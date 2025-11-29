@@ -4,8 +4,9 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Sparkles } from "lucide-react";
 import FAQ from "./pages/faq";
+import BetaPage from "./pages/beta";
 import HomePage from "./sections/HomePage";
 
 export default function App() {
@@ -104,14 +105,15 @@ export default function App() {
                 </Link>
               </div>
 
-              {/* Get Started Button (Desktop) */}
-              <button
-                onClick={() => scrollToSection("join")}
-                className="hidden md:block px-6 py-2 bg-blue-500 rounded-lg text-white font-semibold hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] hover:scale-105 transition-all duration-300"
-                data-testid="button-get-started"
+              {/* Try Beta Button (Desktop) */}
+              <Link
+                href="/beta"
+                className="hidden md:flex items-center gap-2 px-6 py-2 bg-blue-500 rounded-lg text-white font-semibold hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] hover:scale-105 transition-all duration-300"
+                data-testid="button-try-beta"
               >
-                Get Started
-              </button>
+                <Sparkles size={16} />
+                Try Beta
+              </Link>
 
               {/* Mobile Menu Button */}
               <button
@@ -150,13 +152,15 @@ export default function App() {
                   >
                     FAQ
                   </Link>
-                  <button
-                    onClick={() => scrollToSection("join")}
-                    className="w-full px-6 py-2 bg-blue-500 rounded-lg text-white font-semibold hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] transition-all duration-300"
-                    data-testid="mobile-button-get-started"
+                  <Link
+                    href="/beta"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center justify-center gap-2 w-full px-6 py-2 bg-blue-500 rounded-lg text-white font-semibold hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] transition-all duration-300"
+                    data-testid="mobile-button-try-beta"
                   >
-                    Get Started
-                  </button>
+                    <Sparkles size={16} />
+                    Try Beta
+                  </Link>
                 </div>
               </div>
             )}
@@ -166,6 +170,7 @@ export default function App() {
           <Switch>
             <Route path="/" component={() => <HomePage onNavigate={scrollToSection} />} />
             <Route path="/faq" component={FAQ} />
+            <Route path="/beta" component={BetaPage} />
           </Switch>
 
           <Toaster />
