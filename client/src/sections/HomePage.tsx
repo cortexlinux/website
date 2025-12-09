@@ -958,27 +958,23 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                   </div>
                 </div>
                 <div className="p-6 text-center text-gray-500 font-medium">
-                  Tool A
+                  OpenAI Codex
                 </div>
                 <div className="p-6 text-center text-gray-500 font-medium">
-                  Tool B
+                  GitHub Copilot
                 </div>
               </div>
 
               {/* Table Body */}
               <div className="divide-y divide-white/5">
                 {comparisonData.map((row, i) => (
-                  <motion.div
+                  <div
                     key={i}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.08, duration: 0.4 }}
-                    className="grid grid-cols-4 group transition-all duration-300 hover:bg-white/[0.02]"
+                    className="grid grid-cols-4 group transition-colors duration-200 hover:bg-white/[0.02]"
                   >
                     {/* Feature Name with Icon */}
                     <div className="p-5 flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-gray-800 to-gray-900 border border-white/10 flex items-center justify-center group-hover:border-blue-500/30 group-hover:from-blue-900/30 group-hover:to-gray-900 transition-all duration-300">
+                      <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-gray-800 to-gray-900 border border-white/10 flex items-center justify-center group-hover:border-blue-500/30 transition-colors duration-200">
                         <row.icon size={16} className="text-gray-400 group-hover:text-blue-400 transition-colors" />
                       </div>
                       <span className="text-gray-200 font-medium group-hover:text-white transition-colors">
@@ -991,15 +987,9 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                       <div className="absolute inset-0 bg-gradient-to-b from-blue-500/5 to-transparent" />
                       <div className="relative">
                         {row.cortex === true ? (
-                          <motion.div
-                            initial={{ scale: 0 }}
-                            whileInView={{ scale: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: i * 0.08 + 0.2, type: "spring", stiffness: 300 }}
-                            className="w-8 h-8 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center shadow-lg shadow-green-500/25"
-                          >
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center shadow-lg shadow-green-500/25">
                             <Check size={16} className="text-white" strokeWidth={3} />
-                          </motion.div>
+                          </div>
                         ) : typeof row.cortex === "string" ? (
                           <span className="px-3 py-1.5 rounded-full bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-400/30 text-green-400 font-semibold text-sm">
                             {row.cortex}
@@ -1008,7 +998,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                       </div>
                     </div>
 
-                    {/* Tool A Column */}
+                    {/* OpenAI Codex Column */}
                     <div className="p-5 flex items-center justify-center">
                       {row.toolA === true ? (
                         <div className="w-7 h-7 rounded-full bg-gray-800 border border-gray-700 flex items-center justify-center">
@@ -1027,7 +1017,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                       )}
                     </div>
 
-                    {/* Tool B Column */}
+                    {/* GitHub Copilot Column */}
                     <div className="p-5 flex items-center justify-center">
                       {row.toolB === true ? (
                         <div className="w-7 h-7 rounded-full bg-gray-800 border border-gray-700 flex items-center justify-center">
@@ -1043,7 +1033,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                         </span>
                       )}
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
 
@@ -1080,12 +1070,8 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           {/* Mobile Card View */}
           <div className="md:hidden space-y-4">
             {comparisonData.map((row, i) => (
-              <motion.div
+              <div
                 key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
                 className="rounded-xl border border-white/10 bg-gradient-to-b from-white/[0.03] to-transparent backdrop-blur-sm p-5"
               >
                 {/* Feature Header */}
@@ -1110,9 +1096,9 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                     ) : null}
                   </div>
 
-                  {/* Tool A */}
+                  {/* OpenAI Codex */}
                   <div className="text-center p-3 rounded-lg bg-white/[0.02]">
-                    <div className="text-xs text-gray-500 font-medium mb-2">Tool A</div>
+                    <div className="text-xs text-gray-500 font-medium mb-2">Codex</div>
                     {row.toolA === true ? (
                       <div className="w-6 h-6 mx-auto rounded-full bg-gray-800 flex items-center justify-center">
                         <Check size={12} className="text-gray-500" />
@@ -1128,9 +1114,9 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                     )}
                   </div>
 
-                  {/* Tool B */}
+                  {/* GitHub Copilot */}
                   <div className="text-center p-3 rounded-lg bg-white/[0.02]">
-                    <div className="text-xs text-gray-500 font-medium mb-2">Tool B</div>
+                    <div className="text-xs text-gray-500 font-medium mb-2">Copilot</div>
                     {row.toolB === true ? (
                       <div className="w-6 h-6 mx-auto rounded-full bg-gray-800 flex items-center justify-center">
                         <Check size={12} className="text-gray-500" />
@@ -1144,16 +1130,11 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                     )}
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
 
             {/* Mobile CTA */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="pt-4"
-            >
+            <div className="pt-4">
               <button
                 onClick={() => onNavigate("join")}
                 className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 text-white font-semibold hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300"
@@ -1161,7 +1142,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                 Start Building with Cortex — Free
                 <ArrowRight size={16} />
               </button>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
