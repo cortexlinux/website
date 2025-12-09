@@ -726,227 +726,142 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             </p>
           </motion.div>
 
-          {/* Interactive 3D Architecture Visualization */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="relative mb-16"
-          >
-            <svg
-              viewBox="0 0 1000 500"
-              className="w-full h-auto"
-              preserveAspectRatio="xMidYMid meet"
-              data-testid="svg-architecture-diagram"
-            >
-              <defs>
-                {/* Gradient Definitions */}
-                <linearGradient id="archBlueGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#3b82f6" />
-                  <stop offset="100%" stopColor="#1d4ed8" />
-                </linearGradient>
-                <linearGradient id="archPurpleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#8b5cf6" />
-                  <stop offset="100%" stopColor="#6366f1" />
-                </linearGradient>
-                <linearGradient id="archGreenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#22c55e" />
-                  <stop offset="100%" stopColor="#16a34a" />
-                </linearGradient>
-                <linearGradient id="archCyanGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#06b6d4" />
-                  <stop offset="100%" stopColor="#0891b2" />
-                </linearGradient>
-                <linearGradient id="flowGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.8" />
-                  <stop offset="50%" stopColor="#8b5cf6" stopOpacity="0.6" />
-                  <stop offset="100%" stopColor="#22c55e" stopOpacity="0.8" />
-                </linearGradient>
-                
-                {/* Glow Filters */}
-                <filter id="archGlow" x="-50%" y="-50%" width="200%" height="200%">
-                  <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-                  <feMerge>
-                    <feMergeNode in="coloredBlur"/>
-                    <feMergeNode in="SourceGraphic"/>
-                  </feMerge>
-                </filter>
-                <filter id="archSoftGlow" x="-20%" y="-20%" width="140%" height="140%">
-                  <feGaussianBlur stdDeviation="2" result="blur"/>
-                  <feMerge>
-                    <feMergeNode in="blur"/>
-                    <feMergeNode in="SourceGraphic"/>
-                  </feMerge>
-                </filter>
+          {/* Clean Architecture Flow Diagram */}
+          <div className="relative mb-16" data-testid="svg-architecture-diagram">
+            {/* Horizontal Flow - Desktop */}
+            <div className="hidden md:flex items-center justify-center gap-4 lg:gap-8">
+              {/* Step 1: Input */}
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="flex flex-col items-center"
+              >
+                <div className="w-32 lg:w-40 h-24 rounded-xl bg-gradient-to-br from-blue-500/10 to-blue-600/5 border border-blue-500/30 flex flex-col items-center justify-center p-4">
+                  <Terminal size={28} className="text-blue-400 mb-2" />
+                  <span className="text-xs text-blue-400 font-medium">INPUT</span>
+                </div>
+                <span className="text-xs text-gray-500 mt-2 text-center">Natural Language</span>
+              </motion.div>
 
-                {/* Grid Pattern */}
-                <pattern id="archGrid" width="50" height="50" patternUnits="userSpaceOnUse">
-                  <path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(255,255,255,0.02)" strokeWidth="1"/>
-                </pattern>
-              </defs>
-              
-              {/* Background Grid */}
-              <rect width="100%" height="100%" fill="url(#archGrid)" />
+              {/* Arrow 1 */}
+              <motion.div
+                initial={{ opacity: 0, scaleX: 0 }}
+                whileInView={{ opacity: 1, scaleX: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: 0.2 }}
+                className="flex-shrink-0"
+              >
+                <ArrowRight size={24} className="text-gray-600" />
+              </motion.div>
 
-              {/* Layer 1: User Input (Top) */}
-              <g className="layer-user">
-                <rect x="350" y="30" width="300" height="70" rx="12" fill="rgba(59,130,246,0.1)" stroke="#3b82f6" strokeWidth="2">
-                  <animate attributeName="stroke-opacity" values="0.5;1;0.5" dur="3s" repeatCount="indefinite" />
-                </rect>
-                <rect x="360" y="40" width="280" height="50" rx="8" fill="rgba(59,130,246,0.05)" />
-                <text x="500" y="55" textAnchor="middle" fill="#60a5fa" fontSize="11" fontWeight="600">USER LAYER</text>
-                <text x="500" y="75" textAnchor="middle" fill="white" fontSize="14" fontWeight="bold">Your Application</text>
-                {/* Icon placeholder */}
-                <circle cx="380" cy="65" r="15" fill="rgba(59,130,246,0.3)" />
-                <text x="380" y="69" textAnchor="middle" fill="#60a5fa" fontSize="12">CLI</text>
-              </g>
+              {/* Step 2: AI Processing */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.15 }}
+                className="flex flex-col items-center"
+              >
+                <div className="w-44 lg:w-52 h-28 rounded-xl bg-gradient-to-br from-purple-500/15 to-purple-600/5 border border-purple-500/40 flex flex-col items-center justify-center p-4 relative">
+                  <div className="absolute -top-2 -right-2 w-4 h-4 rounded-full bg-purple-500/50 animate-pulse" />
+                  <Brain size={32} className="text-purple-400 mb-2" />
+                  <span className="text-sm text-white font-semibold">AI CORE</span>
+                  <span className="text-xs text-gray-400">Parse + Analyze</span>
+                </div>
+                <span className="text-xs text-gray-500 mt-2 text-center">Context-Aware Processing</span>
+              </motion.div>
 
-              {/* Animated Flow Lines: User to Cortex */}
-              <g className="flow-user-to-cortex">
-                <path d="M 500 100 L 500 140" fill="none" stroke="url(#flowGradient)" strokeWidth="3" strokeDasharray="8,4">
-                  <animate attributeName="stroke-dashoffset" values="0;-24" dur="1.5s" repeatCount="indefinite" />
-                </path>
-                {/* Flow Particles */}
-                <circle r="6" fill="#3b82f6" filter="url(#archGlow)">
-                  <animate attributeName="cy" values="100;140" dur="1s" repeatCount="indefinite" />
-                  <animate attributeName="opacity" values="0;1;0" dur="1s" repeatCount="indefinite" />
-                </circle>
-                <circle r="4" fill="#818cf8" filter="url(#archGlow)">
-                  <animate attributeName="cy" values="100;140" dur="1s" repeatCount="indefinite" begin="0.3s" />
-                  <animate attributeName="opacity" values="0;1;0" dur="1s" repeatCount="indefinite" begin="0.3s" />
-                </circle>
-                <circle r="3" fill="#a78bfa" filter="url(#archGlow)">
-                  <animate attributeName="cy" values="100;140" dur="1s" repeatCount="indefinite" begin="0.6s" />
-                  <animate attributeName="opacity" values="0;1;0" dur="1s" repeatCount="indefinite" begin="0.6s" />
-                </circle>
-                {/* All particles at x=500 */}
-                <circle cx="500" r="6" fill="#3b82f6" filter="url(#archGlow)">
-                  <animate attributeName="cy" values="100;140" dur="1s" repeatCount="indefinite" />
-                  <animate attributeName="opacity" values="0;1;0" dur="1s" repeatCount="indefinite" />
-                </circle>
-              </g>
+              {/* Arrow 2 */}
+              <motion.div
+                initial={{ opacity: 0, scaleX: 0 }}
+                whileInView={{ opacity: 1, scaleX: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: 0.35 }}
+                className="flex-shrink-0"
+              >
+                <ArrowRight size={24} className="text-gray-600" />
+              </motion.div>
 
-              {/* Layer 2: Cortex Runtime (AI Core) */}
-              <g className="layer-cortex">
-                {/* Outer glow ring */}
-                <ellipse cx="500" cy="200" rx="200" ry="50" fill="none" stroke="#8b5cf6" strokeWidth="1" opacity="0.3">
-                  <animate attributeName="rx" values="200;210;200" dur="4s" repeatCount="indefinite" />
-                  <animate attributeName="opacity" values="0.3;0.5;0.3" dur="4s" repeatCount="indefinite" />
-                </ellipse>
-                
-                <rect x="300" y="150" width="400" height="100" rx="16" fill="rgba(139,92,246,0.15)" stroke="#8b5cf6" strokeWidth="2">
-                  <animate attributeName="stroke-opacity" values="0.6;1;0.6" dur="2.5s" repeatCount="indefinite" />
-                </rect>
-                
-                {/* Inner content area */}
-                <rect x="320" y="165" width="360" height="70" rx="10" fill="url(#archPurpleGradient)" opacity="0.2" />
-                
-                {/* AI Brain icon area */}
-                <circle cx="380" cy="200" r="25" fill="rgba(139,92,246,0.4)" stroke="#a78bfa" strokeWidth="1">
-                  <animate attributeName="r" values="25;28;25" dur="2s" repeatCount="indefinite" />
-                </circle>
-                <text x="380" y="195" textAnchor="middle" fill="#c4b5fd" fontSize="10">AI</text>
-                <text x="380" y="208" textAnchor="middle" fill="#c4b5fd" fontSize="8">CORE</text>
-                
-                <text x="530" y="185" textAnchor="middle" fill="#a78bfa" fontSize="11" fontWeight="600">CORTEX RUNTIME</text>
-                <text x="530" y="205" textAnchor="middle" fill="white" fontSize="15" fontWeight="bold">AI Processing Layer</text>
-                <text x="530" y="225" textAnchor="middle" fill="#9ca3af" fontSize="10">NLP + Context Analysis + Command Generation</text>
-              </g>
+              {/* Step 3: Command Generation */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="flex flex-col items-center"
+              >
+                <div className="w-32 lg:w-40 h-24 rounded-xl bg-gradient-to-br from-cyan-500/10 to-cyan-600/5 border border-cyan-500/30 flex flex-col items-center justify-center p-4">
+                  <Code2 size={28} className="text-cyan-400 mb-2" />
+                  <span className="text-xs text-cyan-400 font-medium">GENERATE</span>
+                </div>
+                <span className="text-xs text-gray-500 mt-2 text-center">Safe Commands</span>
+              </motion.div>
 
-              {/* Animated Flow Lines: Cortex to Services */}
-              <g className="flow-cortex-to-services">
-                {/* Left branch */}
-                <path d="M 400 250 Q 300 290 200 330" fill="none" stroke="url(#flowGradient)" strokeWidth="2" strokeDasharray="6,3">
-                  <animate attributeName="stroke-dashoffset" values="0;-18" dur="1.2s" repeatCount="indefinite" />
-                </path>
-                {/* Center branch */}
-                <path d="M 500 250 L 500 330" fill="none" stroke="url(#flowGradient)" strokeWidth="2" strokeDasharray="6,3">
-                  <animate attributeName="stroke-dashoffset" values="0;-18" dur="1.2s" repeatCount="indefinite" />
-                </path>
-                {/* Right branch */}
-                <path d="M 600 250 Q 700 290 800 330" fill="none" stroke="url(#flowGradient)" strokeWidth="2" strokeDasharray="6,3">
-                  <animate attributeName="stroke-dashoffset" values="0;-18" dur="1.2s" repeatCount="indefinite" />
-                </path>
+              {/* Arrow 3 */}
+              <motion.div
+                initial={{ opacity: 0, scaleX: 0 }}
+                whileInView={{ opacity: 1, scaleX: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: 0.5 }}
+                className="flex-shrink-0"
+              >
+                <ArrowRight size={24} className="text-gray-600" />
+              </motion.div>
 
-                {/* Animated particles on paths */}
-                <circle r="5" fill="#8b5cf6" filter="url(#archSoftGlow)">
-                  <animateMotion dur="1.5s" repeatCount="indefinite" path="M 400 250 Q 300 290 200 330" />
-                </circle>
-                <circle r="4" fill="#22c55e" filter="url(#archSoftGlow)">
-                  <animateMotion dur="1.5s" repeatCount="indefinite" path="M 500 250 L 500 330" begin="0.2s" />
-                </circle>
-                <circle r="5" fill="#8b5cf6" filter="url(#archSoftGlow)">
-                  <animateMotion dur="1.5s" repeatCount="indefinite" path="M 600 250 Q 700 290 800 330" begin="0.4s" />
-                </circle>
-              </g>
+              {/* Step 4: Execution */}
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.45 }}
+                className="flex flex-col items-center"
+              >
+                <div className="w-32 lg:w-40 h-24 rounded-xl bg-gradient-to-br from-green-500/10 to-green-600/5 border border-green-500/30 flex flex-col items-center justify-center p-4">
+                  <CheckCircle2 size={28} className="text-green-400 mb-2" />
+                  <span className="text-xs text-green-400 font-medium">EXECUTE</span>
+                </div>
+                <span className="text-xs text-gray-500 mt-2 text-center">Sandboxed Runtime</span>
+              </motion.div>
+            </div>
 
-              {/* Layer 3: Services (Storage, Compute, CDN) */}
-              <g className="layer-services">
-                {/* Storage Node */}
-                <g className="service-storage">
-                  <rect x="100" y="330" width="200" height="80" rx="12" fill="rgba(34,197,94,0.1)" stroke="#22c55e" strokeWidth="1.5">
-                    <animate attributeName="stroke-opacity" values="0.5;0.8;0.5" dur="3s" repeatCount="indefinite" />
-                  </rect>
-                  <circle cx="150" cy="370" r="20" fill="rgba(34,197,94,0.2)" />
-                  <text x="150" y="366" textAnchor="middle" fill="#4ade80" fontSize="8">DB</text>
-                  <text x="150" y="378" textAnchor="middle" fill="#4ade80" fontSize="7">ICON</text>
-                  <text x="230" y="360" textAnchor="middle" fill="#86efac" fontSize="10" fontWeight="600">STORAGE</text>
-                  <text x="230" y="378" textAnchor="middle" fill="#9ca3af" fontSize="9">Persistent Data</text>
-                  <text x="230" y="395" textAnchor="middle" fill="#6b7280" fontSize="8">PostgreSQL, Redis</text>
-                </g>
-
-                {/* Compute Node */}
-                <g className="service-compute">
-                  <rect x="400" y="330" width="200" height="80" rx="12" fill="rgba(6,182,212,0.1)" stroke="#06b6d4" strokeWidth="1.5">
-                    <animate attributeName="stroke-opacity" values="0.5;0.8;0.5" dur="3s" repeatCount="indefinite" begin="0.5s" />
-                  </rect>
-                  <circle cx="450" cy="370" r="20" fill="rgba(6,182,212,0.2)" />
-                  <text x="450" y="366" textAnchor="middle" fill="#22d3ee" fontSize="8">CPU</text>
-                  <text x="450" y="378" textAnchor="middle" fill="#22d3ee" fontSize="7">GPU</text>
-                  <text x="530" y="360" textAnchor="middle" fill="#67e8f9" fontSize="10" fontWeight="600">COMPUTE</text>
-                  <text x="530" y="378" textAnchor="middle" fill="#9ca3af" fontSize="9">ML Processing</text>
-                  <text x="530" y="395" textAnchor="middle" fill="#6b7280" fontSize="8">CUDA, TensorFlow</text>
-                </g>
-
-                {/* CDN Node */}
-                <g className="service-cdn">
-                  <rect x="700" y="330" width="200" height="80" rx="12" fill="rgba(249,115,22,0.1)" stroke="#f97316" strokeWidth="1.5">
-                    <animate attributeName="stroke-opacity" values="0.5;0.8;0.5" dur="3s" repeatCount="indefinite" begin="1s" />
-                  </rect>
-                  <circle cx="750" cy="370" r="20" fill="rgba(249,115,22,0.2)" />
-                  <text x="750" y="366" textAnchor="middle" fill="#fb923c" fontSize="8">CDN</text>
-                  <text x="750" y="378" textAnchor="middle" fill="#fb923c" fontSize="7">EDGE</text>
-                  <text x="830" y="360" textAnchor="middle" fill="#fdba74" fontSize="10" fontWeight="600">EDGE NETWORK</text>
-                  <text x="830" y="378" textAnchor="middle" fill="#9ca3af" fontSize="9">Global Delivery</text>
-                  <text x="830" y="395" textAnchor="middle" fill="#6b7280" fontSize="8">12 Regions</text>
-                </g>
-              </g>
-
-              {/* Layer 4: Hardware (Bottom) */}
-              <g className="layer-hardware">
-                <rect x="200" y="450" width="600" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
-                <text x="500" y="475" textAnchor="middle" fill="#6b7280" fontSize="11">HARDWARE ABSTRACTION LAYER</text>
-                
-                {/* Hardware icons */}
-                <circle cx="280" cy="470" r="12" fill="rgba(255,255,255,0.05)" />
-                <text x="280" y="474" textAnchor="middle" fill="#4b5563" fontSize="8">GPU</text>
-                <circle cx="400" cy="470" r="12" fill="rgba(255,255,255,0.05)" />
-                <text x="400" y="474" textAnchor="middle" fill="#4b5563" fontSize="8">CPU</text>
-                <circle cx="520" cy="470" r="12" fill="rgba(255,255,255,0.05)" />
-                <text x="520" y="474" textAnchor="middle" fill="#4b5563" fontSize="8">RAM</text>
-                <circle cx="640" cy="470" r="12" fill="rgba(255,255,255,0.05)" />
-                <text x="640" y="474" textAnchor="middle" fill="#4b5563" fontSize="8">SSD</text>
-                <circle cx="720" cy="470" r="12" fill="rgba(255,255,255,0.05)" />
-                <text x="720" y="474" textAnchor="middle" fill="#4b5563" fontSize="8">NET</text>
-              </g>
-
-              {/* Flow Labels */}
-              <text x="520" y="125" textAnchor="start" fill="#60a5fa" fontSize="9" opacity="0.8">Natural Language</text>
-              <text x="300" y="300" textAnchor="middle" fill="#a78bfa" fontSize="9" opacity="0.8">Query</text>
-              <text x="500" y="300" textAnchor="middle" fill="#a78bfa" fontSize="9" opacity="0.8">Process</text>
-              <text x="700" y="300" textAnchor="middle" fill="#a78bfa" fontSize="9" opacity="0.8">Serve</text>
-            </svg>
-          </motion.div>
+            {/* Vertical Flow - Mobile */}
+            <div className="md:hidden flex flex-col items-center gap-4">
+              {[
+                { icon: Terminal, label: "INPUT", sublabel: "Natural Language", color: "blue" },
+                { icon: Brain, label: "AI CORE", sublabel: "Parse + Analyze", color: "purple" },
+                { icon: Code2, label: "GENERATE", sublabel: "Safe Commands", color: "cyan" },
+                { icon: CheckCircle2, label: "EXECUTE", sublabel: "Sandboxed Runtime", color: "green" },
+              ].map((step, i) => {
+                const colorMap: Record<string, string> = {
+                  blue: "from-blue-500/10 to-blue-600/5 border-blue-500/30 text-blue-400",
+                  purple: "from-purple-500/15 to-purple-600/5 border-purple-500/40 text-purple-400",
+                  cyan: "from-cyan-500/10 to-cyan-600/5 border-cyan-500/30 text-cyan-400",
+                  green: "from-green-500/10 to-green-600/5 border-green-500/30 text-green-400",
+                };
+                return (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: i * 0.1 }}
+                    className="flex flex-col items-center"
+                  >
+                    {i > 0 && <ArrowRight size={20} className="text-gray-600 rotate-90 mb-3" />}
+                    <div className={`w-48 h-20 rounded-xl bg-gradient-to-br ${colorMap[step.color]} border flex items-center justify-center gap-3 p-4`}>
+                      <step.icon size={24} className={colorMap[step.color].split(' ').pop()} />
+                      <div>
+                        <span className={`text-xs font-medium ${colorMap[step.color].split(' ').pop()}`}>{step.label}</span>
+                        <p className="text-xs text-gray-400">{step.sublabel}</p>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
 
           {/* Architecture Component Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
