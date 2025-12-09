@@ -1335,7 +1335,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
 
           <div className="relative">
             {/* Timeline Line */}
-            <div className="absolute top-4 left-0 right-0 h-0.5 bg-gray-800" />
+            <div className="absolute top-[15px] left-0 right-0 h-0.5 bg-gray-800" />
             
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {roadmapItems.map((item, i) => (
@@ -1345,11 +1345,11 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
-                  className="relative pt-8"
+                  className="relative pt-10"
                 >
                   {/* Timeline Dot */}
                   <div
-                    className={`absolute top-2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full ${
+                    className={`absolute top-[7px] left-1/2 -translate-x-1/2 w-4 h-4 rounded-full ${
                       item.status === "completed"
                         ? "timeline-dot-completed"
                         : item.status === "current"
