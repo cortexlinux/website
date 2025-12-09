@@ -1093,6 +1093,129 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </div>
       </section>
 
+      {/* Build the Future Section */}
+      <section id="contribute" className="py-32 px-4 relative overflow-hidden">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Build the Future of Linux</h2>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-8">
+            {/* For Developers */}
+            <div className="glass-card rounded-2xl p-8 border border-white/10">
+              <h3 className="text-2xl font-bold mb-6">For Developers</h3>
+              <ul className="space-y-4 mb-8">
+                <li className="flex items-center gap-3 text-gray-300">
+                  <Check size={18} className="text-blue-400 flex-shrink-0" />
+                  <span>Earn bounties for contributions ($25-$500 per feature)</span>
+                </li>
+                <li className="flex items-center gap-3 text-gray-300">
+                  <Check size={18} className="text-blue-400 flex-shrink-0" />
+                  <span>Work on cutting-edge AI + systems programming</span>
+                </li>
+                <li className="flex items-center gap-3 text-gray-300">
+                  <Check size={18} className="text-blue-400 flex-shrink-0" />
+                  <span>Join a global community of innovators</span>
+                </li>
+                <li className="flex items-center gap-3 text-gray-300">
+                  <Check size={18} className="text-blue-400 flex-shrink-0" />
+                  <span>2x bonus payment when we close seed funding</span>
+                </li>
+                <li className="flex items-center gap-3 text-gray-300">
+                  <Check size={18} className="text-blue-400 flex-shrink-0" />
+                  <span>Early contributor opportunities at a $50-100B market</span>
+                </li>
+              </ul>
+              <a
+                href="https://github.com/cortexlinux/cortex/issues"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 w-full py-4 bg-blue-500 hover:bg-blue-600 rounded-xl font-semibold transition-colors"
+                data-testid="button-view-issues"
+              >
+                <Github size={18} />
+                View Open Issues on GitHub
+                <ExternalLink size={14} />
+              </a>
+            </div>
+
+            {/* Current Opportunities */}
+            <div>
+              <h3 className="text-xl font-bold mb-6">Current Opportunities</h3>
+              <div className="space-y-4">
+                {/* Issue 1 */}
+                <div className="glass-card rounded-xl p-5 border border-white/10">
+                  <h4 className="font-semibold mb-3">Shell Hotkey Integration for Instant AI Suggestions</h4>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    <span className="px-2 py-1 bg-blue-500/20 text-blue-400 text-xs rounded-md">enhancement</span>
+                    <span className="px-2 py-1 bg-purple-500/20 text-purple-400 text-xs rounded-md">MVP</span>
+                  </div>
+                  <a
+                    href="https://github.com/cortexlinux/cortex/issues/265"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-full py-2.5 text-center rounded-lg font-medium border border-white/20 bg-white/5 hover:bg-white/10 transition-colors text-sm"
+                  >
+                    View Issue on GitHub
+                  </a>
+                </div>
+
+                {/* Issue 2 */}
+                <div className="glass-card rounded-xl p-5 border border-white/10">
+                  <h4 className="font-semibold mb-3">Semantic Caching with GPTCache for Offline Mode</h4>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    <span className="px-2 py-1 bg-blue-500/20 text-blue-400 text-xs rounded-md">enhancement</span>
+                    <span className="px-2 py-1 bg-purple-500/20 text-purple-400 text-xs rounded-md">MVP</span>
+                  </div>
+                  <a
+                    href="https://github.com/cortexlinux/cortex/issues/268"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-full py-2.5 text-center rounded-lg font-medium border border-white/20 bg-white/5 hover:bg-white/10 transition-colors text-sm"
+                  >
+                    View Issue on GitHub
+                  </a>
+                </div>
+
+                {/* Issue 3 */}
+                <div className="glass-card rounded-xl p-5 border border-white/10">
+                  <h4 className="font-semibold mb-3">Parallel LLM Calls Implementation</h4>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    <span className="px-2 py-1 bg-blue-500/20 text-blue-400 text-xs rounded-md">enhancement</span>
+                    <span className="px-2 py-1 bg-purple-500/20 text-purple-400 text-xs rounded-md">MVP</span>
+                  </div>
+                  <a
+                    href="https://github.com/cortexlinux/cortex/issues/276"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-full py-2.5 text-center rounded-lg font-medium border border-white/20 bg-white/5 hover:bg-white/10 transition-colors text-sm"
+                  >
+                    View Issue on GitHub
+                  </a>
+                </div>
+
+                {/* Issue 4 */}
+                <div className="glass-card rounded-xl p-5 border border-white/10">
+                  <h4 className="font-semibold mb-3">Screenshot/Image Input for Error Diagnosis</h4>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    <span className="px-2 py-1 bg-blue-500/20 text-blue-400 text-xs rounded-md">enhancement</span>
+                    <span className="px-2 py-1 bg-purple-500/20 text-purple-400 text-xs rounded-md">MVP</span>
+                  </div>
+                  <a
+                    href="https://github.com/cortexlinux/cortex/issues/266"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-full py-2.5 text-center rounded-lg font-medium border border-white/20 bg-white/5 hover:bg-white/10 transition-colors text-sm"
+                  >
+                    View Issue on GitHub
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Sponsorship Section */}
       <section id="sponsor" className="py-32 px-4 relative overflow-hidden">
         <div className="max-w-6xl mx-auto">
