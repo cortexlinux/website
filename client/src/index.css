@@ -298,14 +298,247 @@
 .glass-card {
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: 
+    background 0.3s cubic-bezier(0.33, 1, 0.68, 1),
+    border-color 0.3s ease,
+    box-shadow 0.35s cubic-bezier(0.33, 1, 0.68, 1),
+    transform 0.3s cubic-bezier(0.33, 1, 0.68, 1);
 }
 
 .glass-card-hover:hover {
   background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(59, 130, 246, 0.5);
-  box-shadow: 0 0 30px rgba(59, 130, 246, 0.15);
-  transform: translateY(-2px);
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: 
+    0 0 40px rgba(59, 130, 246, 0.12),
+    0 20px 40px -15px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transform: translateY(-3px);
+}
+
+/* Premium Button Styles */
+button, a[class*="bg-blue"], a[class*="glass-card"] {
+  transition: 
+    transform 0.2s cubic-bezier(0.33, 1, 0.68, 1),
+    box-shadow 0.25s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+/* Primary CTA buttons */
+.bg-gradient-to-r:hover,
+button[class*="bg-blue"]:hover,
+a[class*="bg-blue"]:hover {
+  transform: translateY(-1px) scale(1.01);
+}
+
+.bg-gradient-to-r:active,
+button[class*="bg-blue"]:active {
+  transform: translateY(0) scale(0.99);
+}
+
+/* Subtle ambient background animation */
+@keyframes ambientShift {
+  0%, 100% { 
+    opacity: 0.15;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% { 
+    opacity: 0.2;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+}
+
+.gradient-glow {
+  animation: ambientShift 8s ease-in-out infinite;
+}
+
+/* Section entrance animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Navigation link hover effects */
+nav button, nav a {
+  position: relative;
+}
+
+nav button::after, nav a:not([class*="bg-"])::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+  transition: width 0.3s ease, left 0.3s ease;
+}
+
+nav button:hover::after, nav a:not([class*="bg-"]):hover::after {
+  width: 100%;
+  left: 0;
+}
+
+/* Footer link hover */
+footer a {
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+footer a:hover {
+  transform: translateX(2px);
+}
+
+/* Trust badge hover */
+.glass-card.rounded-full {
+  transition: 
+    border-color 0.25s ease,
+    box-shadow 0.3s ease,
+    transform 0.2s ease;
+}
+
+.glass-card.rounded-full:hover {
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Stats cards hover enhancement */
+.glass-card.rounded-xl {
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-card.rounded-xl::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.03),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.glass-card.rounded-xl:hover::before {
+  left: 100%;
+}
+
+/* Icon hover effects */
+.glass-card svg {
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.glass-card:hover svg {
+  transform: scale(1.08);
+  filter: drop-shadow(0 0 8px currentColor);
+}
+
+/* Comparison table row hover */
+table tr {
+  transition: background 0.2s ease;
+}
+
+table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Timeline dot pulse enhancement */
+.timeline-dot-current {
+  position: relative;
+}
+
+.timeline-dot-current::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  animation: pulse-ring 2s ease-out infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* Contributor avatar hover */
+.glass-card img {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.glass-card img:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+  z-index: 10;
+}
+
+/* Code tab refined hover */
+.code-tab {
+  position: relative;
+  overflow: hidden;
+}
+
+.code-tab::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: linear-gradient(to top, rgba(59, 130, 246, 0.05), transparent);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.code-tab:hover::before {
+  opacity: 1;
+}
+
+/* Prompt pills enhanced hover */
+.code-editor button[class*="rounded-lg"]:not(.code-action-btn) {
+  position: relative;
+  overflow: hidden;
+}
+
+.code-editor button[class*="rounded-lg"]:not(.code-action-btn)::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.code-editor button[class*="rounded-lg"]:not(.code-action-btn):hover::after {
+  opacity: 1;
 }
 
 .noise-texture {
