@@ -863,40 +863,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             </div>
           </div>
 
-          {/* Data Journey Visualization */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mt-16 glass-card rounded-xl p-8 border border-white/10"
-          >
-            <h3 className="text-xl font-bold mb-6 text-center">Request Journey</h3>
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-              {[
-                { step: 1, label: "You Type", example: '"Install PyTorch"', color: "blue" },
-                { step: 2, label: "AI Parses", example: "Intent: install, Target: pytorch", color: "purple" },
-                { step: 3, label: "Context Check", example: "GPU: RTX 4090, CUDA: 12.3", color: "indigo" },
-                { step: 4, label: "Command Gen", example: "pip install torch+cu123", color: "violet" },
-                { step: 5, label: "Safe Execute", example: "Sandboxed, Reversible", color: "green" },
-              ].map((item, i) => (
-                <div key={i} className="flex items-center gap-4">
-                  <div className="text-center">
-                    <div className={`w-12 h-12 rounded-full bg-${item.color}-500/20 border border-${item.color}-500/40 flex items-center justify-center mb-2 mx-auto`}>
-                      <span className={`text-${item.color}-400 font-bold`}>{item.step}</span>
-                    </div>
-                    <p className="text-sm font-semibold text-white mb-1">{item.label}</p>
-                    <p className="text-xs text-gray-500 font-mono max-w-[120px]">{item.example}</p>
-                  </div>
-                  {i < 4 && (
-                    <div className="hidden md:block">
-                      <ArrowRight size={20} className="text-gray-600" />
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
+          </div>
       </section>
 
       {/* Security Section */}
