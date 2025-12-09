@@ -303,57 +303,54 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             </a>
           </motion.div>
 
-          {/* Premium 3D Terminal Preview - Futuristic AI Theme */}
+          {/* Premium 3D Terminal Preview */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.8 }}
-            className="terminal-holographic cosmic-glow max-w-3xl mx-auto"
+            className="terminal-3d terminal-glow max-w-3xl mx-auto"
           >
-            <div className="terminal-ai-titlebar rounded-t-[20px]">
+            <div className="terminal-3d-titlebar">
               <div className="terminal-3d-button terminal-3d-close" />
               <div className="terminal-3d-button terminal-3d-minimize" />
               <div className="terminal-3d-button terminal-3d-maximize" />
-              <div className="flex-1 flex items-center justify-center gap-3">
-                <div className="ai-status-indicator" />
-                <span className="ai-status-label">AI Active</span>
-                <span className="text-gray-600 mx-2">|</span>
-                <Terminal size={14} className="text-cyan-400" />
+              <div className="flex-1 flex items-center justify-center gap-2">
+                <Terminal size={14} className="text-gray-500" />
                 <span className="text-sm text-gray-400 font-medium">cortex — zsh</span>
               </div>
               <div className="w-16" />
             </div>
-            <div className="terminal-3d-content neural-bg terminal-scan-effect text-left relative rounded-b-[20px]">
+            <div className="terminal-3d-content text-left relative">
               <CopyButton text="cortex install tensorflow --optimize-gpu" variant="3d" />
               <SyntaxLine lineNumber={1}>
                 <span className="terminal-prompt">~</span>
                 <span className="terminal-arrow mx-2">❯</span>
-                <span className="syntax-neon-function">cortex</span>
-                <span className="syntax-neon-variable ml-2">install</span>
-                <span className="syntax-neon-variable ml-2">tensorflow</span>
-                <span className="syntax-neon-keyword ml-2">--optimize-gpu</span>
+                <span className="syntax-command">cortex</span>
+                <span className="syntax-value ml-2">install</span>
+                <span className="syntax-value ml-2">tensorflow</span>
+                <span className="syntax-flag ml-2">--optimize-gpu</span>
               </SyntaxLine>
               <div className="mt-4 space-y-1">
-                <div className="syntax-neon-string flex items-center gap-2">
+                <div className="syntax-success flex items-center gap-2">
                   <span className="text-emerald-400">✓</span>
                   <span>Detected</span>
-                  <span className="syntax-neon-string">NVIDIA RTX 4090</span>
+                  <span className="syntax-string">NVIDIA RTX 4090</span>
                 </div>
-                <div className="syntax-neon-string flex items-center gap-2">
+                <div className="syntax-success flex items-center gap-2">
                   <span className="text-emerald-400">✓</span>
                   <span>Installing</span>
-                  <span className="syntax-neon-keyword">CUDA 12.3</span>
+                  <span className="syntax-path">CUDA 12.3</span>
                   <span>drivers</span>
                 </div>
-                <div className="syntax-neon-string flex items-center gap-2">
+                <div className="syntax-success flex items-center gap-2">
                   <span className="text-emerald-400">✓</span>
                   <span>Configuring TensorFlow for GPU</span>
                 </div>
-                <div className="syntax-neon-string flex items-center gap-2 mt-2">
+                <div className="syntax-success flex items-center gap-2 mt-2">
                   <span className="text-emerald-400">✓</span>
                   <span>Optimized for your hardware —</span>
-                  <span className="syntax-neon-number">Ready in 8s</span>
-                  <span className="neon-cursor" />
+                  <span className="syntax-number">Ready in 8s</span>
+                  <span className="typing-cursor" />
                 </div>
               </div>
             </div>
@@ -398,17 +395,14 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="terminal-holographic cosmic-glow max-w-4xl mx-auto"
+            className="terminal-3d terminal-glow max-w-4xl mx-auto"
           >
-            <div className="terminal-ai-titlebar rounded-t-[20px]">
+            <div className="terminal-3d-titlebar">
               <div className="terminal-3d-button terminal-3d-close" />
               <div className="terminal-3d-button terminal-3d-minimize" />
               <div className="terminal-3d-button terminal-3d-maximize" />
-              <div className="flex-1 flex items-center justify-center gap-3">
-                <div className="ai-status-indicator" />
-                <span className="ai-status-label">AI Ready</span>
-                <span className="text-gray-600 mx-2">|</span>
-                <Command size={14} className="text-cyan-400" />
+              <div className="flex-1 flex items-center justify-center gap-2">
+                <Command size={14} className="text-gray-500" />
                 <span className="text-sm text-gray-400 font-medium">Interactive Playground</span>
               </div>
               <div className="w-16" />
@@ -427,8 +421,8 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               ))}
             </div>
 
-            {/* Terminal Content with Neon Syntax Highlighting */}
-            <div className="terminal-3d-content neural-bg terminal-scan-effect min-h-[220px] relative">
+            {/* Terminal Content with Syntax Highlighting */}
+            <div className="terminal-3d-content min-h-[220px] relative">
               <CopyButton text={demoCommands[activeDemo].command} variant="3d" />
               <SyntaxLine lineNumber={1}>
                 <span className="terminal-prompt">~</span>
@@ -437,9 +431,9 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                   <span 
                     key={i} 
                     className={`ml-1 ${
-                      i === 0 ? "syntax-neon-function" : 
-                      part.startsWith("--") ? "syntax-neon-keyword" : 
-                      "syntax-neon-variable"
+                      i === 0 ? "syntax-command" : 
+                      part.startsWith("--") ? "syntax-flag" : 
+                      "syntax-value"
                     }`}
                   >
                     {part}
@@ -448,7 +442,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               </SyntaxLine>
               <div className="mt-4 space-y-1">
                 {demoCommands[activeDemo].output.split("\n").map((line, i) => (
-                  <div key={i} className="syntax-neon-string flex items-center gap-2">
+                  <div key={i} className="syntax-success flex items-center gap-2">
                     <span className="text-emerald-400">{line.startsWith("✓") ? "✓" : ""}</span>
                     <span>{line.replace("✓ ", "")}</span>
                   </div>
@@ -514,13 +508,13 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                     <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
                     <p className="text-gray-400 mb-4">{feature.description}</p>
                     
-                    {/* Expandable 3D Code Block with Neon Glow */}
+                    {/* Expandable 3D Code Block */}
                     <motion.div
                       initial={false}
                       animate={{ height: expandedFeature === i ? "auto" : 0 }}
                       className="overflow-hidden"
                     >
-                      <div className="code-block-3d neural-bg mt-4 relative">
+                      <div className="code-block-3d mt-4 relative">
                         <CopyButton text={feature.code} variant="3d" />
                         {feature.code.split("\n").map((line, lineIdx) => (
                           <SyntaxLine key={lineIdx} lineNumber={lineIdx + 1}>
@@ -528,11 +522,11 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                               <span 
                                 key={wordIdx}
                                 className={`${wordIdx > 0 ? "ml-1" : ""} ${
-                                  word === "cortex" ? "syntax-neon-function" :
-                                  word.startsWith("--") ? "syntax-neon-keyword" :
-                                  word.startsWith("@") ? "syntax-neon-keyword" :
-                                  word.match(/^[0-9]+/) ? "syntax-neon-number" :
-                                  "syntax-neon-variable"
+                                  word === "cortex" ? "syntax-command" :
+                                  word.startsWith("--") ? "syntax-flag" :
+                                  word.startsWith("@") ? "syntax-path" :
+                                  word.match(/^[0-9]+/) ? "syntax-number" :
+                                  "syntax-value"
                                 }`}
                               >
                                 {word}
@@ -573,32 +567,29 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="terminal-holographic cosmic-glow"
+            className="terminal-3d terminal-glow"
           >
-            <div className="terminal-ai-titlebar rounded-t-[20px]">
+            <div className="terminal-3d-titlebar">
               <div className="terminal-3d-button terminal-3d-close" />
               <div className="terminal-3d-button terminal-3d-minimize" />
               <div className="terminal-3d-button terminal-3d-maximize" />
-              <div className="flex-1 flex items-center justify-center gap-3">
-                <div className="ai-status-indicator" />
-                <span className="ai-status-label">AI Processing</span>
-                <span className="text-gray-600 mx-2">|</span>
-                <Cpu size={14} className="text-cyan-400" />
+              <div className="flex-1 flex items-center justify-center gap-2">
+                <Cpu size={14} className="text-gray-500" />
                 <span className="text-sm text-gray-400 font-medium">cortex-playground</span>
               </div>
               <div className="w-16" />
             </div>
             
-            <div className="terminal-3d-content neural-bg terminal-scan-effect relative rounded-b-[20px]">
+            <div className="terminal-3d-content relative">
               <CopyButton text="cortex generate api --name products" variant="3d" />
               <SyntaxLine lineNumber={1}>
                 <span className="terminal-prompt">~</span>
                 <span className="terminal-arrow mx-2">❯</span>
-                <span className="syntax-neon-function">cortex</span>
-                <span className="syntax-neon-variable ml-2">generate</span>
-                <span className="syntax-neon-variable ml-2">api</span>
-                <span className="syntax-neon-keyword ml-2">--name</span>
-                <span className="syntax-neon-string ml-2">products</span>
+                <span className="syntax-command">cortex</span>
+                <span className="syntax-value ml-2">generate</span>
+                <span className="syntax-value ml-2">api</span>
+                <span className="syntax-flag ml-2">--name</span>
+                <span className="syntax-string ml-2">products</span>
               </SyntaxLine>
               <div className="mt-4 space-y-1">
                 <div className="syntax-success flex items-center gap-2">
@@ -939,17 +930,14 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="terminal-holographic cosmic-glow"
+            className="terminal-3d terminal-glow"
           >
-            <div className="terminal-ai-titlebar rounded-t-[20px]">
+            <div className="terminal-3d-titlebar">
               <div className="terminal-3d-button terminal-3d-close" />
               <div className="terminal-3d-button terminal-3d-minimize" />
               <div className="terminal-3d-button terminal-3d-maximize" />
-              <div className="flex-1 flex items-center justify-center gap-3">
-                <div className="ai-status-indicator" />
-                <span className="ai-status-label">AI Guiding</span>
-                <span className="text-gray-600 mx-2">|</span>
-                <FileText size={14} className="text-cyan-400" />
+              <div className="flex-1 flex items-center justify-center gap-2">
+                <FileText size={14} className="text-gray-500" />
                 <span className="text-sm text-gray-400 font-medium">Quick Start Guide</span>
               </div>
               <div className="w-16" />
@@ -968,35 +956,35 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               ))}
             </div>
 
-            {/* Premium Code Blocks with Neon Syntax Highlighting */}
-            <div className="terminal-3d-content neural-bg terminal-scan-effect relative">
+            {/* Premium Code Blocks with Syntax Highlighting */}
+            <div className="terminal-3d-content relative">
               <CopyButton text={`${installCommands[activeTab]}\ncortex init my-app\ncortex dev`} variant="3d" />
               
               <div className="mb-6">
-                <div className="syntax-neon-comment mb-2"># Install Cortex CLI</div>
+                <div className="syntax-comment mb-2"># Install Cortex CLI</div>
                 <SyntaxLine lineNumber={1}>
-                  <span className="syntax-neon-function">{activeTab}</span>
-                  <span className="syntax-neon-variable ml-2">{activeTab === "npm" ? "install" : activeTab === "yarn" ? "global" : "add"}</span>
-                  <span className="syntax-neon-keyword ml-2">{activeTab === "npm" ? "-g" : activeTab === "yarn" ? "add" : "-g"}</span>
-                  <span className="syntax-neon-keyword ml-2">cortex-cli</span>
+                  <span className="syntax-command">{activeTab}</span>
+                  <span className="syntax-value ml-2">{activeTab === "npm" ? "install" : activeTab === "yarn" ? "global" : "add"}</span>
+                  <span className="syntax-flag ml-2">{activeTab === "npm" ? "-g" : activeTab === "yarn" ? "add" : "-g"}</span>
+                  <span className="syntax-path ml-2">cortex-cli</span>
                 </SyntaxLine>
               </div>
               
               <div className="mb-6">
-                <div className="syntax-neon-comment mb-2"># Initialize your project</div>
+                <div className="syntax-comment mb-2"># Initialize your project</div>
                 <SyntaxLine lineNumber={2}>
-                  <span className="syntax-neon-function">cortex</span>
-                  <span className="syntax-neon-variable ml-2">init</span>
-                  <span className="syntax-neon-string ml-2">my-app</span>
+                  <span className="syntax-command">cortex</span>
+                  <span className="syntax-value ml-2">init</span>
+                  <span className="syntax-string ml-2">my-app</span>
                 </SyntaxLine>
               </div>
               
               <div>
-                <div className="syntax-neon-comment mb-2"># Start developing</div>
+                <div className="syntax-comment mb-2"># Start developing</div>
                 <SyntaxLine lineNumber={3}>
-                  <span className="syntax-neon-function">cortex</span>
-                  <span className="syntax-neon-variable ml-2">dev</span>
-                  <span className="neon-cursor" />
+                  <span className="syntax-command">cortex</span>
+                  <span className="syntax-value ml-2">dev</span>
+                  <span className="typing-cursor" />
                 </SyntaxLine>
               </div>
             </div>
