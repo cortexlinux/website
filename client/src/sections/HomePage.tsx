@@ -589,7 +589,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Your Complete ML Toolkit</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Your Complete <span className="gradient-text">ML Toolkit</span></h2>
             <p className="text-gray-400 max-w-2xl mx-auto">Everything data scientists and DevOps teams need to go from prototype to production — without the infrastructure headaches.</p>
           </motion.div>
 
@@ -652,7 +652,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Try It Yourself</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4"><span className="gradient-text">Try It</span> Yourself</h2>
             <p className="text-gray-400">Run commands directly in your browser.</p>
           </motion.div>
 
@@ -825,7 +825,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Enterprise-Grade Security</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4"><span className="gradient-text">Enterprise-Grade</span> Security</h2>
             <p className="text-gray-400">Built with security-first principles from day one.</p>
           </motion.div>
 
@@ -1097,7 +1097,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       <section id="contribute" className="py-32 px-4 relative overflow-hidden">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Build the Future of Linux</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Build the <span className="gradient-text">Future of Linux</span></h2>
           </div>
 
           <div className="grid lg:grid-cols-2 gap-8">
@@ -1220,7 +1220,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       <section id="sponsor" className="py-32 px-4 relative overflow-hidden">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Fund Open Source Innovation</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Fund <span className="gradient-text">Open Source</span> Innovation</h2>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 mb-16">
@@ -1368,7 +1368,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       <section id="pricing" className="py-32 px-4 relative overflow-hidden">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Choose Your Edition</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Choose Your <span className="gradient-text">Edition</span></h2>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
@@ -1480,7 +1480,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Join a Growing Community of Engineers</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Join a Growing <span className="gradient-text">Community</span> of Engineers</h2>
             <p className="text-gray-400">100% open source. Backed by a thriving community of ML engineers, data scientists, and DevOps pros.</p>
           </motion.div>
 
@@ -1565,7 +1565,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Be Up and Running in 30 Seconds</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Be Up and Running in <span className="gradient-text">30 Seconds</span></h2>
             <p className="text-gray-400">Three commands. That's all it takes to transform how you work with ML infrastructure.</p>
           </motion.div>
 
@@ -2086,7 +2086,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Join 8,000+ Developers</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Join <span className="gradient-text">8,000+</span> Developers</h2>
             <p className="text-gray-400">Connect with the community.</p>
           </motion.div>
 
@@ -2125,7 +2125,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Roadmap</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4"><span className="gradient-text">Roadmap</span></h2>
             <p className="text-gray-400">Where we're headed.</p>
           </motion.div>
 
@@ -2208,7 +2208,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to Build Something Amazing?</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to Build Something <span className="gradient-text">Amazing</span>?</h2>
             <p className="text-xl text-gray-400 mb-10">Start shipping faster with Cortex. Free forever.</p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
