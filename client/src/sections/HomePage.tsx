@@ -85,23 +85,95 @@ function TypewriterText({ text, speed = 40 }: { text: string; speed?: number }) 
   );
 }
 
-function CopyButton({ text }: { text: string }) {
+function CopyButton({ text, size = "default" }: { text: string; size?: "default" | "sm" }) {
   const [copied, setCopied] = useState(false);
   
-  const handleCopy = async () => {
+  const handleCopy = async (e: React.MouseEvent) => {
+    e.stopPropagation();
     await navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
   
+  const iconSize = size === "sm" ? 14 : 16;
+  
   return (
     <button
       onClick={handleCopy}
-      className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+      className="code-action-btn"
       aria-label="Copy to clipboard"
     >
-      {copied ? <Check size={16} className="text-green-400" /> : <Copy size={16} className="text-gray-400" />}
+      {copied ? (
+        <>
+          <Check size={iconSize} className="text-emerald-400" />
+          <span className="text-emerald-400">Copied</span>
+        </>
+      ) : (
+        <>
+          <Copy size={iconSize} />
+          <span>Copy</span>
+        </>
+      )}
     </button>
+  );
+}
+
+function CodeEditor({ 
+  title, 
+  children, 
+  showLineNumbers = false,
+  actions 
+}: { 
+  title: string; 
+  children: React.ReactNode; 
+  showLineNumbers?: boolean;
+  actions?: React.ReactNode;
+}) {
+  return (
+    <div className="code-editor">
+      <div className="code-editor-header">
+        <div className="flex items-center gap-4">
+          <div className="code-editor-dots">
+            <div className="code-editor-dot code-editor-dot-red" />
+            <div className="code-editor-dot code-editor-dot-yellow" />
+            <div className="code-editor-dot code-editor-dot-green" />
+          </div>
+          <span className="code-editor-title">{title}</span>
+        </div>
+        {actions && <div className="code-editor-actions">{actions}</div>}
+      </div>
+      <div className="code-editor-body">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function CodeLine({ 
+  lineNumber, 
+  children 
+}: { 
+  lineNumber?: number; 
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="code-line">
+      {lineNumber !== undefined && (
+        <span className="code-line-number">{lineNumber}</span>
+      )}
+      <span className="code-line-content">{children}</span>
+    </div>
+  );
+}
+
+function OutputLine({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="code-output-line">
+      <span className="code-check">
+        <Check size={10} />
+      </span>
+      <span className="syntax-muted">{children}</span>
+    </div>
   );
 }
 
@@ -247,25 +319,31 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             </a>
           </motion.div>
 
-          {/* Animated Terminal Preview */}
+          {/* Professional Terminal Preview */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.8 }}
-            className="macos-window max-w-3xl mx-auto border border-white/10"
+            className="max-w-3xl mx-auto"
           >
-            <div className="macos-titlebar">
-              <div className="macos-button macos-close" />
-              <div className="macos-button macos-minimize" />
-              <div className="macos-button macos-maximize" />
-              <span className="ml-4 text-sm text-gray-400">Terminal — cortex</span>
-            </div>
-            <div className="bg-[#1a1a1a] p-6 font-mono text-sm text-left">
-              <div className="text-gray-400 mb-2">$ cortex install tensorflow --optimize-gpu</div>
-              <div className="text-green-400">
-                <TypewriterText text="✓ Detected NVIDIA RTX 4090&#10;✓ Installing CUDA 12.3 drivers&#10;✓ Configuring TensorFlow for GPU&#10;✓ Optimized for your hardware — Ready in 8s" speed={30} />
+            <CodeEditor 
+              title="terminal — cortex" 
+              actions={<CopyButton text="cortex install tensorflow --optimize-gpu" size="sm" />}
+            >
+              <CodeLine lineNumber={1}>
+                <span className="syntax-prompt">$</span>{" "}
+                <span className="syntax-command">cortex</span>{" "}
+                <span className="syntax-keyword">install</span>{" "}
+                <span className="syntax-string">tensorflow</span>{" "}
+                <span className="syntax-flag">--optimize-gpu</span>
+              </CodeLine>
+              <div className="code-output">
+                <OutputLine>Detected <span className="syntax-accent">NVIDIA RTX 4090</span></OutputLine>
+                <OutputLine>Installing <span className="syntax-info">CUDA 12.3</span> drivers</OutputLine>
+                <OutputLine>Configuring TensorFlow for <span className="syntax-accent">GPU</span></OutputLine>
+                <OutputLine>Optimized for your hardware — <span className="syntax-success">Ready in 8s</span></OutputLine>
               </div>
-            </div>
+            </CodeEditor>
           </motion.div>
         </div>
       </section>
@@ -307,58 +385,90 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="macos-window max-w-4xl mx-auto border border-white/10"
+            className="max-w-4xl mx-auto"
           >
-            <div className="macos-titlebar">
-              <div className="macos-button macos-close" />
-              <div className="macos-button macos-minimize" />
-              <div className="macos-button macos-maximize" />
-              <span className="ml-4 text-sm text-gray-400">Interactive Demo</span>
-            </div>
-            
-            {/* Demo Tabs */}
-            <div className="bg-[#252525] border-b border-white/10 flex gap-2 px-4 py-2">
-              {demoCommands.map((demo, i) => (
-                <button
-                  key={i}
-                  onClick={() => setActiveDemo(i)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                    activeDemo === i
-                      ? "bg-blue-500/20 text-blue-400 border border-blue-500/30"
-                      : "text-gray-400 hover:text-white hover:bg-white/5"
-                  }`}
-                >
-                  {demo.label}
-                </button>
-              ))}
-            </div>
-
-            {/* Terminal Content */}
-            <div className="bg-[#1a1a1a] p-6 font-mono text-sm min-h-[200px]">
-              <div className="text-gray-400 mb-4">$ {demoCommands[activeDemo].command}</div>
-              <div className="text-green-400 whitespace-pre-line">
-                {demoCommands[activeDemo].output}
+            <div className="code-editor">
+              <div className="code-editor-header">
+                <div className="flex items-center gap-4">
+                  <div className="code-editor-dots">
+                    <div className="code-editor-dot code-editor-dot-red" />
+                    <div className="code-editor-dot code-editor-dot-yellow" />
+                    <div className="code-editor-dot code-editor-dot-green" />
+                  </div>
+                  <span className="code-editor-title">interactive demo</span>
+                </div>
+                <CopyButton text={demoCommands[activeDemo].command} size="sm" />
               </div>
-            </div>
-
-            {/* Actions */}
-            <div className="bg-[#252525] border-t border-white/10 px-4 py-3 flex justify-between items-center">
-              <div className="flex gap-2">
-                <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500 text-white text-sm font-medium hover:bg-blue-600 transition-colors">
-                  <Play size={14} />
-                  Run Example
-                </button>
-                <CopyButton text={demoCommands[activeDemo].command} />
+              
+              {/* Demo Tabs */}
+              <div className="code-tabs">
+                {demoCommands.map((demo, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setActiveDemo(i)}
+                    className={`code-tab ${activeDemo === i ? "active" : ""}`}
+                  >
+                    {demo.label}
+                  </button>
+                ))}
               </div>
-              <a
-                href="https://github.com/cortexlinux/cortex"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-gray-400 hover:text-blue-400 flex items-center gap-1"
-              >
-                Fork this example
-                <ExternalLink size={12} />
-              </a>
+
+              {/* Terminal Content */}
+              <div className="code-editor-body min-h-[180px]">
+                <CodeLine lineNumber={1}>
+                  <span className="syntax-prompt">$</span>{" "}
+                  <span className="syntax-command">cortex</span>{" "}
+                  {activeDemo === 0 && (
+                    <>
+                      <span className="syntax-keyword">generate</span>{" "}
+                      <span className="syntax-string">api</span>{" "}
+                      <span className="syntax-flag">--name</span>{" "}
+                      <span className="syntax-variable">users</span>
+                    </>
+                  )}
+                  {activeDemo === 1 && (
+                    <>
+                      <span className="syntax-keyword">add</span>{" "}
+                      <span className="syntax-string">auth</span>{" "}
+                      <span className="syntax-flag">--provider</span>{" "}
+                      <span className="syntax-variable">oauth</span>
+                    </>
+                  )}
+                  {activeDemo === 2 && (
+                    <>
+                      <span className="syntax-keyword">deploy</span>{" "}
+                      <span className="syntax-flag">--edge</span>
+                    </>
+                  )}
+                </CodeLine>
+                
+                <div className="code-output" key={activeDemo}>
+                  {activeDemo === 0 && (
+                    <>
+                      <OutputLine>Created <span className="syntax-path">/api/users/route.ts</span></OutputLine>
+                      <OutputLine>Generated <span className="syntax-info">CRUD operations</span></OutputLine>
+                      <OutputLine>Added <span className="syntax-accent">TypeScript</span> types</OutputLine>
+                      <OutputLine>API ready at <span className="syntax-string">localhost:3000/api/users</span></OutputLine>
+                    </>
+                  )}
+                  {activeDemo === 1 && (
+                    <>
+                      <OutputLine>Installed <span className="syntax-info">authentication</span> dependencies</OutputLine>
+                      <OutputLine>Created <span className="syntax-path">auth middleware</span></OutputLine>
+                      <OutputLine>Generated <span className="syntax-accent">login/signup</span> routes</OutputLine>
+                      <OutputLine>Added <span className="syntax-success">session management</span></OutputLine>
+                    </>
+                  )}
+                  {activeDemo === 2 && (
+                    <>
+                      <OutputLine>Building <span className="syntax-info">production bundle</span>...</OutputLine>
+                      <OutputLine>Optimizing for <span className="syntax-accent">edge runtime</span></OutputLine>
+                      <OutputLine>Deploying to <span className="syntax-variable">12 regions</span></OutputLine>
+                      <OutputLine>Live at <span className="syntax-string">https://app.cortex.dev</span></OutputLine>
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
           </motion.div>
         </div>
@@ -396,20 +506,31 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                     <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
                     <p className="text-gray-400 mb-4">{feature.description}</p>
                     
-                    {/* Expandable Code */}
+                    {/* Expandable Code - Professional */}
                     <motion.div
                       initial={false}
                       animate={{ height: expandedFeature === i ? "auto" : 0 }}
                       className="overflow-hidden"
                     >
-                      <div className="bg-black/50 rounded-lg p-4 font-mono text-sm text-green-400 mt-4">
-                        <pre>{feature.code}</pre>
+                      <div className="feature-code-block">
+                        {feature.code.split('\n').map((line, lineIdx) => (
+                          <CodeLine key={lineIdx} lineNumber={lineIdx + 1}>
+                            <span className="syntax-prompt">$</span>{" "}
+                            {line.split(' ').map((word, wordIdx) => {
+                              if (word === 'cortex') return <span key={wordIdx} className="syntax-command">{word} </span>;
+                              if (word.startsWith('--')) return <span key={wordIdx} className="syntax-flag">{word} </span>;
+                              if (word.startsWith('@')) return <span key={wordIdx} className="syntax-accent">{word} </span>;
+                              if (['init', 'add', 'deploy', 'plugin', 'install'].includes(word)) return <span key={wordIdx} className="syntax-keyword">{word} </span>;
+                              return <span key={wordIdx} className="syntax-string">{word} </span>;
+                            })}
+                          </CodeLine>
+                        ))}
                       </div>
                     </motion.div>
                     
-                    <button className="text-blue-400 text-sm flex items-center gap-1 mt-2 hover:gap-2 transition-all">
+                    <button className="text-blue-400 text-sm flex items-center gap-1 mt-3 hover:gap-2 transition-all">
                       {expandedFeature === i ? "Hide code" : "View code"}
-                      <ChevronRight size={14} className={`transition-transform ${expandedFeature === i ? "rotate-90" : ""}`} />
+                      <ChevronRight size={14} className={`transition-transform duration-200 ${expandedFeature === i ? "rotate-90" : ""}`} />
                     </button>
                   </div>
                 </div>
@@ -437,34 +558,51 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="glass-card rounded-2xl overflow-hidden"
           >
-            <div className="bg-[#1a1a1a] p-6 font-mono text-sm border-b border-white/10">
-              <div className="flex items-center gap-2 text-gray-500 mb-4">
-                <Terminal size={16} />
-                <span>cortex-playground</span>
+            <div className="code-editor">
+              <div className="code-editor-header">
+                <div className="flex items-center gap-4">
+                  <div className="code-editor-dots">
+                    <div className="code-editor-dot code-editor-dot-red" />
+                    <div className="code-editor-dot code-editor-dot-yellow" />
+                    <div className="code-editor-dot code-editor-dot-green" />
+                  </div>
+                  <span className="code-editor-title flex items-center gap-2">
+                    <Terminal size={14} className="opacity-50" />
+                    cortex-playground
+                  </span>
+                </div>
+                <CopyButton text="cortex generate api --name products" size="sm" />
               </div>
-              <div className="space-y-2">
-                <div className="text-gray-400">$ cortex generate api --name products</div>
-                <div className="text-green-400">
-                  ✓ Created /api/products/route.ts<br />
-                  ✓ Generated CRUD operations<br />
-                  ✓ Added TypeScript types<br />
+              
+              <div className="code-editor-body">
+                <CodeLine lineNumber={1}>
+                  <span className="syntax-prompt">$</span>{" "}
+                  <span className="syntax-command">cortex</span>{" "}
+                  <span className="syntax-keyword">generate</span>{" "}
+                  <span className="syntax-string">api</span>{" "}
+                  <span className="syntax-flag">--name</span>{" "}
+                  <span className="syntax-variable">products</span>
+                </CodeLine>
+                <div className="code-output">
+                  <OutputLine>Created <span className="syntax-path">/api/products/route.ts</span></OutputLine>
+                  <OutputLine>Generated <span className="syntax-info">CRUD operations</span></OutputLine>
+                  <OutputLine>Added <span className="syntax-accent">TypeScript</span> types</OutputLine>
                 </div>
               </div>
-            </div>
-            
-            {/* Prompt Pills */}
-            <div className="bg-[#252525] px-6 py-4 flex flex-wrap gap-2">
-              <span className="text-sm text-gray-400 mr-2">Try:</span>
-              {["Generate REST API", "Add Authentication", "Deploy to Edge", "Install Plugin"].map((prompt, i) => (
-                <button
-                  key={i}
-                  className="px-4 py-2 rounded-full text-sm bg-white/5 text-gray-300 hover:bg-blue-500/20 hover:text-blue-400 border border-white/10 hover:border-blue-500/30 transition-all"
-                >
-                  {prompt}
-                </button>
-              ))}
+              
+              {/* Prompt Pills */}
+              <div className="border-t border-white/5 px-6 py-4 flex flex-wrap items-center gap-3 bg-black/20">
+                <span className="text-xs text-gray-500 uppercase tracking-wider">Try:</span>
+                {["Generate REST API", "Add Authentication", "Deploy to Edge", "Install Plugin"].map((prompt, i) => (
+                  <button
+                    key={i}
+                    className="px-4 py-2 rounded-lg text-sm bg-white/[0.03] text-gray-400 hover:text-white hover:bg-white/[0.06] border border-white/[0.06] hover:border-white/10 transition-all duration-200"
+                  >
+                    {prompt}
+                  </button>
+                ))}
+              </div>
             </div>
           </motion.div>
         </div>
@@ -776,45 +914,100 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="glass-card rounded-2xl overflow-hidden"
           >
-            {/* Package Manager Tabs */}
-            <div className="border-b border-white/10 flex">
-              {(["npm", "yarn", "pnpm", "bun"] as const).map((pm) => (
-                <button
-                  key={pm}
-                  onClick={() => setActiveTab(pm)}
-                  className={`px-6 py-3 text-sm font-medium transition-all ${
-                    activeTab === pm
-                      ? "text-blue-400 border-b-2 border-blue-400"
-                      : "text-gray-400 hover:text-white"
-                  }`}
-                >
-                  {pm}
-                </button>
-              ))}
-            </div>
-
-            {/* Code Blocks */}
-            <div className="p-6 font-mono text-sm bg-[#1a1a1a]">
-              <div className="flex justify-between items-center mb-4">
-                <span className="text-gray-500"># Install</span>
-                <CopyButton text={installCommands[activeTab]} />
+            <div className="code-editor">
+              <div className="code-editor-header">
+                <div className="flex items-center gap-4">
+                  <div className="code-editor-dots">
+                    <div className="code-editor-dot code-editor-dot-red" />
+                    <div className="code-editor-dot code-editor-dot-yellow" />
+                    <div className="code-editor-dot code-editor-dot-green" />
+                  </div>
+                  <span className="code-editor-title">quickstart.sh</span>
+                </div>
+                <CopyButton text={`${installCommands[activeTab]}\ncortex init my-app\ncortex dev`} size="sm" />
               </div>
-              <div className="text-green-400 mb-6">{installCommands[activeTab]}</div>
               
-              <div className="text-gray-500 mb-2"># Initialize</div>
-              <div className="text-green-400 mb-6">cortex init my-app</div>
-              
-              <div className="text-gray-500 mb-2"># Start developing</div>
-              <div className="text-green-400">cortex dev</div>
-            </div>
+              {/* Package Manager Tabs */}
+              <div className="code-tabs">
+                {(["npm", "yarn", "pnpm", "bun"] as const).map((pm) => (
+                  <button
+                    key={pm}
+                    onClick={() => setActiveTab(pm)}
+                    className={`code-tab ${activeTab === pm ? "active" : ""}`}
+                  >
+                    {pm}
+                  </button>
+                ))}
+              </div>
 
-            {/* Doc Links */}
-            <div className="border-t border-white/10 p-4 flex gap-4 flex-wrap">
-              <a href="#" className="text-sm text-blue-400 hover:underline">Full Documentation</a>
-              <a href="#" className="text-sm text-gray-400 hover:text-white">API Reference</a>
-              <a href="#" className="text-sm text-gray-400 hover:text-white">Examples</a>
+              {/* Code Blocks */}
+              <div className="code-editor-body quickstart-block">
+                <div className="quickstart-step">
+                  <div className="quickstart-label">Step 1 — Install</div>
+                  <CodeLine lineNumber={1}>
+                    <span className="syntax-prompt">$</span>{" "}
+                    {activeTab === "npm" && (
+                      <>
+                        <span className="syntax-command">npm</span>{" "}
+                        <span className="syntax-keyword">install</span>{" "}
+                        <span className="syntax-flag">-g</span>{" "}
+                        <span className="syntax-string">cortex-cli</span>
+                      </>
+                    )}
+                    {activeTab === "yarn" && (
+                      <>
+                        <span className="syntax-command">yarn</span>{" "}
+                        <span className="syntax-keyword">global</span>{" "}
+                        <span className="syntax-keyword">add</span>{" "}
+                        <span className="syntax-string">cortex-cli</span>
+                      </>
+                    )}
+                    {activeTab === "pnpm" && (
+                      <>
+                        <span className="syntax-command">pnpm</span>{" "}
+                        <span className="syntax-keyword">add</span>{" "}
+                        <span className="syntax-flag">-g</span>{" "}
+                        <span className="syntax-string">cortex-cli</span>
+                      </>
+                    )}
+                    {activeTab === "bun" && (
+                      <>
+                        <span className="syntax-command">bun</span>{" "}
+                        <span className="syntax-keyword">add</span>{" "}
+                        <span className="syntax-flag">-g</span>{" "}
+                        <span className="syntax-string">cortex-cli</span>
+                      </>
+                    )}
+                  </CodeLine>
+                </div>
+                
+                <div className="quickstart-step">
+                  <div className="quickstart-label">Step 2 — Initialize</div>
+                  <CodeLine lineNumber={2}>
+                    <span className="syntax-prompt">$</span>{" "}
+                    <span className="syntax-command">cortex</span>{" "}
+                    <span className="syntax-keyword">init</span>{" "}
+                    <span className="syntax-variable">my-app</span>
+                  </CodeLine>
+                </div>
+                
+                <div className="quickstart-step">
+                  <div className="quickstart-label">Step 3 — Start developing</div>
+                  <CodeLine lineNumber={3}>
+                    <span className="syntax-prompt">$</span>{" "}
+                    <span className="syntax-command">cortex</span>{" "}
+                    <span className="syntax-keyword">dev</span>
+                  </CodeLine>
+                </div>
+              </div>
+
+              {/* Doc Links */}
+              <div className="border-t border-white/5 px-6 py-4 flex gap-6 flex-wrap bg-black/20">
+                <a href="#" className="text-sm text-blue-400 hover:text-blue-300 transition-colors">Full Documentation</a>
+                <a href="#" className="text-sm text-gray-500 hover:text-gray-300 transition-colors">API Reference</a>
+                <a href="#" className="text-sm text-gray-500 hover:text-gray-300 transition-colors">Examples</a>
+              </div>
             </div>
           </motion.div>
         </div>
