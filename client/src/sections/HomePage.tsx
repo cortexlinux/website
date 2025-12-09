@@ -1058,7 +1058,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </div>
       </section>
 
-      {/* AI Processing Visualization - Enhanced */}
+      {/* AI Processing Visualization - Enhanced with Animated SVG */}
       <section id="ai-processing" className="py-24 px-4 border-t border-white/5 overflow-hidden">
         <div className="max-w-6xl mx-auto">
           <motion.div
@@ -1077,9 +1077,248 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             </p>
           </motion.div>
 
-          {/* Interactive Pipeline */}
+          {/* Animated Neural Network SVG Visualization */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="relative mb-16"
+          >
+            <svg
+              viewBox="0 0 1200 300"
+              className="w-full h-auto"
+              preserveAspectRatio="xMidYMid meet"
+            >
+              <defs>
+                {/* Gradient definitions */}
+                <linearGradient id="blueGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.8" />
+                  <stop offset="100%" stopColor="#6366f1" stopOpacity="0.8" />
+                </linearGradient>
+                <linearGradient id="purpleGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#6366f1" stopOpacity="0.8" />
+                  <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.8" />
+                </linearGradient>
+                <linearGradient id="greenGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.8" />
+                  <stop offset="100%" stopColor="#22c55e" stopOpacity="0.8" />
+                </linearGradient>
+                
+                {/* Glow filter */}
+                <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                  <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+                
+                {/* Animated particle */}
+                <circle id="particle" r="4" fill="#60a5fa" filter="url(#glow)">
+                  <animate attributeName="opacity" values="0.3;1;0.3" dur="1s" repeatCount="indefinite" />
+                </circle>
+              </defs>
+              
+              {/* Background grid pattern */}
+              <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth="1"/>
+              </pattern>
+              <rect width="100%" height="100%" fill="url(#grid)" />
+              
+              {/* Stage 1: Input Node */}
+              <g className="input-stage">
+                <circle cx="100" cy="150" r="50" fill="rgba(59,130,246,0.1)" stroke="#3b82f6" strokeWidth="2" />
+                <circle cx="100" cy="150" r="35" fill="rgba(59,130,246,0.2)" />
+                <text x="100" y="145" textAnchor="middle" fill="#60a5fa" fontSize="12" fontWeight="bold">INPUT</text>
+                <text x="100" y="162" textAnchor="middle" fill="#9ca3af" fontSize="9">"Update packages"</text>
+                
+                {/* Pulsing ring */}
+                <circle cx="100" cy="150" r="50" fill="none" stroke="#3b82f6" strokeWidth="1" opacity="0.5">
+                  <animate attributeName="r" values="50;60;50" dur="2s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0.5;0;0.5" dur="2s" repeatCount="indefinite" />
+                </circle>
+              </g>
+              
+              {/* Connection Line 1 with particles */}
+              <g className="connection-1">
+                <path d="M 150 150 Q 250 100 350 150" fill="none" stroke="url(#blueGlow)" strokeWidth="2" strokeDasharray="5,5">
+                  <animate attributeName="stroke-dashoffset" values="0;-20" dur="1s" repeatCount="indefinite" />
+                </path>
+                <path d="M 150 150 Q 250 200 350 150" fill="none" stroke="url(#blueGlow)" strokeWidth="2" strokeDasharray="5,5">
+                  <animate attributeName="stroke-dashoffset" values="0;-20" dur="1s" repeatCount="indefinite" />
+                </path>
+                
+                {/* Moving particles on path 1 */}
+                <circle r="5" fill="#60a5fa" filter="url(#glow)">
+                  <animateMotion dur="2s" repeatCount="indefinite">
+                    <mpath href="#path1" />
+                  </animateMotion>
+                </circle>
+                <circle r="4" fill="#818cf8" filter="url(#glow)">
+                  <animateMotion dur="2s" repeatCount="indefinite" begin="0.5s">
+                    <mpath href="#path1" />
+                  </animateMotion>
+                </circle>
+                <circle r="3" fill="#60a5fa" filter="url(#glow)">
+                  <animateMotion dur="2s" repeatCount="indefinite" begin="1s">
+                    <mpath href="#path1" />
+                  </animateMotion>
+                </circle>
+              </g>
+              
+              {/* Hidden paths for particle animation */}
+              <path id="path1" d="M 150 150 Q 250 120 350 150" fill="none" stroke="none" />
+              <path id="path2" d="M 450 150 Q 550 120 650 150" fill="none" stroke="none" />
+              <path id="path3" d="M 750 150 Q 850 120 950 150" fill="none" stroke="none" />
+              
+              {/* Stage 2: AI Processing - Neural network cluster */}
+              <g className="processing-stage">
+                <circle cx="400" cy="150" r="60" fill="rgba(99,102,241,0.1)" stroke="#6366f1" strokeWidth="2" />
+                
+                {/* Inner rotating circles */}
+                <g>
+                  <animateTransform attributeName="transform" type="rotate" from="0 400 150" to="360 400 150" dur="10s" repeatCount="indefinite" />
+                  <circle cx="400" cy="100" r="8" fill="#818cf8" opacity="0.8">
+                    <animate attributeName="opacity" values="0.4;1;0.4" dur="1.5s" repeatCount="indefinite" />
+                  </circle>
+                  <circle cx="445" cy="125" r="6" fill="#a78bfa" opacity="0.8">
+                    <animate attributeName="opacity" values="0.4;1;0.4" dur="1.5s" repeatCount="indefinite" begin="0.3s" />
+                  </circle>
+                  <circle cx="445" cy="175" r="7" fill="#818cf8" opacity="0.8">
+                    <animate attributeName="opacity" values="0.4;1;0.4" dur="1.5s" repeatCount="indefinite" begin="0.6s" />
+                  </circle>
+                  <circle cx="400" cy="200" r="5" fill="#a78bfa" opacity="0.8">
+                    <animate attributeName="opacity" values="0.4;1;0.4" dur="1.5s" repeatCount="indefinite" begin="0.9s" />
+                  </circle>
+                  <circle cx="355" cy="175" r="8" fill="#818cf8" opacity="0.8">
+                    <animate attributeName="opacity" values="0.4;1;0.4" dur="1.5s" repeatCount="indefinite" begin="1.2s" />
+                  </circle>
+                  <circle cx="355" cy="125" r="6" fill="#a78bfa" opacity="0.8">
+                    <animate attributeName="opacity" values="0.4;1;0.4" dur="1.5s" repeatCount="indefinite" begin="1.5s" />
+                  </circle>
+                </g>
+                
+                {/* Center core */}
+                <circle cx="400" cy="150" r="25" fill="rgba(99,102,241,0.3)" stroke="#818cf8" strokeWidth="1">
+                  <animate attributeName="r" values="20;25;20" dur="2s" repeatCount="indefinite" />
+                </circle>
+                <text x="400" y="147" textAnchor="middle" fill="#a5b4fc" fontSize="10" fontWeight="bold">AI</text>
+                <text x="400" y="158" textAnchor="middle" fill="#a5b4fc" fontSize="8">PROCESS</text>
+              </g>
+              
+              {/* Connection Line 2 with particles */}
+              <g className="connection-2">
+                <path d="M 460 150 Q 560 80 660 150" fill="none" stroke="url(#purpleGlow)" strokeWidth="2" strokeDasharray="5,5">
+                  <animate attributeName="stroke-dashoffset" values="0;-20" dur="1s" repeatCount="indefinite" />
+                </path>
+                <path d="M 460 150 Q 560 220 660 150" fill="none" stroke="url(#purpleGlow)" strokeWidth="2" strokeDasharray="5,5">
+                  <animate attributeName="stroke-dashoffset" values="0;-20" dur="1s" repeatCount="indefinite" />
+                </path>
+                
+                {/* Moving particles */}
+                <circle r="5" fill="#a78bfa" filter="url(#glow)">
+                  <animateMotion dur="2s" repeatCount="indefinite" begin="0.3s">
+                    <mpath href="#path2" />
+                  </animateMotion>
+                </circle>
+                <circle r="4" fill="#c4b5fd" filter="url(#glow)">
+                  <animateMotion dur="2s" repeatCount="indefinite" begin="0.8s">
+                    <mpath href="#path2" />
+                  </animateMotion>
+                </circle>
+                <circle r="3" fill="#a78bfa" filter="url(#glow)">
+                  <animateMotion dur="2s" repeatCount="indefinite" begin="1.3s">
+                    <mpath href="#path2" />
+                  </animateMotion>
+                </circle>
+              </g>
+              
+              {/* Stage 3: Command Generation */}
+              <g className="command-stage">
+                <rect x="660" y="100" width="100" height="100" rx="10" fill="rgba(139,92,246,0.1)" stroke="#8b5cf6" strokeWidth="2" />
+                
+                {/* Terminal lines animation */}
+                <rect x="675" y="120" width="0" height="8" fill="#a78bfa" rx="2">
+                  <animate attributeName="width" values="0;50;50;0" dur="3s" repeatCount="indefinite" />
+                </rect>
+                <rect x="675" y="135" width="0" height="8" fill="#c4b5fd" rx="2">
+                  <animate attributeName="width" values="0;40;40;0" dur="3s" repeatCount="indefinite" begin="0.5s" />
+                </rect>
+                <rect x="675" y="150" width="0" height="8" fill="#a78bfa" rx="2">
+                  <animate attributeName="width" values="0;60;60;0" dur="3s" repeatCount="indefinite" begin="1s" />
+                </rect>
+                <rect x="675" y="165" width="0" height="8" fill="#c4b5fd" rx="2">
+                  <animate attributeName="width" values="0;35;35;0" dur="3s" repeatCount="indefinite" begin="1.5s" />
+                </rect>
+                
+                <text x="710" y="190" textAnchor="middle" fill="#c4b5fd" fontSize="9" fontWeight="bold">COMMANDS</text>
+              </g>
+              
+              {/* Connection Line 3 with particles */}
+              <g className="connection-3">
+                <path d="M 760 150 Q 860 100 960 150" fill="none" stroke="url(#greenGlow)" strokeWidth="2" strokeDasharray="5,5">
+                  <animate attributeName="stroke-dashoffset" values="0;-20" dur="1s" repeatCount="indefinite" />
+                </path>
+                <path d="M 760 150 Q 860 200 960 150" fill="none" stroke="url(#greenGlow)" strokeWidth="2" strokeDasharray="5,5">
+                  <animate attributeName="stroke-dashoffset" values="0;-20" dur="1s" repeatCount="indefinite" />
+                </path>
+                
+                {/* Moving particles */}
+                <circle r="5" fill="#4ade80" filter="url(#glow)">
+                  <animateMotion dur="2s" repeatCount="indefinite" begin="0.6s">
+                    <mpath href="#path3" />
+                  </animateMotion>
+                </circle>
+                <circle r="4" fill="#86efac" filter="url(#glow)">
+                  <animateMotion dur="2s" repeatCount="indefinite" begin="1.1s">
+                    <mpath href="#path3" />
+                  </animateMotion>
+                </circle>
+                <circle r="3" fill="#4ade80" filter="url(#glow)">
+                  <animateMotion dur="2s" repeatCount="indefinite" begin="1.6s">
+                    <mpath href="#path3" />
+                  </animateMotion>
+                </circle>
+              </g>
+              
+              {/* Stage 4: Execution - Success state */}
+              <g className="execute-stage">
+                <circle cx="1010" cy="150" r="50" fill="rgba(34,197,94,0.1)" stroke="#22c55e" strokeWidth="2" />
+                <circle cx="1010" cy="150" r="35" fill="rgba(34,197,94,0.2)">
+                  <animate attributeName="r" values="30;35;30" dur="1.5s" repeatCount="indefinite" />
+                </circle>
+                
+                {/* Checkmark */}
+                <path d="M 990 150 L 1005 165 L 1030 135" fill="none" stroke="#4ade80" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
+                  <animate attributeName="stroke-dasharray" values="0 100;100 0" dur="0.5s" fill="freeze" repeatCount="indefinite" begin="2s" />
+                </path>
+                
+                <text x="1010" y="185" textAnchor="middle" fill="#86efac" fontSize="9" fontWeight="bold">EXECUTED</text>
+                
+                {/* Success pulse */}
+                <circle cx="1010" cy="150" r="50" fill="none" stroke="#22c55e" strokeWidth="1" opacity="0.5">
+                  <animate attributeName="r" values="50;70;50" dur="2s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0.5;0;0.5" dur="2s" repeatCount="indefinite" />
+                </circle>
+              </g>
+              
+              {/* Labels below each stage */}
+              <text x="100" y="230" textAnchor="middle" fill="#60a5fa" fontSize="11" fontWeight="600">01. Natural Input</text>
+              <text x="100" y="245" textAnchor="middle" fill="#6b7280" fontSize="9">Speak or type</text>
+              
+              <text x="400" y="230" textAnchor="middle" fill="#818cf8" fontSize="11" fontWeight="600">02. AI Processing</text>
+              <text x="400" y="245" textAnchor="middle" fill="#6b7280" fontSize="9">Context analysis</text>
+              
+              <text x="710" y="230" textAnchor="middle" fill="#a78bfa" fontSize="11" fontWeight="600">03. Generate</text>
+              <text x="710" y="245" textAnchor="middle" fill="#6b7280" fontSize="9">System commands</text>
+              
+              <text x="1010" y="230" textAnchor="middle" fill="#4ade80" fontSize="11" fontWeight="600">04. Execute</text>
+              <text x="1010" y="245" textAnchor="middle" fill="#6b7280" fontSize="9">Safe & reversible</text>
+            </svg>
+          </motion.div>
+
+          {/* Interactive Pipeline Cards */}
           <div className="relative">
-            {/* Main Pipeline Container */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
               {/* Stage 1: Input */}
               <motion.div
@@ -1099,17 +1338,9 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                   <h3 className="text-lg font-semibold mb-2 text-white">Natural Input</h3>
                   <p className="text-sm text-gray-400 mb-4">Speak or type in plain language</p>
                   
-                  {/* Example command */}
                   <div className="bg-black/40 rounded-lg p-3 border border-white/5">
                     <p className="text-sm font-mono text-blue-300">"Update all packages and clean cache"</p>
                   </div>
-                  
-                  {/* Animated pulse */}
-                  <motion.div
-                    className="absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-blue-500 hidden md:block"
-                    animate={{ scale: [1, 1.3, 1], opacity: [0.5, 1, 0.5] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  />
                 </div>
               </motion.div>
 
@@ -1131,7 +1362,6 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                   <h3 className="text-lg font-semibold mb-2 text-white">AI Processing</h3>
                   <p className="text-sm text-gray-400 mb-4">Context-aware understanding</p>
                   
-                  {/* Processing visualization */}
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <motion.div
@@ -1158,12 +1388,6 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                       <span className="text-xs text-gray-500">Safety Check</span>
                     </div>
                   </div>
-                  
-                  <motion.div
-                    className="absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-indigo-500 hidden md:block"
-                    animate={{ scale: [1, 1.3, 1], opacity: [0.5, 1, 0.5] }}
-                    transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-                  />
                 </div>
               </motion.div>
 
@@ -1185,17 +1409,10 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                   <h3 className="text-lg font-semibold mb-2 text-white">Command Gen</h3>
                   <p className="text-sm text-gray-400 mb-4">Precise system commands</p>
                   
-                  {/* Generated commands */}
                   <div className="bg-black/40 rounded-lg p-3 border border-white/5 font-mono text-xs space-y-1">
                     <div className="text-purple-300">$ sudo pacman -Syu</div>
                     <div className="text-purple-300">$ sudo paccache -r</div>
                   </div>
-                  
-                  <motion.div
-                    className="absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-purple-500 hidden md:block"
-                    animate={{ scale: [1, 1.3, 1], opacity: [0.5, 1, 0.5] }}
-                    transition={{ duration: 2, repeat: Infinity, delay: 1 }}
-                  />
                 </div>
               </motion.div>
 
@@ -1217,7 +1434,6 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                   <h3 className="text-lg font-semibold mb-2 text-white">Safe Execute</h3>
                   <p className="text-sm text-gray-400 mb-4">Sandboxed & reversible</p>
                   
-                  {/* Success indicators */}
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 text-emerald-400">
                       <Check size={14} />
@@ -1234,20 +1450,6 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                   </div>
                 </div>
               </motion.div>
-            </div>
-
-            {/* Connection arrows for desktop */}
-            <div className="hidden md:block absolute top-1/2 left-0 right-0 -translate-y-1/2 pointer-events-none">
-              <svg className="w-full h-8" viewBox="0 0 1000 30" preserveAspectRatio="none">
-                <defs>
-                  <linearGradient id="flowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#3b82f6" />
-                    <stop offset="33%" stopColor="#6366f1" />
-                    <stop offset="66%" stopColor="#8b5cf6" />
-                    <stop offset="100%" stopColor="#22c55e" />
-                  </linearGradient>
-                </defs>
-              </svg>
             </div>
           </div>
 
