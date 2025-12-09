@@ -811,11 +811,303 @@
   background-size: 50px 50px;
 }
 
+/* ==========================================
+   FUTURISTIC AI DEV THEME - Enhanced Effects
+   ========================================== */
+
+/* Holographic Animated Border */
+@keyframes holographic-border {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.terminal-holographic {
+  position: relative;
+  background: linear-gradient(145deg, #0a0a0f 0%, #0d0d14 100%);
+  border-radius: 20px;
+  overflow: visible;
+}
+
+.terminal-holographic::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 22px;
+  background: linear-gradient(
+    90deg,
+    #00f0ff,
+    #8b5cf6,
+    #f472b6,
+    #00f0ff,
+    #3b82f6,
+    #00f0ff
+  );
+  background-size: 300% 100%;
+  animation: holographic-border 4s linear infinite;
+  z-index: -1;
+  opacity: 0.8;
+}
+
+.terminal-holographic::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #0a0a0f 0%, #0d0d14 100%);
+  z-index: -1;
+}
+
+/* Scanning Line Animation */
+@keyframes scan-line {
+  0% { transform: translateY(-100%); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(100%); opacity: 0; }
+}
+
+.terminal-scan-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.terminal-scan-effect::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 240, 255, 0.3) 20%,
+    rgba(0, 240, 255, 0.8) 50%,
+    rgba(0, 240, 255, 0.3) 80%,
+    transparent 100%
+  );
+  animation: scan-line 3s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* Neural Network Background Pattern */
+@keyframes neural-pulse {
+  0%, 100% { opacity: 0.03; }
+  50% { opacity: 0.08; }
+}
+
+.neural-bg {
+  position: relative;
+}
+
+.neural-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(0, 240, 255, 0.1) 0%, transparent 25%),
+    radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 25%),
+    radial-gradient(circle at 60% 70%, rgba(244, 114, 182, 0.08) 0%, transparent 25%),
+    radial-gradient(circle at 30% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 25%);
+  animation: neural-pulse 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Cosmic Glow Effect */
+.cosmic-glow {
+  box-shadow: 
+    0 0 30px rgba(0, 240, 255, 0.15),
+    0 0 60px rgba(139, 92, 246, 0.1),
+    0 0 100px rgba(59, 130, 246, 0.05),
+    inset 0 0 30px rgba(0, 240, 255, 0.03);
+}
+
+.cosmic-glow:hover {
+  box-shadow: 
+    0 0 40px rgba(0, 240, 255, 0.25),
+    0 0 80px rgba(139, 92, 246, 0.15),
+    0 0 120px rgba(59, 130, 246, 0.1),
+    inset 0 0 40px rgba(0, 240, 255, 0.05);
+}
+
+/* AI Status Indicator */
+@keyframes ai-pulse {
+  0%, 100% { 
+    box-shadow: 0 0 5px rgba(0, 240, 255, 0.5), 0 0 10px rgba(0, 240, 255, 0.3);
+    opacity: 1;
+  }
+  50% { 
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.8), 0 0 25px rgba(0, 240, 255, 0.5);
+    opacity: 0.8;
+  }
+}
+
+.ai-status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00f0ff 0%, #0ea5e9 100%);
+  animation: ai-pulse 2s ease-in-out infinite;
+}
+
+.ai-status-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #00f0ff;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+}
+
+/* Neon Syntax Highlighting with Glow */
+.syntax-neon-keyword {
+  color: #f472b6;
+  text-shadow: 0 0 8px rgba(244, 114, 182, 0.6);
+  font-weight: 600;
+}
+
+.syntax-neon-function {
+  color: #60a5fa;
+  text-shadow: 0 0 8px rgba(96, 165, 250, 0.6);
+}
+
+.syntax-neon-string {
+  color: #4ade80;
+  text-shadow: 0 0 8px rgba(74, 222, 128, 0.5);
+}
+
+.syntax-neon-variable {
+  color: #00f0ff;
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+}
+
+.syntax-neon-comment {
+  color: #6b7280;
+  font-style: italic;
+}
+
+.syntax-neon-number {
+  color: #fb923c;
+  text-shadow: 0 0 8px rgba(251, 146, 60, 0.5);
+}
+
+/* Pulsing Cursor */
+@keyframes neon-cursor-blink {
+  0%, 40% { 
+    opacity: 1;
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.8), 0 0 20px rgba(0, 240, 255, 0.4);
+  }
+  50%, 100% { 
+    opacity: 0.3;
+    box-shadow: 0 0 5px rgba(0, 240, 255, 0.4);
+  }
+}
+
+.neon-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.2em;
+  background: #00f0ff;
+  margin-left: 2px;
+  animation: neon-cursor-blink 1s ease-in-out infinite;
+  border-radius: 1px;
+  vertical-align: text-bottom;
+}
+
+/* Glowing Grid Background */
+@keyframes grid-flow {
+  0% { background-position: 0 0; }
+  100% { background-position: 50px 50px; }
+}
+
+.flowing-grid {
+  background-image: 
+    linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: grid-flow 20s linear infinite;
+}
+
+/* Orb Floating Effect */
+@keyframes orb-float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-20px) scale(1.05); }
+}
+
+.cosmic-orb {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(0, 240, 255, 0.4), rgba(139, 92, 246, 0.2), transparent);
+  filter: blur(40px);
+  animation: orb-float 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Enhanced Terminal Title Bar for AI Theme */
+.terminal-ai-titlebar {
+  background: linear-gradient(180deg, rgba(15, 15, 25, 0.95) 0%, rgba(10, 10, 18, 0.98) 100%);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+  position: relative;
+}
+
+.terminal-ai-titlebar::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.3), rgba(139, 92, 246, 0.3), transparent);
+}
+
+/* Data Stream Effect */
+@keyframes data-stream {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+.data-stream-overlay {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0.03;
+}
+
+.data-stream-overlay::before {
+  content: "01001010 11010101 00110010 01101001 10101010 01010101";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  font-family: monospace;
+  font-size: 10px;
+  color: #00f0ff;
+  line-height: 1.2;
+  white-space: pre-wrap;
+  word-break: break-all;
+  animation: data-stream 15s linear infinite;
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .logo-scroll,
   .terminal-cursor,
   .timeline-dot-current,
+  .terminal-holographic::before,
+  .terminal-scan-effect::before,
+  .neural-bg::before,
+  .ai-status-indicator,
+  .neon-cursor,
+  .flowing-grid,
+  .cosmic-orb,
+  .data-stream-overlay::before,
   [class*="animate"] {
     animation: none !important;
     transition: none !important;
