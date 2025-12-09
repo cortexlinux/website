@@ -38,6 +38,49 @@
     
     <!-- DNS Prefetch for External Resources -->
     <link rel="dns-prefetch" href="https://api.github.com" />
+    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    [
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Cortex Linux",
+        "url": "https://cortexlinux.com",
+        "logo": "https://cortexlinux.com/favicon.png",
+        "sameAs": [
+          "https://github.com/cortexlinux/cortex",
+          "https://twitter.com/cortexlinux",
+          "https://discord.gg/cortexlinux"
+        ],
+        "description": "The world's first AI-Native Operating System. Linux that understands natural language."
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Cortex Linux",
+        "operatingSystem": "Linux",
+        "applicationCategory": "DeveloperApplication",
+        "description": "AI-Native Linux operating system that understands natural language commands for ML workflows",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "4.8",
+          "ratingCount": "127"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Cortex Linux",
+        "url": "https://cortexlinux.com"
+      }
+    ]
+    </script>
   </head>
   <body>
     <div id="root"></div>

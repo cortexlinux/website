@@ -50,9 +50,7 @@ const githubApiLimiter = rateLimit({
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
   message: { error: "Too many requests, please try again later" },
-  keyGenerator: (req) => {
-    return req.ip || req.headers['x-forwarded-for']?.toString() || 'unknown';
-  },
+  validate: { xForwardedForHeader: false },
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {

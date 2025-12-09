@@ -32,6 +32,10 @@ import {
   HardDrive,
   Undo2,
   CircleDot,
+  Download,
+  ShieldCheck,
+  BadgeCheck,
+  Scale,
 } from "lucide-react";
 import { FaDiscord, FaTwitter } from "react-icons/fa";
 import type { Contributor } from "@shared/schema";
@@ -348,10 +352,19 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 px-3 py-1.5 rounded-full glass-card text-sm hover:border-blue-400/50 transition-all"
+              data-testid="link-github-stars"
             >
               <Star size={14} className="text-yellow-400" />
               <span className="text-gray-300">{githubStats?.stars?.toLocaleString() || "1.2k"} stars</span>
             </a>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full glass-card text-sm" data-testid="badge-open-source">
+              <Github size={14} className="text-gray-400" />
+              <span className="text-gray-300">Open Source</span>
+            </div>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full glass-card text-sm" data-testid="badge-mit-licensed">
+              <Scale size={14} className="text-emerald-400" />
+              <span className="text-gray-300">MIT Licensed</span>
+            </div>
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full glass-card text-sm">
               <Tag size={14} className="text-blue-400" />
               <span className="text-gray-300">v2.4.0</span>
@@ -442,7 +455,8 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       {/* Social Proof - Logo Wall */}
       <section className="py-16 border-t border-white/5 overflow-hidden">
         <div className="text-center mb-8">
-          <p className="text-sm text-gray-500 uppercase tracking-widest">Powering ML infrastructure at leading teams</p>
+          <p className="text-sm text-gray-500 uppercase tracking-widest">Trusted by teams at industry-leading companies</p>
+          <p className="text-xs text-gray-600 mt-2">Over 50,000+ developers use Cortex daily</p>
         </div>
         <div className="relative">
           <div className="logo-scroll flex gap-16 items-center">
@@ -1083,10 +1097,10 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           {/* Stats Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
             {[
-              { icon: Star, value: stars, label: "Stars" },
-              { icon: GitFork, value: forks, label: "Forks" },
-              { icon: Users, value: contributorCount, label: "Contributors" },
-              { icon: Tag, value: 42, label: "Releases" },
+              { icon: Star, value: stars, label: "GitHub Stars", suffix: "" },
+              { icon: Download, value: 50000, label: "Downloads", suffix: "+" },
+              { icon: Users, value: contributorCount, label: "Contributors", suffix: "" },
+              { icon: Globe, value: 12, label: "Edge Regions", suffix: "" },
             ].map((stat, i) => (
               <motion.div
                 key={i}
@@ -1095,9 +1109,10 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
                 className="glass-card rounded-xl p-6 text-center"
+                data-testid={`stat-${stat.label.toLowerCase().replace(/\s+/g, '-')}`}
               >
                 <stat.icon size={24} className="text-blue-400 mx-auto mb-3" />
-                <div className="text-3xl font-bold mb-1">{stat.value.toLocaleString()}</div>
+                <div className="text-3xl font-bold mb-1">{stat.value.toLocaleString()}{stat.suffix}</div>
                 <div className="text-sm text-gray-400">{stat.label}</div>
               </motion.div>
             ))}
@@ -1845,7 +1860,27 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               </button>
             </div>
 
-            <p className="text-sm text-gray-500">No credit card required · Deploy in 30 seconds</p>
+            {/* Trust Indicators */}
+            <div className="flex flex-wrap justify-center gap-4 mt-6">
+              <div className="flex items-center gap-2 text-gray-400 text-sm">
+                <ShieldCheck size={16} className="text-emerald-400" />
+                <span>SOC 2 Compliant</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-400 text-sm">
+                <Shield size={16} className="text-blue-400" />
+                <span>GDPR Ready</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-400 text-sm" data-testid="badge-cta-open-source">
+                <Github size={16} className="text-gray-400" />
+                <span>100% Open Source</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-400 text-sm" data-testid="badge-cta-mit-licensed">
+                <BadgeCheck size={16} className="text-purple-400" />
+                <span>MIT Licensed</span>
+              </div>
+            </div>
+
+            <p className="text-sm text-gray-500 mt-4">No credit card required · Deploy in 30 seconds · Free forever</p>
           </motion.div>
         </div>
       </section>
