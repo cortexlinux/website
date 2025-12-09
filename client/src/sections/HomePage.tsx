@@ -580,10 +580,10 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       </section>
 
       {/* Features Grid - Bento Style */}
-      <section id="about" className="py-24 px-4 border-t border-white/5 relative overflow-hidden">
+      <section id="about" className="py-24 px-4 border-t border-white/5 relative">
         {/* Subtle background blobs */}
         <div className="bg-blob bg-blob-blue w-[500px] h-[500px] -top-32 -right-32" style={{ animationDelay: '0s' }} />
-        <div className="bg-blob bg-blob-purple w-[400px] h-[400px] bottom-20 -left-20" style={{ animationDelay: '4s' }} />
+        <div className="bg-blob bg-blob-blue w-[400px] h-[400px] bottom-20 -left-20" style={{ animationDelay: '4s' }} />
         
         <div className="max-w-6xl mx-auto relative z-10">
           <motion.div
@@ -646,9 +646,9 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       </section>
 
       {/* Live Demo Playground */}
-      <section className="py-24 px-4 border-t border-white/5 relative overflow-hidden">
+      <section className="py-24 px-4 border-t border-white/5 relative">
         {/* Subtle background blobs */}
-        <div className="bg-blob bg-blob-cyan w-[450px] h-[450px] top-1/4 -left-24" style={{ animationDelay: '2s' }} />
+        <div className="bg-blob bg-blob-blue w-[450px] h-[450px] top-1/4 -left-24" style={{ animationDelay: '2s' }} />
         <div className="bg-blob bg-blob-blue w-[350px] h-[350px] bottom-10 right-0" style={{ animationDelay: '6s' }} />
         
         <div className="max-w-4xl mx-auto relative z-10">
@@ -1100,10 +1100,10 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-32 px-4 relative overflow-hidden">
+      <section id="pricing" className="py-32 px-4 relative">
         {/* Subtle background blobs */}
         <div className="bg-blob bg-blob-blue w-[600px] h-[600px] top-0 left-1/4 -translate-x-1/2" style={{ animationDelay: '1s' }} />
-        <div className="bg-blob bg-blob-emerald w-[400px] h-[400px] bottom-20 right-10" style={{ animationDelay: '5s' }} />
+        <div className="bg-blob bg-blob-blue w-[400px] h-[400px] bottom-20 right-10" style={{ animationDelay: '5s' }} />
         
         <div className="max-w-5xl mx-auto relative z-10">
           <div className="text-center mb-16">
@@ -1817,9 +1817,9 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       </section>
 
       {/* Community Section */}
-      <section className="py-24 px-4 border-t border-white/5 relative overflow-hidden">
+      <section className="py-24 px-4 border-t border-white/5 relative">
         {/* Subtle background blobs */}
-        <div className="bg-blob bg-blob-purple w-[500px] h-[500px] top-10 -right-20" style={{ animationDelay: '3s' }} />
+        <div className="bg-blob bg-blob-blue w-[500px] h-[500px] top-10 -right-20" style={{ animationDelay: '3s' }} />
         <div className="bg-blob bg-blob-blue w-[350px] h-[350px] bottom-0 left-10" style={{ animationDelay: '7s' }} />
         
         <div className="max-w-5xl mx-auto relative z-10">
@@ -1860,10 +1860,10 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       </section>
 
       {/* Roadmap Timeline */}
-      <section className="py-24 px-4 border-t border-white/5 relative overflow-hidden">
+      <section className="py-24 px-4 border-t border-white/5 relative">
         {/* Subtle background blobs */}
-        <div className="bg-blob bg-blob-cyan w-[400px] h-[400px] top-20 left-1/3" style={{ animationDelay: '2s' }} />
-        <div className="bg-blob bg-blob-purple w-[300px] h-[300px] bottom-10 right-1/4" style={{ animationDelay: '8s' }} />
+        <div className="bg-blob bg-blob-blue w-[400px] h-[400px] top-20 left-1/3" style={{ animationDelay: '2s' }} />
+        <div className="bg-blob bg-blob-blue w-[300px] h-[300px] bottom-10 right-1/4" style={{ animationDelay: '8s' }} />
         
         <div className="max-w-4xl mx-auto relative z-10">
           <motion.div
