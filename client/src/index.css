@@ -811,6 +811,47 @@ table tbody tr:hover {
   pointer-events: none;
 }
 
+/* Subtle background blob - softer ambient effect */
+.bg-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  opacity: 0.4;
+  animation: blobFloat 12s ease-in-out infinite;
+}
+
+.bg-blob-blue {
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, transparent 70%);
+}
+
+.bg-blob-purple {
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+}
+
+.bg-blob-cyan {
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.08) 0%, transparent 70%);
+}
+
+.bg-blob-emerald {
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
+}
+
+@keyframes blobFloat {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1);
+    opacity: 0.3;
+  }
+  33% { 
+    transform: translate(10px, -15px) scale(1.05);
+    opacity: 0.4;
+  }
+  66% { 
+    transform: translate(-10px, 10px) scale(0.98);
+    opacity: 0.35;
+  }
+}
+
 .gradient-text {
   background: linear-gradient(135deg, #fff 0%, #60a5fa 50%, #3b82f6 100%);
   -webkit-background-clip: text;
