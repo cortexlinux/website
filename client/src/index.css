@@ -1321,6 +1321,19 @@ table tbody tr:hover {
   50% { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0); }
 }
 
+/* Staggered opacity fade for AI processing indicators */
+@keyframes opacity-fade {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+.animate-opacity-fade {
+  animation-name: opacity-fade;
+  animation-duration: 1.5s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
 /* Grid pattern overlay */
 .grid-pattern {
   background-image: 
@@ -1334,6 +1347,7 @@ table tbody tr:hover {
   .logo-scroll,
   .terminal-cursor,
   .timeline-dot-current,
+  .animate-opacity-fade,
   [class*="animate"] {
     animation: none !important;
     transition: none !important;

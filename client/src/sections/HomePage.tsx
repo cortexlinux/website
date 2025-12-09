@@ -1580,27 +1580,15 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                   
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <motion.div
-                        className="w-2 h-2 rounded-full bg-indigo-400"
-                        animate={{ opacity: [0.3, 1, 0.3] }}
-                        transition={{ duration: 1.5, repeat: Infinity, delay: 0 }}
-                      />
+                      <div className="w-2 h-2 rounded-full bg-indigo-400 animate-opacity-fade" />
                       <span className="text-xs text-gray-500">Intent Analysis</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <motion.div
-                        className="w-2 h-2 rounded-full bg-indigo-400"
-                        animate={{ opacity: [0.3, 1, 0.3] }}
-                        transition={{ duration: 1.5, repeat: Infinity, delay: 0.3 }}
-                      />
+                      <div className="w-2 h-2 rounded-full bg-indigo-400 animate-opacity-fade" style={{ animationDelay: '0.3s' }} />
                       <span className="text-xs text-gray-500">Context Mapping</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <motion.div
-                        className="w-2 h-2 rounded-full bg-indigo-400"
-                        animate={{ opacity: [0.3, 1, 0.3] }}
-                        transition={{ duration: 1.5, repeat: Infinity, delay: 0.6 }}
-                      />
+                      <div className="w-2 h-2 rounded-full bg-indigo-400 animate-opacity-fade" style={{ animationDelay: '0.6s' }} />
                       <span className="text-xs text-gray-500">Safety Check</span>
                     </div>
                   </div>
