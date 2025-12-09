@@ -36,6 +36,19 @@ import {
   ShieldCheck,
   BadgeCheck,
   Scale,
+  Layers,
+  Database,
+  Cloud,
+  Network,
+  Workflow,
+  Code2,
+  Brain,
+  Wand2,
+  CheckCircle2,
+  Activity,
+  Boxes,
+  MousePointer2,
+  Info,
 } from "lucide-react";
 import { FaDiscord, FaTwitter } from "react-icons/fa";
 import type { Contributor } from "@shared/schema";
@@ -686,97 +699,362 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </div>
       </section>
 
-      {/* Architecture Diagram */}
-      <section className="py-24 px-4 border-t border-white/5">
-        <div className="max-w-4xl mx-auto">
+      {/* Architecture Diagram - Enhanced 3D Layered Visualization */}
+      <section id="architecture" className="py-32 px-4 border-t border-white/5 relative overflow-hidden">
+        {/* Background Effects */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-500/5 rounded-full blur-3xl" />
+          <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
+        </div>
+
+        <div className="max-w-6xl mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">How It Works</h2>
-            <p className="text-gray-400">Simple architecture, powerful results.</p>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 text-blue-400 text-sm mb-6">
+              <Layers size={14} />
+              <span>System Architecture</span>
+            </div>
+            <h2 className="text-3xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white via-white to-gray-400 bg-clip-text text-transparent">
+              How Cortex Works
+            </h2>
+            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+              A powerful layered architecture that transforms your natural language into optimized system operations.
+            </p>
           </motion.div>
 
+          {/* Interactive 3D Architecture Visualization */}
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="relative"
+            className="relative mb-16"
           >
-            <svg viewBox="0 0 600 300" className="w-full max-w-2xl mx-auto">
-              {/* Connection Lines */}
-              <motion.path
-                d="M300 60 L300 100"
-                stroke="#3b82f6"
-                strokeWidth="2"
-                fill="none"
-                initial={{ pathLength: 0 }}
-                whileInView={{ pathLength: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-              />
-              <motion.path
-                d="M300 160 L150 200 M300 160 L300 200 M300 160 L450 200"
-                stroke="#3b82f6"
-                strokeWidth="2"
-                fill="none"
-                initial={{ pathLength: 0 }}
-                whileInView={{ pathLength: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.6 }}
-              />
-              
-              {/* Your App Node */}
-              <motion.g
-                initial={{ opacity: 0, y: -20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-              >
-                <rect x="225" y="20" width="150" height="40" rx="8" fill="#1a1a1a" stroke="#3b82f6" strokeWidth="2" />
-                <text x="300" y="45" textAnchor="middle" fill="white" fontSize="14" fontWeight="600">Your App</text>
-              </motion.g>
-
-              {/* Cortex Runtime Node */}
-              <motion.g
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-              >
-                <rect x="200" y="100" width="200" height="60" rx="12" fill="url(#blueGradient)" />
-                <text x="300" y="125" textAnchor="middle" fill="white" fontSize="14" fontWeight="600">Cortex Runtime</text>
-                <text x="300" y="145" textAnchor="middle" fill="rgba(255,255,255,0.7)" fontSize="12">AI Layer</text>
-              </motion.g>
-
-              {/* Bottom Nodes */}
-              {[
-                { x: 100, label: "Storage" },
-                { x: 300, label: "Compute" },
-                { x: 500, label: "CDN" },
-              ].map((node, i) => (
-                <motion.g
-                  key={node.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.8 + i * 0.1 }}
-                >
-                  <rect x={node.x - 60} y="220" width="120" height="40" rx="8" fill="#1a1a1a" stroke="#374151" strokeWidth="1" />
-                  <text x={node.x} y="245" textAnchor="middle" fill="#9ca3af" fontSize="13">{node.label}</text>
-                </motion.g>
-              ))}
-
-              {/* Gradient Definition */}
+            <svg
+              viewBox="0 0 1000 500"
+              className="w-full h-auto"
+              preserveAspectRatio="xMidYMid meet"
+              data-testid="svg-architecture-diagram"
+            >
               <defs>
-                <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                {/* Gradient Definitions */}
+                <linearGradient id="archBlueGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" stopColor="#3b82f6" />
                   <stop offset="100%" stopColor="#1d4ed8" />
                 </linearGradient>
+                <linearGradient id="archPurpleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#8b5cf6" />
+                  <stop offset="100%" stopColor="#6366f1" />
+                </linearGradient>
+                <linearGradient id="archGreenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#22c55e" />
+                  <stop offset="100%" stopColor="#16a34a" />
+                </linearGradient>
+                <linearGradient id="archCyanGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#06b6d4" />
+                  <stop offset="100%" stopColor="#0891b2" />
+                </linearGradient>
+                <linearGradient id="flowGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.8" />
+                  <stop offset="50%" stopColor="#8b5cf6" stopOpacity="0.6" />
+                  <stop offset="100%" stopColor="#22c55e" stopOpacity="0.8" />
+                </linearGradient>
+                
+                {/* Glow Filters */}
+                <filter id="archGlow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                  <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+                <filter id="archSoftGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="2" result="blur"/>
+                  <feMerge>
+                    <feMergeNode in="blur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+
+                {/* Grid Pattern */}
+                <pattern id="archGrid" width="50" height="50" patternUnits="userSpaceOnUse">
+                  <path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(255,255,255,0.02)" strokeWidth="1"/>
+                </pattern>
               </defs>
+              
+              {/* Background Grid */}
+              <rect width="100%" height="100%" fill="url(#archGrid)" />
+
+              {/* Layer 1: User Input (Top) */}
+              <g className="layer-user">
+                <rect x="350" y="30" width="300" height="70" rx="12" fill="rgba(59,130,246,0.1)" stroke="#3b82f6" strokeWidth="2">
+                  <animate attributeName="stroke-opacity" values="0.5;1;0.5" dur="3s" repeatCount="indefinite" />
+                </rect>
+                <rect x="360" y="40" width="280" height="50" rx="8" fill="rgba(59,130,246,0.05)" />
+                <text x="500" y="55" textAnchor="middle" fill="#60a5fa" fontSize="11" fontWeight="600">USER LAYER</text>
+                <text x="500" y="75" textAnchor="middle" fill="white" fontSize="14" fontWeight="bold">Your Application</text>
+                {/* Icon placeholder */}
+                <circle cx="380" cy="65" r="15" fill="rgba(59,130,246,0.3)" />
+                <text x="380" y="69" textAnchor="middle" fill="#60a5fa" fontSize="12">CLI</text>
+              </g>
+
+              {/* Animated Flow Lines: User to Cortex */}
+              <g className="flow-user-to-cortex">
+                <path d="M 500 100 L 500 140" fill="none" stroke="url(#flowGradient)" strokeWidth="3" strokeDasharray="8,4">
+                  <animate attributeName="stroke-dashoffset" values="0;-24" dur="1.5s" repeatCount="indefinite" />
+                </path>
+                {/* Flow Particles */}
+                <circle r="6" fill="#3b82f6" filter="url(#archGlow)">
+                  <animate attributeName="cy" values="100;140" dur="1s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0;1;0" dur="1s" repeatCount="indefinite" />
+                </circle>
+                <circle r="4" fill="#818cf8" filter="url(#archGlow)">
+                  <animate attributeName="cy" values="100;140" dur="1s" repeatCount="indefinite" begin="0.3s" />
+                  <animate attributeName="opacity" values="0;1;0" dur="1s" repeatCount="indefinite" begin="0.3s" />
+                </circle>
+                <circle r="3" fill="#a78bfa" filter="url(#archGlow)">
+                  <animate attributeName="cy" values="100;140" dur="1s" repeatCount="indefinite" begin="0.6s" />
+                  <animate attributeName="opacity" values="0;1;0" dur="1s" repeatCount="indefinite" begin="0.6s" />
+                </circle>
+                {/* All particles at x=500 */}
+                <circle cx="500" r="6" fill="#3b82f6" filter="url(#archGlow)">
+                  <animate attributeName="cy" values="100;140" dur="1s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0;1;0" dur="1s" repeatCount="indefinite" />
+                </circle>
+              </g>
+
+              {/* Layer 2: Cortex Runtime (AI Core) */}
+              <g className="layer-cortex">
+                {/* Outer glow ring */}
+                <ellipse cx="500" cy="200" rx="200" ry="50" fill="none" stroke="#8b5cf6" strokeWidth="1" opacity="0.3">
+                  <animate attributeName="rx" values="200;210;200" dur="4s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0.3;0.5;0.3" dur="4s" repeatCount="indefinite" />
+                </ellipse>
+                
+                <rect x="300" y="150" width="400" height="100" rx="16" fill="rgba(139,92,246,0.15)" stroke="#8b5cf6" strokeWidth="2">
+                  <animate attributeName="stroke-opacity" values="0.6;1;0.6" dur="2.5s" repeatCount="indefinite" />
+                </rect>
+                
+                {/* Inner content area */}
+                <rect x="320" y="165" width="360" height="70" rx="10" fill="url(#archPurpleGradient)" opacity="0.2" />
+                
+                {/* AI Brain icon area */}
+                <circle cx="380" cy="200" r="25" fill="rgba(139,92,246,0.4)" stroke="#a78bfa" strokeWidth="1">
+                  <animate attributeName="r" values="25;28;25" dur="2s" repeatCount="indefinite" />
+                </circle>
+                <text x="380" y="195" textAnchor="middle" fill="#c4b5fd" fontSize="10">AI</text>
+                <text x="380" y="208" textAnchor="middle" fill="#c4b5fd" fontSize="8">CORE</text>
+                
+                <text x="530" y="185" textAnchor="middle" fill="#a78bfa" fontSize="11" fontWeight="600">CORTEX RUNTIME</text>
+                <text x="530" y="205" textAnchor="middle" fill="white" fontSize="15" fontWeight="bold">AI Processing Layer</text>
+                <text x="530" y="225" textAnchor="middle" fill="#9ca3af" fontSize="10">NLP + Context Analysis + Command Generation</text>
+              </g>
+
+              {/* Animated Flow Lines: Cortex to Services */}
+              <g className="flow-cortex-to-services">
+                {/* Left branch */}
+                <path d="M 400 250 Q 300 290 200 330" fill="none" stroke="url(#flowGradient)" strokeWidth="2" strokeDasharray="6,3">
+                  <animate attributeName="stroke-dashoffset" values="0;-18" dur="1.2s" repeatCount="indefinite" />
+                </path>
+                {/* Center branch */}
+                <path d="M 500 250 L 500 330" fill="none" stroke="url(#flowGradient)" strokeWidth="2" strokeDasharray="6,3">
+                  <animate attributeName="stroke-dashoffset" values="0;-18" dur="1.2s" repeatCount="indefinite" />
+                </path>
+                {/* Right branch */}
+                <path d="M 600 250 Q 700 290 800 330" fill="none" stroke="url(#flowGradient)" strokeWidth="2" strokeDasharray="6,3">
+                  <animate attributeName="stroke-dashoffset" values="0;-18" dur="1.2s" repeatCount="indefinite" />
+                </path>
+
+                {/* Animated particles on paths */}
+                <circle r="5" fill="#8b5cf6" filter="url(#archSoftGlow)">
+                  <animateMotion dur="1.5s" repeatCount="indefinite" path="M 400 250 Q 300 290 200 330" />
+                </circle>
+                <circle r="4" fill="#22c55e" filter="url(#archSoftGlow)">
+                  <animateMotion dur="1.5s" repeatCount="indefinite" path="M 500 250 L 500 330" begin="0.2s" />
+                </circle>
+                <circle r="5" fill="#8b5cf6" filter="url(#archSoftGlow)">
+                  <animateMotion dur="1.5s" repeatCount="indefinite" path="M 600 250 Q 700 290 800 330" begin="0.4s" />
+                </circle>
+              </g>
+
+              {/* Layer 3: Services (Storage, Compute, CDN) */}
+              <g className="layer-services">
+                {/* Storage Node */}
+                <g className="service-storage">
+                  <rect x="100" y="330" width="200" height="80" rx="12" fill="rgba(34,197,94,0.1)" stroke="#22c55e" strokeWidth="1.5">
+                    <animate attributeName="stroke-opacity" values="0.5;0.8;0.5" dur="3s" repeatCount="indefinite" />
+                  </rect>
+                  <circle cx="150" cy="370" r="20" fill="rgba(34,197,94,0.2)" />
+                  <text x="150" y="366" textAnchor="middle" fill="#4ade80" fontSize="8">DB</text>
+                  <text x="150" y="378" textAnchor="middle" fill="#4ade80" fontSize="7">ICON</text>
+                  <text x="230" y="360" textAnchor="middle" fill="#86efac" fontSize="10" fontWeight="600">STORAGE</text>
+                  <text x="230" y="378" textAnchor="middle" fill="#9ca3af" fontSize="9">Persistent Data</text>
+                  <text x="230" y="395" textAnchor="middle" fill="#6b7280" fontSize="8">PostgreSQL, Redis</text>
+                </g>
+
+                {/* Compute Node */}
+                <g className="service-compute">
+                  <rect x="400" y="330" width="200" height="80" rx="12" fill="rgba(6,182,212,0.1)" stroke="#06b6d4" strokeWidth="1.5">
+                    <animate attributeName="stroke-opacity" values="0.5;0.8;0.5" dur="3s" repeatCount="indefinite" begin="0.5s" />
+                  </rect>
+                  <circle cx="450" cy="370" r="20" fill="rgba(6,182,212,0.2)" />
+                  <text x="450" y="366" textAnchor="middle" fill="#22d3ee" fontSize="8">CPU</text>
+                  <text x="450" y="378" textAnchor="middle" fill="#22d3ee" fontSize="7">GPU</text>
+                  <text x="530" y="360" textAnchor="middle" fill="#67e8f9" fontSize="10" fontWeight="600">COMPUTE</text>
+                  <text x="530" y="378" textAnchor="middle" fill="#9ca3af" fontSize="9">ML Processing</text>
+                  <text x="530" y="395" textAnchor="middle" fill="#6b7280" fontSize="8">CUDA, TensorFlow</text>
+                </g>
+
+                {/* CDN Node */}
+                <g className="service-cdn">
+                  <rect x="700" y="330" width="200" height="80" rx="12" fill="rgba(249,115,22,0.1)" stroke="#f97316" strokeWidth="1.5">
+                    <animate attributeName="stroke-opacity" values="0.5;0.8;0.5" dur="3s" repeatCount="indefinite" begin="1s" />
+                  </rect>
+                  <circle cx="750" cy="370" r="20" fill="rgba(249,115,22,0.2)" />
+                  <text x="750" y="366" textAnchor="middle" fill="#fb923c" fontSize="8">CDN</text>
+                  <text x="750" y="378" textAnchor="middle" fill="#fb923c" fontSize="7">EDGE</text>
+                  <text x="830" y="360" textAnchor="middle" fill="#fdba74" fontSize="10" fontWeight="600">EDGE NETWORK</text>
+                  <text x="830" y="378" textAnchor="middle" fill="#9ca3af" fontSize="9">Global Delivery</text>
+                  <text x="830" y="395" textAnchor="middle" fill="#6b7280" fontSize="8">12 Regions</text>
+                </g>
+              </g>
+
+              {/* Layer 4: Hardware (Bottom) */}
+              <g className="layer-hardware">
+                <rect x="200" y="450" width="600" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
+                <text x="500" y="475" textAnchor="middle" fill="#6b7280" fontSize="11">HARDWARE ABSTRACTION LAYER</text>
+                
+                {/* Hardware icons */}
+                <circle cx="280" cy="470" r="12" fill="rgba(255,255,255,0.05)" />
+                <text x="280" y="474" textAnchor="middle" fill="#4b5563" fontSize="8">GPU</text>
+                <circle cx="400" cy="470" r="12" fill="rgba(255,255,255,0.05)" />
+                <text x="400" y="474" textAnchor="middle" fill="#4b5563" fontSize="8">CPU</text>
+                <circle cx="520" cy="470" r="12" fill="rgba(255,255,255,0.05)" />
+                <text x="520" y="474" textAnchor="middle" fill="#4b5563" fontSize="8">RAM</text>
+                <circle cx="640" cy="470" r="12" fill="rgba(255,255,255,0.05)" />
+                <text x="640" y="474" textAnchor="middle" fill="#4b5563" fontSize="8">SSD</text>
+                <circle cx="720" cy="470" r="12" fill="rgba(255,255,255,0.05)" />
+                <text x="720" y="474" textAnchor="middle" fill="#4b5563" fontSize="8">NET</text>
+              </g>
+
+              {/* Flow Labels */}
+              <text x="520" y="125" textAnchor="start" fill="#60a5fa" fontSize="9" opacity="0.8">Natural Language</text>
+              <text x="300" y="300" textAnchor="middle" fill="#a78bfa" fontSize="9" opacity="0.8">Query</text>
+              <text x="500" y="300" textAnchor="middle" fill="#a78bfa" fontSize="9" opacity="0.8">Process</text>
+              <text x="700" y="300" textAnchor="middle" fill="#a78bfa" fontSize="9" opacity="0.8">Serve</text>
             </svg>
+          </motion.div>
+
+          {/* Architecture Component Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                icon: Terminal,
+                title: "Application Layer",
+                description: "Your CLI interface for natural language commands",
+                color: "blue",
+                features: ["Voice Input", "Text Commands", "Real-time Feedback"]
+              },
+              {
+                icon: Brain,
+                title: "AI Runtime",
+                description: "Context-aware processing with NLP understanding",
+                color: "purple",
+                features: ["Intent Analysis", "Context Memory", "Safe Generation"]
+              },
+              {
+                icon: Boxes,
+                title: "Service Layer",
+                description: "Modular services for storage, compute, and delivery",
+                color: "cyan",
+                features: ["Auto-scaling", "Load Balancing", "Edge Caching"]
+              },
+              {
+                icon: Cpu,
+                title: "Hardware Layer",
+                description: "Automatic GPU detection and driver optimization",
+                color: "green",
+                features: ["GPU Passthrough", "Driver Mgmt", "Performance Tuning"]
+              }
+            ].map((layer, i) => {
+              const colorClasses: Record<string, { bg: string; border: string; text: string; icon: string }> = {
+                blue: { bg: "bg-blue-500/10", border: "border-blue-500/30 hover:border-blue-500/50", text: "text-blue-400", icon: "text-blue-400" },
+                purple: { bg: "bg-purple-500/10", border: "border-purple-500/30 hover:border-purple-500/50", text: "text-purple-400", icon: "text-purple-400" },
+                cyan: { bg: "bg-cyan-500/10", border: "border-cyan-500/30 hover:border-cyan-500/50", text: "text-cyan-400", icon: "text-cyan-400" },
+                green: { bg: "bg-green-500/10", border: "border-green-500/30 hover:border-green-500/50", text: "text-green-400", icon: "text-green-400" },
+              };
+              const colors = colorClasses[layer.color];
+              
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  data-testid={`card-architecture-layer-${i}`}
+                  className="group"
+                >
+                  <div className={`glass-card rounded-xl p-6 h-full border ${colors.border} transition-all duration-300`}>
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className={`w-12 h-12 rounded-lg ${colors.bg} flex items-center justify-center`}>
+                        <layer.icon size={24} className={colors.icon} />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-white">{layer.title}</h3>
+                        <span className={`text-xs font-mono ${colors.text}`}>0{i + 1}</span>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-400 mb-4">{layer.description}</p>
+                    <div className="space-y-2">
+                      {layer.features.map((feature, fi) => (
+                        <div key={fi} className="flex items-center gap-2">
+                          <div className={`w-1.5 h-1.5 rounded-full ${colors.bg.replace('/10', '/50')}`} />
+                          <span className="text-xs text-gray-500">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Data Journey Visualization */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-16 glass-card rounded-xl p-8 border border-white/10"
+          >
+            <h3 className="text-xl font-bold mb-6 text-center">Request Journey</h3>
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              {[
+                { step: 1, label: "You Type", example: '"Install PyTorch"', color: "blue" },
+                { step: 2, label: "AI Parses", example: "Intent: install, Target: pytorch", color: "purple" },
+                { step: 3, label: "Context Check", example: "GPU: RTX 4090, CUDA: 12.3", color: "indigo" },
+                { step: 4, label: "Command Gen", example: "pip install torch+cu123", color: "violet" },
+                { step: 5, label: "Safe Execute", example: "Sandboxed, Reversible", color: "green" },
+              ].map((item, i) => (
+                <div key={i} className="flex items-center gap-4">
+                  <div className="text-center">
+                    <div className={`w-12 h-12 rounded-full bg-${item.color}-500/20 border border-${item.color}-500/40 flex items-center justify-center mb-2 mx-auto`}>
+                      <span className={`text-${item.color}-400 font-bold`}>{item.step}</span>
+                    </div>
+                    <p className="text-sm font-semibold text-white mb-1">{item.label}</p>
+                    <p className="text-xs text-gray-500 font-mono max-w-[120px]">{item.example}</p>
+                  </div>
+                  {i < 4 && (
+                    <div className="hidden md:block">
+                      <ArrowRight size={20} className="text-gray-600" />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </motion.div>
         </div>
       </section>
@@ -1274,411 +1552,569 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </div>
       </section>
 
-      {/* AI Processing Visualization - Enhanced with Animated SVG */}
-      <section id="ai-processing" className="py-24 px-4 border-t border-white/5 overflow-hidden">
-        <div className="max-w-6xl mx-auto">
+      {/* AI Processing Visualization - Premium Enhanced Version */}
+      <section id="ai-processing" className="py-32 px-4 border-t border-white/5 overflow-hidden relative">
+        {/* Background Effects */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/3 left-1/4 w-[600px] h-[600px] bg-indigo-500/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-3xl" />
+        </div>
+
+        <div className="max-w-6xl mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="text-center mb-16"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm mb-4">
-              <Cpu size={14} />
-              <span>How It Works</span>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 text-indigo-400 text-sm mb-6">
+              <Brain size={14} />
+              <span>AI-Powered Pipeline</span>
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Stop Reading Docs. Start Shipping.</h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">
-              Describe what you need in plain English. Cortex translates your intent into perfectly optimized system commands — instantly.
+            <h2 className="text-3xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white via-white to-gray-400 bg-clip-text text-transparent">
+              The AI That Understands You
+            </h2>
+            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+              Describe what you need in plain English. Cortex translates your intent into perfectly optimized system commands — instantly and safely.
             </p>
           </motion.div>
 
-          {/* Animated Neural Network SVG Visualization */}
+          {/* Premium Animated Neural Network SVG Visualization */}
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             className="relative mb-16"
+            data-testid="svg-ai-processing-visualization"
           >
             <svg
-              viewBox="0 0 1200 300"
+              viewBox="0 0 1200 350"
               className="w-full h-auto"
               preserveAspectRatio="xMidYMid meet"
             >
               <defs>
-                {/* Gradient definitions */}
-                <linearGradient id="blueGlow" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.8" />
-                  <stop offset="100%" stopColor="#6366f1" stopOpacity="0.8" />
+                {/* Premium Gradient definitions */}
+                <linearGradient id="aiBlueGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#3b82f6" stopOpacity="1" />
+                  <stop offset="100%" stopColor="#6366f1" stopOpacity="1" />
                 </linearGradient>
-                <linearGradient id="purpleGlow" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#6366f1" stopOpacity="0.8" />
-                  <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.8" />
+                <linearGradient id="aiPurpleGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#6366f1" stopOpacity="1" />
+                  <stop offset="100%" stopColor="#8b5cf6" stopOpacity="1" />
                 </linearGradient>
-                <linearGradient id="greenGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+                <linearGradient id="aiGreenGlow" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.8" />
-                  <stop offset="100%" stopColor="#22c55e" stopOpacity="0.8" />
+                  <stop offset="100%" stopColor="#22c55e" stopOpacity="1" />
                 </linearGradient>
+                <linearGradient id="aiCoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#818cf8" />
+                  <stop offset="50%" stopColor="#a78bfa" />
+                  <stop offset="100%" stopColor="#c4b5fd" />
+                </linearGradient>
+                <radialGradient id="aiOrbGlow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.6" />
+                  <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0" />
+                </radialGradient>
                 
-                {/* Glow filter */}
-                <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-                  <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                {/* Enhanced Glow filters */}
+                <filter id="aiGlow" x="-100%" y="-100%" width="300%" height="300%">
+                  <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
                   <feMerge>
                     <feMergeNode in="coloredBlur"/>
                     <feMergeNode in="SourceGraphic"/>
                   </feMerge>
                 </filter>
-                
-                {/* Animated particle */}
-                <circle id="particle" r="4" fill="#60a5fa" filter="url(#glow)">
-                  <animate attributeName="opacity" values="0.3;1;0.3" dur="1s" repeatCount="indefinite" />
-                </circle>
+                <filter id="aiStrongGlow" x="-100%" y="-100%" width="300%" height="300%">
+                  <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+                  <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+
+                {/* Background grid pattern */}
+                <pattern id="aiGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.02)" strokeWidth="1"/>
+                </pattern>
               </defs>
               
-              {/* Background grid pattern */}
-              <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth="1"/>
-              </pattern>
-              <rect width="100%" height="100%" fill="url(#grid)" />
+              {/* Background Elements */}
+              <rect width="100%" height="100%" fill="url(#aiGrid)" />
               
-              {/* Stage 1: Input Node */}
-              <g className="input-stage">
-                <circle cx="100" cy="150" r="50" fill="rgba(59,130,246,0.1)" stroke="#3b82f6" strokeWidth="2" />
-                <circle cx="100" cy="150" r="35" fill="rgba(59,130,246,0.2)" />
-                <text x="100" y="145" textAnchor="middle" fill="#60a5fa" fontSize="12" fontWeight="bold">INPUT</text>
-                <text x="100" y="162" textAnchor="middle" fill="#9ca3af" fontSize="9">"Update packages"</text>
+              {/* Ambient Orbs */}
+              <circle cx="200" cy="80" r="80" fill="url(#aiOrbGlow)" opacity="0.3">
+                <animate attributeName="r" values="80;100;80" dur="6s" repeatCount="indefinite" />
+              </circle>
+              <circle cx="1000" cy="280" r="60" fill="url(#aiOrbGlow)" opacity="0.2">
+                <animate attributeName="r" values="60;80;60" dur="8s" repeatCount="indefinite" />
+              </circle>
+              
+              {/* Stage 1: Input Node - Enhanced */}
+              <g className="input-stage" data-testid="stage-input">
+                {/* Outer glow ring */}
+                <circle cx="120" cy="175" r="70" fill="none" stroke="#3b82f6" strokeWidth="1" opacity="0.2">
+                  <animate attributeName="r" values="70;85;70" dur="3s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0.2;0.4;0.2" dur="3s" repeatCount="indefinite" />
+                </circle>
                 
-                {/* Pulsing ring */}
-                <circle cx="100" cy="150" r="50" fill="none" stroke="#3b82f6" strokeWidth="1" opacity="0.5">
-                  <animate attributeName="r" values="50;60;50" dur="2s" repeatCount="indefinite" />
-                  <animate attributeName="opacity" values="0.5;0;0.5" dur="2s" repeatCount="indefinite" />
+                {/* Main circle with gradient border */}
+                <circle cx="120" cy="175" r="55" fill="rgba(59,130,246,0.08)" stroke="url(#aiBlueGlow)" strokeWidth="2.5">
+                  <animate attributeName="stroke-opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite" />
+                </circle>
+                
+                {/* Inner circle */}
+                <circle cx="120" cy="175" r="40" fill="rgba(59,130,246,0.15)">
+                  <animate attributeName="fill-opacity" values="0.15;0.25;0.15" dur="2s" repeatCount="indefinite" />
+                </circle>
+                
+                {/* Icon representation */}
+                <circle cx="120" cy="165" r="15" fill="rgba(96,165,250,0.3)" />
+                <text x="120" y="170" textAnchor="middle" fill="#60a5fa" fontSize="14" fontWeight="bold">IN</text>
+                <text x="120" y="195" textAnchor="middle" fill="#9ca3af" fontSize="9">"Install PyTorch"</text>
+                
+                {/* Multiple pulsing rings */}
+                <circle cx="120" cy="175" r="55" fill="none" stroke="#3b82f6" strokeWidth="1.5" opacity="0.5">
+                  <animate attributeName="r" values="55;75;55" dur="2.5s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0.5;0;0.5" dur="2.5s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="120" cy="175" r="55" fill="none" stroke="#60a5fa" strokeWidth="1" opacity="0.3">
+                  <animate attributeName="r" values="55;85;55" dur="3s" repeatCount="indefinite" begin="0.5s" />
+                  <animate attributeName="opacity" values="0.3;0;0.3" dur="3s" repeatCount="indefinite" begin="0.5s" />
                 </circle>
               </g>
               
-              {/* Connection Line 1 with particles */}
+              {/* Connection 1: Input to AI - Multiple flowing lines */}
               <g className="connection-1">
-                <path d="M 150 150 Q 250 100 350 150" fill="none" stroke="url(#blueGlow)" strokeWidth="2" strokeDasharray="5,5">
-                  <animate attributeName="stroke-dashoffset" values="0;-20" dur="1s" repeatCount="indefinite" />
+                {/* Primary path */}
+                <path d="M 175 175 C 250 120 320 120 395 175" fill="none" stroke="url(#aiBlueGlow)" strokeWidth="2.5" strokeDasharray="8,4" opacity="0.8">
+                  <animate attributeName="stroke-dashoffset" values="0;-24" dur="1.2s" repeatCount="indefinite" />
                 </path>
-                <path d="M 150 150 Q 250 200 350 150" fill="none" stroke="url(#blueGlow)" strokeWidth="2" strokeDasharray="5,5">
-                  <animate attributeName="stroke-dashoffset" values="0;-20" dur="1s" repeatCount="indefinite" />
+                {/* Secondary path */}
+                <path d="M 175 175 C 250 230 320 230 395 175" fill="none" stroke="url(#aiBlueGlow)" strokeWidth="2" strokeDasharray="8,4" opacity="0.5">
+                  <animate attributeName="stroke-dashoffset" values="0;-24" dur="1.2s" repeatCount="indefinite" />
                 </path>
                 
-                {/* Moving particles on path 1 */}
-                <circle r="5" fill="#60a5fa" filter="url(#glow)">
-                  <animateMotion dur="2s" repeatCount="indefinite">
-                    <mpath href="#path1" />
+                {/* Hidden animation path */}
+                <path id="aiPath1" d="M 175 175 C 250 145 320 145 395 175" fill="none" stroke="none" />
+                
+                {/* Multiple moving particles */}
+                <circle r="6" fill="#60a5fa" filter="url(#aiGlow)">
+                  <animateMotion dur="1.8s" repeatCount="indefinite">
+                    <mpath href="#aiPath1" />
                   </animateMotion>
+                  <animate attributeName="opacity" values="0;1;1;0" dur="1.8s" repeatCount="indefinite" />
                 </circle>
-                <circle r="4" fill="#818cf8" filter="url(#glow)">
-                  <animateMotion dur="2s" repeatCount="indefinite" begin="0.5s">
-                    <mpath href="#path1" />
+                <circle r="4" fill="#818cf8" filter="url(#aiGlow)">
+                  <animateMotion dur="1.8s" repeatCount="indefinite" begin="0.4s">
+                    <mpath href="#aiPath1" />
                   </animateMotion>
+                  <animate attributeName="opacity" values="0;1;1;0" dur="1.8s" repeatCount="indefinite" begin="0.4s" />
                 </circle>
-                <circle r="3" fill="#60a5fa" filter="url(#glow)">
-                  <animateMotion dur="2s" repeatCount="indefinite" begin="1s">
-                    <mpath href="#path1" />
+                <circle r="5" fill="#60a5fa" filter="url(#aiGlow)">
+                  <animateMotion dur="1.8s" repeatCount="indefinite" begin="0.9s">
+                    <mpath href="#aiPath1" />
                   </animateMotion>
+                  <animate attributeName="opacity" values="0;1;1;0" dur="1.8s" repeatCount="indefinite" begin="0.9s" />
+                </circle>
+                <circle r="3" fill="#a78bfa" filter="url(#aiGlow)">
+                  <animateMotion dur="1.8s" repeatCount="indefinite" begin="1.3s">
+                    <mpath href="#aiPath1" />
+                  </animateMotion>
+                  <animate attributeName="opacity" values="0;1;1;0" dur="1.8s" repeatCount="indefinite" begin="1.3s" />
                 </circle>
               </g>
               
-              {/* Hidden paths for particle animation */}
-              <path id="path1" d="M 150 150 Q 250 120 350 150" fill="none" stroke="none" />
-              <path id="path2" d="M 450 150 Q 550 120 650 150" fill="none" stroke="none" />
-              <path id="path3" d="M 750 150 Q 850 120 950 150" fill="none" stroke="none" />
-              
-              {/* Stage 2: AI Processing - Neural network cluster */}
-              <g className="processing-stage">
-                <circle cx="400" cy="150" r="60" fill="rgba(99,102,241,0.1)" stroke="#6366f1" strokeWidth="2" />
+              {/* Stage 2: AI Processing - Neural Network Core */}
+              <g className="processing-stage" data-testid="stage-ai-processing">
+                {/* Large outer glow */}
+                <circle cx="460" cy="175" r="100" fill="url(#aiOrbGlow)" opacity="0.4">
+                  <animate attributeName="opacity" values="0.3;0.5;0.3" dur="4s" repeatCount="indefinite" />
+                </circle>
                 
-                {/* Inner rotating circles */}
+                {/* Main processing circle */}
+                <circle cx="460" cy="175" r="75" fill="rgba(99,102,241,0.1)" stroke="#6366f1" strokeWidth="2.5">
+                  <animate attributeName="stroke-opacity" values="0.6;1;0.6" dur="2.5s" repeatCount="indefinite" />
+                </circle>
+                
+                {/* Neural network nodes - Rotating cluster */}
                 <g>
-                  <animateTransform attributeName="transform" type="rotate" from="0 400 150" to="360 400 150" dur="10s" repeatCount="indefinite" />
-                  <circle cx="400" cy="100" r="8" fill="#818cf8" opacity="0.8">
-                    <animate attributeName="opacity" values="0.4;1;0.4" dur="1.5s" repeatCount="indefinite" />
+                  <animateTransform attributeName="transform" type="rotate" from="0 460 175" to="360 460 175" dur="15s" repeatCount="indefinite" />
+                  <circle cx="460" cy="105" r="10" fill="#818cf8" opacity="0.9" filter="url(#aiGlow)">
+                    <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite" />
                   </circle>
-                  <circle cx="445" cy="125" r="6" fill="#a78bfa" opacity="0.8">
-                    <animate attributeName="opacity" values="0.4;1;0.4" dur="1.5s" repeatCount="indefinite" begin="0.3s" />
+                  <circle cx="520" cy="130" r="8" fill="#a78bfa" opacity="0.8" filter="url(#aiGlow)">
+                    <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite" begin="0.4s" />
                   </circle>
-                  <circle cx="445" cy="175" r="7" fill="#818cf8" opacity="0.8">
-                    <animate attributeName="opacity" values="0.4;1;0.4" dur="1.5s" repeatCount="indefinite" begin="0.6s" />
+                  <circle cx="520" cy="220" r="9" fill="#818cf8" opacity="0.85" filter="url(#aiGlow)">
+                    <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite" begin="0.8s" />
                   </circle>
-                  <circle cx="400" cy="200" r="5" fill="#a78bfa" opacity="0.8">
-                    <animate attributeName="opacity" values="0.4;1;0.4" dur="1.5s" repeatCount="indefinite" begin="0.9s" />
+                  <circle cx="460" cy="245" r="7" fill="#a78bfa" opacity="0.75" filter="url(#aiGlow)">
+                    <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite" begin="1.2s" />
                   </circle>
-                  <circle cx="355" cy="175" r="8" fill="#818cf8" opacity="0.8">
-                    <animate attributeName="opacity" values="0.4;1;0.4" dur="1.5s" repeatCount="indefinite" begin="1.2s" />
+                  <circle cx="400" cy="220" r="10" fill="#818cf8" opacity="0.9" filter="url(#aiGlow)">
+                    <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite" begin="1.6s" />
                   </circle>
-                  <circle cx="355" cy="125" r="6" fill="#a78bfa" opacity="0.8">
-                    <animate attributeName="opacity" values="0.4;1;0.4" dur="1.5s" repeatCount="indefinite" begin="1.5s" />
+                  <circle cx="400" cy="130" r="8" fill="#a78bfa" opacity="0.8" filter="url(#aiGlow)">
+                    <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite" begin="2s" />
                   </circle>
                 </g>
                 
-                {/* Center core */}
-                <circle cx="400" cy="150" r="25" fill="rgba(99,102,241,0.3)" stroke="#818cf8" strokeWidth="1">
-                  <animate attributeName="r" values="20;25;20" dur="2s" repeatCount="indefinite" />
+                {/* Counter-rotating inner ring */}
+                <g>
+                  <animateTransform attributeName="transform" type="rotate" from="360 460 175" to="0 460 175" dur="12s" repeatCount="indefinite" />
+                  <circle cx="460" cy="145" r="5" fill="#c4b5fd" opacity="0.7" />
+                  <circle cx="480" cy="175" r="4" fill="#c4b5fd" opacity="0.6" />
+                  <circle cx="460" cy="205" r="5" fill="#c4b5fd" opacity="0.7" />
+                  <circle cx="440" cy="175" r="4" fill="#c4b5fd" opacity="0.6" />
+                </g>
+                
+                {/* Center core with pulsing effect */}
+                <circle cx="460" cy="175" r="32" fill="url(#aiCoreGradient)" opacity="0.3" filter="url(#aiStrongGlow)">
+                  <animate attributeName="r" values="28;35;28" dur="2.5s" repeatCount="indefinite" />
                 </circle>
-                <text x="400" y="147" textAnchor="middle" fill="#a5b4fc" fontSize="10" fontWeight="bold">AI</text>
-                <text x="400" y="158" textAnchor="middle" fill="#a5b4fc" fontSize="8">PROCESS</text>
+                <circle cx="460" cy="175" r="25" fill="rgba(139,92,246,0.4)" stroke="#a78bfa" strokeWidth="1.5">
+                  <animate attributeName="r" values="22;28;22" dur="2s" repeatCount="indefinite" />
+                </circle>
+                
+                {/* Core text */}
+                <text x="460" y="170" textAnchor="middle" fill="#e0e7ff" fontSize="12" fontWeight="bold">AI</text>
+                <text x="460" y="185" textAnchor="middle" fill="#c4b5fd" fontSize="9">CORTEX</text>
               </g>
               
-              {/* Connection Line 2 with particles */}
+              {/* Connection 2: AI to Commands */}
               <g className="connection-2">
-                <path d="M 460 150 Q 560 80 660 150" fill="none" stroke="url(#purpleGlow)" strokeWidth="2" strokeDasharray="5,5">
-                  <animate attributeName="stroke-dashoffset" values="0;-20" dur="1s" repeatCount="indefinite" />
+                <path d="M 535 175 C 610 100 680 100 755 175" fill="none" stroke="url(#aiPurpleGlow)" strokeWidth="2.5" strokeDasharray="8,4" opacity="0.8">
+                  <animate attributeName="stroke-dashoffset" values="0;-24" dur="1.2s" repeatCount="indefinite" />
                 </path>
-                <path d="M 460 150 Q 560 220 660 150" fill="none" stroke="url(#purpleGlow)" strokeWidth="2" strokeDasharray="5,5">
-                  <animate attributeName="stroke-dashoffset" values="0;-20" dur="1s" repeatCount="indefinite" />
+                <path d="M 535 175 C 610 250 680 250 755 175" fill="none" stroke="url(#aiPurpleGlow)" strokeWidth="2" strokeDasharray="8,4" opacity="0.5">
+                  <animate attributeName="stroke-dashoffset" values="0;-24" dur="1.2s" repeatCount="indefinite" />
                 </path>
                 
-                {/* Moving particles */}
-                <circle r="5" fill="#a78bfa" filter="url(#glow)">
-                  <animateMotion dur="2s" repeatCount="indefinite" begin="0.3s">
-                    <mpath href="#path2" />
+                <path id="aiPath2" d="M 535 175 C 610 150 680 150 755 175" fill="none" stroke="none" />
+                
+                <circle r="6" fill="#a78bfa" filter="url(#aiGlow)">
+                  <animateMotion dur="1.8s" repeatCount="indefinite" begin="0.2s">
+                    <mpath href="#aiPath2" />
                   </animateMotion>
+                  <animate attributeName="opacity" values="0;1;1;0" dur="1.8s" repeatCount="indefinite" begin="0.2s" />
                 </circle>
-                <circle r="4" fill="#c4b5fd" filter="url(#glow)">
-                  <animateMotion dur="2s" repeatCount="indefinite" begin="0.8s">
-                    <mpath href="#path2" />
+                <circle r="4" fill="#c4b5fd" filter="url(#aiGlow)">
+                  <animateMotion dur="1.8s" repeatCount="indefinite" begin="0.7s">
+                    <mpath href="#aiPath2" />
                   </animateMotion>
+                  <animate attributeName="opacity" values="0;1;1;0" dur="1.8s" repeatCount="indefinite" begin="0.7s" />
                 </circle>
-                <circle r="3" fill="#a78bfa" filter="url(#glow)">
-                  <animateMotion dur="2s" repeatCount="indefinite" begin="1.3s">
-                    <mpath href="#path2" />
+                <circle r="5" fill="#a78bfa" filter="url(#aiGlow)">
+                  <animateMotion dur="1.8s" repeatCount="indefinite" begin="1.2s">
+                    <mpath href="#aiPath2" />
                   </animateMotion>
+                  <animate attributeName="opacity" values="0;1;1;0" dur="1.8s" repeatCount="indefinite" begin="1.2s" />
                 </circle>
               </g>
               
-              {/* Stage 3: Command Generation */}
-              <g className="command-stage">
-                <rect x="660" y="100" width="100" height="100" rx="10" fill="rgba(139,92,246,0.1)" stroke="#8b5cf6" strokeWidth="2" />
-                
-                {/* Terminal lines animation */}
-                <rect x="675" y="120" width="0" height="8" fill="#a78bfa" rx="2">
-                  <animate attributeName="width" values="0;50;50;0" dur="3s" repeatCount="indefinite" />
-                </rect>
-                <rect x="675" y="135" width="0" height="8" fill="#c4b5fd" rx="2">
-                  <animate attributeName="width" values="0;40;40;0" dur="3s" repeatCount="indefinite" begin="0.5s" />
-                </rect>
-                <rect x="675" y="150" width="0" height="8" fill="#a78bfa" rx="2">
-                  <animate attributeName="width" values="0;60;60;0" dur="3s" repeatCount="indefinite" begin="1s" />
-                </rect>
-                <rect x="675" y="165" width="0" height="8" fill="#c4b5fd" rx="2">
-                  <animate attributeName="width" values="0;35;35;0" dur="3s" repeatCount="indefinite" begin="1.5s" />
+              {/* Stage 3: Command Generation - Terminal Style */}
+              <g className="command-stage" data-testid="stage-command-gen">
+                {/* Outer glow */}
+                <rect x="735" y="110" width="130" height="130" rx="16" fill="none" stroke="#8b5cf6" strokeWidth="1" opacity="0.3">
+                  <animate attributeName="opacity" values="0.2;0.4;0.2" dur="3s" repeatCount="indefinite" />
                 </rect>
                 
-                <text x="710" y="190" textAnchor="middle" fill="#c4b5fd" fontSize="9" fontWeight="bold">COMMANDS</text>
+                {/* Main container */}
+                <rect x="745" y="120" width="110" height="110" rx="12" fill="rgba(139,92,246,0.1)" stroke="#8b5cf6" strokeWidth="2">
+                  <animate attributeName="stroke-opacity" values="0.6;1;0.6" dur="2.5s" repeatCount="indefinite" />
+                </rect>
+                
+                {/* Terminal header */}
+                <rect x="750" y="125" width="100" height="20" rx="4" fill="rgba(139,92,246,0.2)" />
+                <circle cx="762" cy="135" r="3" fill="#ef4444" opacity="0.8" />
+                <circle cx="774" cy="135" r="3" fill="#fbbf24" opacity="0.8" />
+                <circle cx="786" cy="135" r="3" fill="#22c55e" opacity="0.8" />
+                
+                {/* Animated terminal lines */}
+                <rect x="755" y="152" width="0" height="10" fill="#a78bfa" rx="2">
+                  <animate attributeName="width" values="0;70;70;0" dur="4s" repeatCount="indefinite" />
+                </rect>
+                <rect x="755" y="167" width="0" height="10" fill="#c4b5fd" rx="2">
+                  <animate attributeName="width" values="0;55;55;0" dur="4s" repeatCount="indefinite" begin="0.6s" />
+                </rect>
+                <rect x="755" y="182" width="0" height="10" fill="#a78bfa" rx="2">
+                  <animate attributeName="width" values="0;85;85;0" dur="4s" repeatCount="indefinite" begin="1.2s" />
+                </rect>
+                <rect x="755" y="197" width="0" height="10" fill="#c4b5fd" rx="2">
+                  <animate attributeName="width" values="0;45;45;0" dur="4s" repeatCount="indefinite" begin="1.8s" />
+                </rect>
+                
+                {/* Cursor blink */}
+                <rect x="755" y="212" width="8" height="10" fill="#8b5cf6" rx="1">
+                  <animate attributeName="opacity" values="0;1;0" dur="1s" repeatCount="indefinite" />
+                </rect>
               </g>
               
-              {/* Connection Line 3 with particles */}
+              {/* Connection 3: Commands to Execution */}
               <g className="connection-3">
-                <path d="M 760 150 Q 860 100 960 150" fill="none" stroke="url(#greenGlow)" strokeWidth="2" strokeDasharray="5,5">
-                  <animate attributeName="stroke-dashoffset" values="0;-20" dur="1s" repeatCount="indefinite" />
+                <path d="M 855 175 C 930 100 1000 100 1075 175" fill="none" stroke="url(#aiGreenGlow)" strokeWidth="2.5" strokeDasharray="8,4" opacity="0.8">
+                  <animate attributeName="stroke-dashoffset" values="0;-24" dur="1.2s" repeatCount="indefinite" />
                 </path>
-                <path d="M 760 150 Q 860 200 960 150" fill="none" stroke="url(#greenGlow)" strokeWidth="2" strokeDasharray="5,5">
-                  <animate attributeName="stroke-dashoffset" values="0;-20" dur="1s" repeatCount="indefinite" />
+                <path d="M 855 175 C 930 250 1000 250 1075 175" fill="none" stroke="url(#aiGreenGlow)" strokeWidth="2" strokeDasharray="8,4" opacity="0.5">
+                  <animate attributeName="stroke-dashoffset" values="0;-24" dur="1.2s" repeatCount="indefinite" />
                 </path>
                 
-                {/* Moving particles */}
-                <circle r="5" fill="#4ade80" filter="url(#glow)">
-                  <animateMotion dur="2s" repeatCount="indefinite" begin="0.6s">
-                    <mpath href="#path3" />
+                <path id="aiPath3" d="M 855 175 C 930 150 1000 150 1075 175" fill="none" stroke="none" />
+                
+                <circle r="6" fill="#4ade80" filter="url(#aiGlow)">
+                  <animateMotion dur="1.8s" repeatCount="indefinite" begin="0.4s">
+                    <mpath href="#aiPath3" />
                   </animateMotion>
+                  <animate attributeName="opacity" values="0;1;1;0" dur="1.8s" repeatCount="indefinite" begin="0.4s" />
                 </circle>
-                <circle r="4" fill="#86efac" filter="url(#glow)">
-                  <animateMotion dur="2s" repeatCount="indefinite" begin="1.1s">
-                    <mpath href="#path3" />
+                <circle r="4" fill="#86efac" filter="url(#aiGlow)">
+                  <animateMotion dur="1.8s" repeatCount="indefinite" begin="0.9s">
+                    <mpath href="#aiPath3" />
                   </animateMotion>
+                  <animate attributeName="opacity" values="0;1;1;0" dur="1.8s" repeatCount="indefinite" begin="0.9s" />
                 </circle>
-                <circle r="3" fill="#4ade80" filter="url(#glow)">
-                  <animateMotion dur="2s" repeatCount="indefinite" begin="1.6s">
-                    <mpath href="#path3" />
+                <circle r="5" fill="#4ade80" filter="url(#aiGlow)">
+                  <animateMotion dur="1.8s" repeatCount="indefinite" begin="1.4s">
+                    <mpath href="#aiPath3" />
                   </animateMotion>
+                  <animate attributeName="opacity" values="0;1;1;0" dur="1.8s" repeatCount="indefinite" begin="1.4s" />
                 </circle>
               </g>
               
-              {/* Stage 4: Execution - Success state */}
-              <g className="execute-stage">
-                <circle cx="1010" cy="150" r="50" fill="rgba(34,197,94,0.1)" stroke="#22c55e" strokeWidth="2" />
-                <circle cx="1010" cy="150" r="35" fill="rgba(34,197,94,0.2)">
-                  <animate attributeName="r" values="30;35;30" dur="1.5s" repeatCount="indefinite" />
+              {/* Stage 4: Execution Success - Enhanced */}
+              <g className="execute-stage" data-testid="stage-execute">
+                {/* Outer success glow */}
+                <circle cx="1100" cy="175" r="80" fill="none" stroke="#22c55e" strokeWidth="1" opacity="0.2">
+                  <animate attributeName="r" values="80;100;80" dur="3s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0.2;0.4;0.2" dur="3s" repeatCount="indefinite" />
                 </circle>
                 
-                {/* Checkmark */}
-                <path d="M 990 150 L 1005 165 L 1030 135" fill="none" stroke="#4ade80" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
-                  <animate attributeName="stroke-dasharray" values="0 100;100 0" dur="0.5s" fill="freeze" repeatCount="indefinite" begin="2s" />
+                {/* Main circle */}
+                <circle cx="1100" cy="175" r="55" fill="rgba(34,197,94,0.08)" stroke="#22c55e" strokeWidth="2.5">
+                  <animate attributeName="stroke-opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite" />
+                </circle>
+                
+                {/* Inner glow */}
+                <circle cx="1100" cy="175" r="40" fill="rgba(34,197,94,0.15)">
+                  <animate attributeName="r" values="35;42;35" dur="1.8s" repeatCount="indefinite" />
+                  <animate attributeName="fill-opacity" values="0.15;0.25;0.15" dur="1.8s" repeatCount="indefinite" />
+                </circle>
+                
+                {/* Animated Checkmark */}
+                <path d="M 1078 175 L 1093 190 L 1122 155" fill="none" stroke="#4ade80" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" filter="url(#aiGlow)">
+                  <animate attributeName="stroke-dasharray" values="0 100;100 0" dur="0.8s" fill="freeze" repeatCount="indefinite" begin="2s" />
                 </path>
                 
-                <text x="1010" y="185" textAnchor="middle" fill="#86efac" fontSize="9" fontWeight="bold">EXECUTED</text>
+                <text x="1100" y="210" textAnchor="middle" fill="#86efac" fontSize="10" fontWeight="bold">SUCCESS</text>
                 
-                {/* Success pulse */}
-                <circle cx="1010" cy="150" r="50" fill="none" stroke="#22c55e" strokeWidth="1" opacity="0.5">
-                  <animate attributeName="r" values="50;70;50" dur="2s" repeatCount="indefinite" />
-                  <animate attributeName="opacity" values="0.5;0;0.5" dur="2s" repeatCount="indefinite" />
+                {/* Multiple success pulses */}
+                <circle cx="1100" cy="175" r="55" fill="none" stroke="#22c55e" strokeWidth="2" opacity="0.5">
+                  <animate attributeName="r" values="55;80;55" dur="2.5s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0.5;0;0.5" dur="2.5s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="1100" cy="175" r="55" fill="none" stroke="#4ade80" strokeWidth="1" opacity="0.3">
+                  <animate attributeName="r" values="55;95;55" dur="3s" repeatCount="indefinite" begin="0.5s" />
+                  <animate attributeName="opacity" values="0.3;0;0.3" dur="3s" repeatCount="indefinite" begin="0.5s" />
                 </circle>
               </g>
               
-              {/* Labels below each stage */}
-              <text x="100" y="230" textAnchor="middle" fill="#60a5fa" fontSize="11" fontWeight="600">01. Natural Input</text>
-              <text x="100" y="245" textAnchor="middle" fill="#6b7280" fontSize="9">Speak or type</text>
-              
-              <text x="400" y="230" textAnchor="middle" fill="#818cf8" fontSize="11" fontWeight="600">02. AI Processing</text>
-              <text x="400" y="245" textAnchor="middle" fill="#6b7280" fontSize="9">Context analysis</text>
-              
-              <text x="710" y="230" textAnchor="middle" fill="#a78bfa" fontSize="11" fontWeight="600">03. Generate</text>
-              <text x="710" y="245" textAnchor="middle" fill="#6b7280" fontSize="9">System commands</text>
-              
-              <text x="1010" y="230" textAnchor="middle" fill="#4ade80" fontSize="11" fontWeight="600">04. Execute</text>
-              <text x="1010" y="245" textAnchor="middle" fill="#6b7280" fontSize="9">Safe & reversible</text>
+              {/* Stage Labels - Enhanced */}
+              <g className="stage-labels">
+                <text x="120" y="260" textAnchor="middle" fill="#60a5fa" fontSize="12" fontWeight="700">01. Input</text>
+                <text x="120" y="278" textAnchor="middle" fill="#6b7280" fontSize="10">Natural Language</text>
+                
+                <text x="460" y="280" textAnchor="middle" fill="#818cf8" fontSize="12" fontWeight="700">02. Process</text>
+                <text x="460" y="298" textAnchor="middle" fill="#6b7280" fontSize="10">AI Understanding</text>
+                
+                <text x="800" y="260" textAnchor="middle" fill="#a78bfa" fontSize="12" fontWeight="700">03. Generate</text>
+                <text x="800" y="278" textAnchor="middle" fill="#6b7280" fontSize="10">Optimized Commands</text>
+                
+                <text x="1100" y="260" textAnchor="middle" fill="#4ade80" fontSize="12" fontWeight="700">04. Execute</text>
+                <text x="1100" y="278" textAnchor="middle" fill="#6b7280" fontSize="10">Safe & Reversible</text>
+              </g>
             </svg>
           </motion.div>
 
-          {/* Interactive Pipeline Cards */}
-          <div className="relative">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
-              {/* Stage 1: Input */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0 }}
-                className="group relative"
-              >
-                <div className="glass-card rounded-xl p-6 h-full border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
-                      <MessageCircle size={20} className="text-blue-400" />
-                    </div>
-                    <span className="text-xs text-gray-500 font-mono">01</span>
+          {/* Enhanced Interactive Pipeline Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Stage 1: Natural Input */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0 }}
+              className="group"
+              data-testid="card-stage-input"
+            >
+              <div className="glass-card rounded-xl p-6 h-full border border-blue-500/20 hover:border-blue-500/50 hover:shadow-[0_0_30px_rgba(59,130,246,0.15)] transition-all duration-300">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center border border-blue-500/30">
+                    <MessageCircle size={22} className="text-blue-400" />
                   </div>
-                  <h3 className="text-lg font-semibold mb-2 text-white">Natural Input</h3>
-                  <p className="text-sm text-gray-400 mb-4">Speak or type in plain language</p>
-                  
-                  <div className="bg-black/40 rounded-lg p-3 border border-white/5">
-                    <p className="text-sm font-mono text-blue-300">"Update all packages and clean cache"</p>
-                  </div>
+                  <span className="text-xs text-blue-400/60 font-mono font-bold">01</span>
                 </div>
-              </motion.div>
+                <h3 className="text-lg font-bold mb-2 text-white">Natural Input</h3>
+                <p className="text-sm text-gray-400 mb-4">Speak or type in plain language. No syntax to learn.</p>
+                
+                <div className="bg-black/50 rounded-lg p-4 border border-blue-500/10">
+                  <p className="text-sm font-mono text-blue-300 leading-relaxed">"Install PyTorch with GPU support for my RTX 4090"</p>
+                </div>
+                
+                <div className="mt-4 flex items-center gap-2 text-xs text-gray-500">
+                  <Info size={12} />
+                  <span>Voice and text input supported</span>
+                </div>
+              </div>
+            </motion.div>
 
-              {/* Stage 2: Parse */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.15 }}
-                className="group relative"
-              >
-                <div className="glass-card rounded-xl p-6 h-full border border-indigo-500/20 hover:border-indigo-500/40 transition-all duration-300">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center">
-                      <Cpu size={20} className="text-indigo-400" />
-                    </div>
-                    <span className="text-xs text-gray-500 font-mono">02</span>
+            {/* Stage 2: AI Processing */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="group"
+              data-testid="card-stage-ai"
+            >
+              <div className="glass-card rounded-xl p-6 h-full border border-indigo-500/20 hover:border-indigo-500/50 hover:shadow-[0_0_30px_rgba(99,102,241,0.15)] transition-all duration-300">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-indigo-500/20 flex items-center justify-center border border-indigo-500/30">
+                    <Brain size={22} className="text-indigo-400" />
                   </div>
-                  <h3 className="text-lg font-semibold mb-2 text-white">AI Processing</h3>
-                  <p className="text-sm text-gray-400 mb-4">Context-aware understanding</p>
-                  
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-indigo-400 animate-opacity-fade" />
-                      <span className="text-xs text-gray-500">Intent Analysis</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-indigo-400 animate-opacity-fade" style={{ animationDelay: '0.3s' }} />
-                      <span className="text-xs text-gray-500">Context Mapping</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-indigo-400 animate-opacity-fade" style={{ animationDelay: '0.6s' }} />
-                      <span className="text-xs text-gray-500">Safety Check</span>
-                    </div>
+                  <span className="text-xs text-indigo-400/60 font-mono font-bold">02</span>
+                </div>
+                <h3 className="text-lg font-bold mb-2 text-white">AI Processing</h3>
+                <p className="text-sm text-gray-400 mb-4">Context-aware understanding of your system.</p>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
+                    <span className="text-xs text-gray-400">Intent Analysis</span>
+                    <span className="text-xs text-indigo-400 ml-auto">install pytorch</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" style={{ animationDelay: '0.2s' }} />
+                    <span className="text-xs text-gray-400">Hardware Detection</span>
+                    <span className="text-xs text-indigo-400 ml-auto">RTX 4090</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" style={{ animationDelay: '0.4s' }} />
+                    <span className="text-xs text-gray-400">CUDA Version</span>
+                    <span className="text-xs text-indigo-400 ml-auto">12.3</span>
                   </div>
                 </div>
-              </motion.div>
+              </div>
+            </motion.div>
 
-              {/* Stage 3: Generate */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.3 }}
-                className="group relative"
-              >
-                <div className="glass-card rounded-xl p-6 h-full border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
-                      <Terminal size={20} className="text-purple-400" />
-                    </div>
-                    <span className="text-xs text-gray-500 font-mono">03</span>
+            {/* Stage 3: Command Generation */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="group"
+              data-testid="card-stage-generate"
+            >
+              <div className="glass-card rounded-xl p-6 h-full border border-purple-500/20 hover:border-purple-500/50 hover:shadow-[0_0_30px_rgba(139,92,246,0.15)] transition-all duration-300">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center border border-purple-500/30">
+                    <Code2 size={22} className="text-purple-400" />
                   </div>
-                  <h3 className="text-lg font-semibold mb-2 text-white">Command Gen</h3>
-                  <p className="text-sm text-gray-400 mb-4">Precise system commands</p>
-                  
-                  <div className="bg-black/40 rounded-lg p-3 border border-white/5 font-mono text-xs space-y-1">
-                    <div className="text-purple-300">$ sudo pacman -Syu</div>
-                    <div className="text-purple-300">$ sudo paccache -r</div>
+                  <span className="text-xs text-purple-400/60 font-mono font-bold">03</span>
+                </div>
+                <h3 className="text-lg font-bold mb-2 text-white">Command Generation</h3>
+                <p className="text-sm text-gray-400 mb-4">Optimized commands for your hardware.</p>
+                
+                <div className="bg-black/50 rounded-lg p-3 border border-purple-500/10 font-mono text-xs space-y-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-purple-400">$</span>
+                    <span className="text-gray-300">pip install torch+cu123</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-purple-400">$</span>
+                    <span className="text-gray-300">pip install torchvision</span>
                   </div>
                 </div>
-              </motion.div>
+                
+                <div className="mt-3 text-xs text-purple-400/70">Auto-optimized for CUDA 12.3</div>
+              </div>
+            </motion.div>
 
-              {/* Stage 4: Execute */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.45 }}
-                className="group"
-              >
-                <div className="glass-card rounded-xl p-6 h-full border border-emerald-500/20 hover:border-emerald-500/40 transition-all duration-300">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-10 h-10 rounded-lg bg-emerald-500/20 flex items-center justify-center">
-                      <Check size={20} className="text-emerald-400" />
-                    </div>
-                    <span className="text-xs text-gray-500 font-mono">04</span>
+            {/* Stage 4: Safe Execution */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+              className="group"
+              data-testid="card-stage-execute"
+            >
+              <div className="glass-card rounded-xl p-6 h-full border border-emerald-500/20 hover:border-emerald-500/50 hover:shadow-[0_0_30px_rgba(34,197,94,0.15)] transition-all duration-300">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30">
+                    <CheckCircle2 size={22} className="text-emerald-400" />
                   </div>
-                  <h3 className="text-lg font-semibold mb-2 text-white">Safe Execute</h3>
-                  <p className="text-sm text-gray-400 mb-4">Sandboxed & reversible</p>
-                  
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-emerald-400">
-                      <Check size={14} />
-                      <span className="text-xs">Packages updated</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-emerald-400">
-                      <Check size={14} />
-                      <span className="text-xs">Cache cleaned</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-emerald-400">
-                      <Check size={14} />
-                      <span className="text-xs">Rollback ready</span>
-                    </div>
+                  <span className="text-xs text-emerald-400/60 font-mono font-bold">04</span>
+                </div>
+                <h3 className="text-lg font-bold mb-2 text-white">Safe Execution</h3>
+                <p className="text-sm text-gray-400 mb-4">Sandboxed execution with instant rollback.</p>
+                
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-emerald-400">
+                    <Check size={14} />
+                    <span className="text-xs">PyTorch installed</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-emerald-400">
+                    <Check size={14} />
+                    <span className="text-xs">GPU verified: RTX 4090</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-emerald-400">
+                    <Check size={14} />
+                    <span className="text-xs">CUDA 12.3 compatible</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-emerald-400">
+                    <RotateCcw size={14} />
+                    <span className="text-xs">Rollback point created</span>
                   </div>
                 </div>
-              </motion.div>
-            </div>
+              </div>
+            </motion.div>
           </div>
 
-          {/* Feature highlights */}
+          {/* Feature Highlights - Enhanced */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.6 }}
-            className="mt-12 flex flex-wrap justify-center gap-6"
+            transition={{ delay: 0.4 }}
+            className="mt-16 flex flex-wrap justify-center gap-4"
           >
             {[
-              { label: "Natural Language", icon: MessageCircle },
-              { label: "Context Aware", icon: Cpu },
-              { label: "Sandboxed", icon: Shield },
-              { label: "Reversible", icon: RotateCcw },
-            ].map((item, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10"
-              >
-                <item.icon size={16} className="text-gray-400" />
-                <span className="text-sm text-gray-300">{item.label}</span>
-              </div>
-            ))}
+              { label: "Natural Language", icon: MessageCircle, color: "blue" },
+              { label: "Hardware Aware", icon: Cpu, color: "indigo" },
+              { label: "Sandboxed", icon: Shield, color: "purple" },
+              { label: "Instant Rollback", icon: RotateCcw, color: "green" },
+              { label: "Context Memory", icon: Brain, color: "violet" },
+            ].map((item, i) => {
+              const colorMap: Record<string, string> = {
+                blue: "text-blue-400 border-blue-500/30 bg-blue-500/5",
+                indigo: "text-indigo-400 border-indigo-500/30 bg-indigo-500/5",
+                purple: "text-purple-400 border-purple-500/30 bg-purple-500/5",
+                green: "text-emerald-400 border-emerald-500/30 bg-emerald-500/5",
+                violet: "text-violet-400 border-violet-500/30 bg-violet-500/5",
+              };
+              return (
+                <div
+                  key={i}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-full border ${colorMap[item.color]} transition-all duration-200 hover:scale-105`}
+                  data-testid={`badge-feature-${item.label.toLowerCase().replace(' ', '-')}`}
+                >
+                  <item.icon size={16} />
+                  <span className="text-sm font-medium">{item.label}</span>
+                </div>
+              );
+            })}
           </motion.div>
         </div>
       </section>
