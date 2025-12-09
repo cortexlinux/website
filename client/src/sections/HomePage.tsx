@@ -321,13 +321,14 @@ export default function HomePage({ onNavigate }: HomePageProps) {
   ];
 
   const comparisonData = [
-    { feature: "Open Source", icon: Github, cortex: true, toolA: false, toolB: false },
-    { feature: "Self-Hostable", icon: Server, cortex: true, toolA: false, toolB: true },
-    { feature: "AI-Native", icon: Sparkles, cortex: true, toolA: "partial", toolB: false },
-    { feature: "Edge Runtime", icon: Globe, cortex: true, toolA: true, toolB: false },
-    { feature: "Free Tier", icon: Infinity, cortex: "Unlimited", toolA: "Limited", toolB: "None" },
-    { feature: "Hardware Detection", icon: HardDrive, cortex: true, toolA: false, toolB: false },
-    { feature: "Auto Rollback", icon: Undo2, cortex: true, toolA: false, toolB: false },
+    { feature: "AI-assisted commands", icon: Sparkles, cortex: true, toolA: true, toolB: true },
+    { feature: "Hardware detection", icon: HardDrive, cortex: true, toolA: false, toolB: false },
+    { feature: "Dependency resolution", icon: Puzzle, cortex: true, toolA: false, toolB: false },
+    { feature: "GPU optimization", icon: Cpu, cortex: true, toolA: false, toolB: false },
+    { feature: "System configuration", icon: Server, cortex: true, toolA: false, toolB: false },
+    { feature: "OS-level integration", icon: Layers, cortex: true, toolA: false, toolB: false },
+    { feature: "Preview commands", icon: Eye, cortex: true, toolA: false, toolB: true },
+    { feature: "Rollback capability", icon: Undo2, cortex: true, toolA: false, toolB: false },
   ];
 
   const roadmapItems = [
@@ -958,10 +959,10 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                   </div>
                 </div>
                 <div className="p-6 text-center text-gray-500 font-medium">
-                  OpenAI Codex
+                  Warp/Gemini CLI
                 </div>
                 <div className="p-6 text-center text-gray-500 font-medium">
-                  GitHub Copilot
+                  Claude Code
                 </div>
               </div>
 
@@ -1096,9 +1097,9 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                     ) : null}
                   </div>
 
-                  {/* OpenAI Codex */}
+                  {/* Warp/Gemini CLI */}
                   <div className="text-center p-3 rounded-lg bg-white/[0.02]">
-                    <div className="text-xs text-gray-500 font-medium mb-2">Codex</div>
+                    <div className="text-xs text-gray-500 font-medium mb-2">Warp</div>
                     {row.toolA === true ? (
                       <div className="w-6 h-6 mx-auto rounded-full bg-gray-800 flex items-center justify-center">
                         <Check size={12} className="text-gray-500" />
@@ -1114,9 +1115,9 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                     )}
                   </div>
 
-                  {/* GitHub Copilot */}
+                  {/* Claude Code */}
                   <div className="text-center p-3 rounded-lg bg-white/[0.02]">
-                    <div className="text-xs text-gray-500 font-medium mb-2">Copilot</div>
+                    <div className="text-xs text-gray-500 font-medium mb-2">Claude</div>
                     {row.toolB === true ? (
                       <div className="w-6 h-6 mx-auto rounded-full bg-gray-800 flex items-center justify-center">
                         <Check size={12} className="text-gray-500" />
