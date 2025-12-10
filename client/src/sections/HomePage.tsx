@@ -52,6 +52,7 @@ import {
 } from "lucide-react";
 import { FaDiscord, FaTwitter } from "react-icons/fa";
 import type { Contributor } from "@shared/schema";
+import BlogPreview from "@/components/BlogPreview";
 
 interface GitHubStats {
   openIssues: number;
@@ -1945,6 +1946,9 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </div>
       </section>
 
+      {/* Blog Preview Section */}
+      <BlogPreview />
+
       {/* Final CTA */}
       <section id="join" className="py-32 px-4 relative overflow-hidden">
         <div className="gradient-glow left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] opacity-30" />
@@ -2036,10 +2040,10 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             <div>
               <h4 className="font-semibold mb-4 text-white">Resources</h4>
               <ul className="space-y-2 text-sm text-gray-400">
+                <li><a href="/blog" className="hover:text-white transition-colors" data-testid="footer-link-blog">Blog</a></li>
                 <li><button onClick={() => onNavigate("preview")} className="hover:text-white transition-colors" data-testid="footer-link-api">API Reference</button></li>
                 <li><a href="/beta" className="hover:text-white transition-colors" data-testid="footer-link-get-started">Get Started</a></li>
                 <li><button onClick={() => onNavigate("security")} className="hover:text-white transition-colors" data-testid="footer-link-security">Security</button></li>
-                <li><a href="https://github.com/cortexlinux/cortex" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors" data-testid="footer-link-examples">Examples</a></li>
               </ul>
             </div>
 

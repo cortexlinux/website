@@ -7,6 +7,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Menu, X, Sparkles, Github, Star } from "lucide-react";
 import FAQ from "./pages/faq";
 import BetaPage from "./pages/beta";
+import Blog from "./pages/blog";
+import BlogPostPage from "./pages/blog-post";
 import HomePage from "./sections/HomePage";
 
 export default function App() {
@@ -181,6 +183,8 @@ export default function App() {
             <Route path="/" component={() => <HomePage onNavigate={scrollToSection} />} />
             <Route path="/faq" component={FAQ} />
             <Route path="/beta" component={BetaPage} />
+            <Route path="/blog" component={Blog} />
+            <Route path="/blog/:slug" component={BlogPostPage} />
           </Switch>
 
           <Toaster />
