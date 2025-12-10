@@ -67,57 +67,15 @@ An AI-native system addresses these challenges at the kernel and system service 
 
 The heart of an AI-native system is its intent-resolution engine. This is not a simple chatbot wrapper—it's a sophisticated pipeline that transforms high-level user goals into verified, atomic system operations.
 
-\`\`\`
-┌────────────────────────────────────────────────────────────────────┐
-│                        USER INTENT LAYER                           │
-│   "Set up a PyTorch environment with GPU support for training"     │
-└───────────────────────────────┬────────────────────────────────────┘
-                                │
-                                ▼
-┌────────────────────────────────────────────────────────────────────┐
-│                      NLP PARSER MODULE                             │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────────────────┐  │
-│  │   Tokenizer  │─▶│ Intent       │─▶│ Entity Extraction        │  │
-│  │              │  │ Classifier   │  │ (pytorch, gpu, training) │  │
-│  └──────────────┘  └──────────────┘  └──────────────────────────┘  │
-│                                                                    │
-│  Output: { action: "env_setup", target: "pytorch",                 │
-│            requirements: ["gpu", "training"], confidence: 0.94 }   │
-└───────────────────────────────┬────────────────────────────────────┘
-                                │
-                                ▼
-┌────────────────────────────────────────────────────────────────────┐
-│                     ACTION RESOLVER                                │
-│  ┌──────────────────┐  ┌──────────────────┐  ┌─────────────────┐   │
-│  │ Hardware Query   │  │ Dependency Graph │  │ Conflict        │   │
-│  │ - GPU: RTX 4090  │  │ Resolution       │  │ Detection       │   │
-│  │ - Driver: 535.x  │  │ - PyTorch 2.1.2  │  │ - Version locks │   │
-│  │ - CUDA cap: 8.9  │  │ - CUDA 12.1      │  │ - Path conflicts│   │
-│  └──────────────────┘  │ - cuDNN 8.9.7    │  └─────────────────┘   │
-│                        └──────────────────┘                        │
-│                                                                    │
-│  Output: ExecutionPlan { steps: [...], estimated_time: "8min",     │
-│           rollback_points: [...], validation_checks: [...] }       │
-└───────────────────────────────┬────────────────────────────────────┘
-                                │
-                                ▼
-┌────────────────────────────────────────────────────────────────────┐
-│                     SYSTEM EXECUTOR                                │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │ Transaction Manager                                          │  │
-│  │ - Atomic operations with automatic rollback                  │  │
-│  │ - Progress tracking and ETA updates                          │  │
-│  │ - Real-time validation at each step                          │  │
-│  └──────────────────────────────────────────────────────────────┘  │
-│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────────┐ │
-│  │ Package Manager │  │ Driver Installer│  │ Environment        │ │
-│  │ Integration     │  │ (DKMS-aware)    │  │ Configurator       │ │
-│  └─────────────────┘  └─────────────────┘  └─────────────────────┘ │
-│                                                                    │
-│  Output: { success: true, snapshot_id: "snap-2025-01-15-0942",     │
-│            validation_report: {...}, rollback_available: true }    │
-└────────────────────────────────────────────────────────────────────┘
-\`\`\`
+The intent-resolution engine consists of three main layers working in sequence:
+
+**User Intent Layer:** Accepts natural language commands like "Set up a PyTorch environment with GPU support for training."
+
+**NLP Parser Module:** Tokenizes input, classifies intent, and extracts entities (pytorch, gpu, training). Outputs structured data with action type, target, requirements, and confidence score.
+
+**Action Resolver:** Queries hardware capabilities (GPU model, driver version, CUDA capability), builds dependency graphs, and detects potential conflicts. Produces an execution plan with steps, time estimates, rollback points, and validation checks.
+
+**System Executor:** Manages transactions atomically with automatic rollback, tracks progress, and validates each step in real-time. Integrates with package managers, driver installers, and environment configurators.
 
 ### Key Architectural Components
 
@@ -183,21 +141,7 @@ $ cortex hw detect --json
 
 The resolver builds a directed acyclic graph (DAG) of requirements:
 
-\`\`\`
-LLaMA Inference
-├── transformers >= 4.35.0
-│   └── tokenizers >= 0.15.0
-├── torch >= 2.1.0 [cu121]
-│   ├── cuda-runtime == 12.1
-│   │   └── nvidia-driver >= 530
-│   └── cudnn >= 8.9
-├── flash-attn >= 2.5.0
-│   ├── torch >= 2.0
-│   ├── cuda >= 11.6
-│   └── compute_capability >= 8.0 ✓ (8.9 detected)
-├── accelerate >= 0.25.0
-└── safetensors >= 0.4.0
-\`\`\`
+The resolver builds a dependency graph for LLaMA Inference including: transformers (with tokenizers), torch with CUDA runtime and cuDNN, flash-attn (requiring torch, CUDA 11.6+, and compute capability 8.0+), accelerate, and safetensors. Each dependency's version constraints are resolved against the detected hardware capabilities.
 
 **Stage 4: Execution Plan Generation**
 
@@ -428,29 +372,9 @@ cortex add package-a package-b
 
 ### The Diamond Dependency Problem, Amplified
 
-Traditional package managers handle the diamond dependency problem poorly:
+Traditional package managers handle the diamond dependency problem poorly. A simple case like PyTorch depending on both NumPy and CUDA Runtime, which both depend on cuDNN, is already challenging.
 
-\`\`\`
-         PyTorch
-        /       \\
-    NumPy       CUDA Runtime
-        \\       /
-         cuDNN
-\`\`\`
-
-But ML dependencies are more like:
-
-\`\`\`
-              Your Training Script
-             /        |        \\
-     PyTorch    Transformers    DeepSpeed
-        |    \\      / |          /  |
-       CUDA    Tokenizers   NCCL   MPI
-        |         |          |      |
-    Driver    Rust FFI    IB Driver  (System Library)
-        |
-    Kernel Module
-\`\`\`
+But ML dependencies are far more complex: your training script depends on PyTorch, Transformers, and DeepSpeed. These in turn depend on CUDA, Tokenizers, NCCL, and MPI. Going deeper, these depend on drivers, Rust FFI bindings, InfiniBand drivers, and system libraries. At the bottom, kernel modules must be compatible with everything above.
 
 When any node in this graph updates, the ripple effects are unpredictable. Traditional managers can't reason about cross-layer dependencies (Python packages depending on kernel modules).
 
@@ -633,134 +557,23 @@ The root cause is architectural: ML frameworks create deep dependency chains tha
 
 A "simple" PyTorch installation actually involves:
 
-\`\`\`
-┌──────────────────────────────────────────────────────────────────────┐
-│                      APPLICATION LAYER                               │
-│  Your training script                                                │
-│      │                                                               │
-│      ▼                                                               │
-│  PyTorch 2.1.2  ◄─── Compiled against specific CUDA version          │
-│      │                                                               │
-│      ├──────────────────────────────────────────┐                    │
-│      ▼                                          ▼                    │
-│  torch.cuda module                         cuDNN bindings            │
-└──────────────────────────────────────────────────────────────────────┘
-                         │                         │
-                         ▼                         ▼
-┌──────────────────────────────────────────────────────────────────────┐
-│                      RUNTIME LAYER                                   │
-│  CUDA Runtime (libcudart.so.12)          cuDNN 8.9 (libcudnn.so.8)   │
-│      │                                          │                    │
-│      └───────────────────┬──────────────────────┘                    │
-│                          ▼                                           │
-│                   CUDA Driver API                                    │
-└──────────────────────────────────────────────────────────────────────┘
-                          │
-                          ▼
-┌──────────────────────────────────────────────────────────────────────┐
-│                      DRIVER LAYER                                    │
-│  NVIDIA Kernel Module (nvidia.ko)                                    │
-│      │                                                               │
-│      └──── Compiled against specific kernel version (DKMS)           │
-└──────────────────────────────────────────────────────────────────────┘
-                          │
-                          ▼
-┌──────────────────────────────────────────────────────────────────────┐
-│                      KERNEL LAYER                                    │
-│  Linux Kernel 6.5.0 ◄─── Module interface version                    │
-│      │                                                               │
-│      └──── Kernel headers (required for DKMS builds)                 │
-└──────────────────────────────────────────────────────────────────────┘
-\`\`\`
+A "simple" PyTorch installation spans four distinct layers: the **Application Layer** (your training script using PyTorch, which is compiled against specific CUDA versions), the **Runtime Layer** (CUDA Runtime and cuDNN libraries that interface with the driver API), the **Driver Layer** (NVIDIA kernel module compiled via DKMS against your specific kernel), and the **Kernel Layer** (Linux kernel with required headers for module builds).
 
-**Every arrow is a potential failure point.** Change any component, and the entire stack can collapse. Traditional tools see only their layer—pip sees Python packages, apt sees system packages, DKMS sees kernel modules—but none understands the full graph.
+**Every connection between these layers is a potential failure point.** Change any component, and the entire stack can collapse. Traditional tools see only their layer—pip sees Python packages, apt sees system packages, DKMS sees kernel modules—but none understands the full graph.
 
 ---
 
 ## The Dependency Resolution Architecture
 
-Cortex implements a unified dependency resolver that understands all layers simultaneously. Here's how it works:
+Cortex implements a unified dependency resolver that works through multiple phases:
 
-\`\`\`
-┌────────────────────────────────────────────────────────────────────┐
-│                    DEPENDENCY RESOLUTION FLOW                       │
-└────────────────────────────────────────────────────────────────────┘
+**Phase 1: Hardware Introspection** - The system queries your hardware configuration including GPU model, compute capability, driver version, maximum CUDA version supported, available cuDNN versions, NVLink status, and PCIe generation.
 
-User Request: "cortex add pytorch transformers flash-attn"
-                                │
-                                ▼
-┌────────────────────────────────────────────────────────────────────┐
-│  PHASE 1: HARDWARE INTROSPECTION                                   │
-│  ┌─────────────────────────────────────────────────────────────┐   │
-│  │  $ cortex hw query                                          │   │
-│  │  {                                                          │   │
-│  │    "gpu": "RTX 4090",                                       │   │
-│  │    "compute_capability": "8.9",                             │   │
-│  │    "driver": "535.154.05",                                  │   │
-│  │    "cuda_max": "12.2",                                      │   │
-│  │    "cudnn_available": ["8.9.7", "8.6.0"],                   │   │
-│  │    "nvlink": false,                                         │   │
-│  │    "pcie_gen": 4                                            │   │
-│  │  }                                                          │   │
-│  └─────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────┬────────────────────────────────────┘
-                                │
-                                ▼
-┌────────────────────────────────────────────────────────────────────┐
-│  PHASE 2: CONSTRAINT COLLECTION                                    │
-│  ┌─────────────────────────────────────────────────────────────┐   │
-│  │  Package Requirements:                                      │   │
-│  │    pytorch: needs CUDA >= 11.8, Python >= 3.8               │   │
-│  │    transformers: needs torch, tokenizers                    │   │
-│  │    flash-attn: needs torch, CUDA >= 11.6, SM >= 80          │   │
-│  │                                                             │   │
-│  │  Hardware Constraints:                                      │   │
-│  │    GPU SM 8.9 → Compatible with flash-attn ✓                │   │
-│  │    Driver 535.x → Max CUDA runtime 12.2                     │   │
-│  │                                                             │   │
-│  │  Environment Constraints:                                   │   │
-│  │    Existing Python: 3.11.5                                  │   │
-│  │    Existing CUDA: None (fresh install)                      │   │
-│  └─────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────┬────────────────────────────────────┘
-                                │
-                                ▼
-┌────────────────────────────────────────────────────────────────────┐
-│  PHASE 3: SATISFIABILITY ANALYSIS                                  │
-│  ┌─────────────────────────────────────────────────────────────┐   │
-│  │  SAT Solver Input:                                          │   │
-│  │    ∀ pkg ∈ requested: version(pkg) ∈ available(pkg)        │   │
-│  │    ∀ dep ∈ deps(pkg): satisfied(dep)                       │   │
-│  │    cuda_version ≤ driver_max_cuda                          │   │
-│  │    cuda_version ≥ min(cuda_requirements)                   │   │
-│  │    compute_capability ≥ min(sm_requirements)               │   │
-│  │                                                             │   │
-│  │  Solution:                                                  │   │
-│  │    pytorch=2.1.2+cu121, cuda=12.1, cudnn=8.9.7             │   │
-│  │    flash-attn=2.5.0 (compiled for sm_89)                   │   │
-│  │    transformers=4.36.0, tokenizers=0.15.0                  │   │
-│  └─────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────┬────────────────────────────────────┘
-                                │
-                                ▼
-┌────────────────────────────────────────────────────────────────────┐
-│  PHASE 4: EXECUTION PLAN GENERATION                                │
-│  ┌─────────────────────────────────────────────────────────────┐   │
-│  │  Ordered Steps (respecting dependencies):                   │   │
-│  │    1. Snapshot current state → snap-pre-install             │   │
-│  │    2. Install CUDA toolkit 12.1 (system)                    │   │
-│  │    3. Install cuDNN 8.9.7 (system)                          │   │
-│  │    4. Install pytorch 2.1.2+cu121 (pip, isolated)           │   │
-│  │    5. Install tokenizers 0.15.0 (pip)                       │   │
-│  │    6. Install transformers 4.36.0 (pip)                     │   │
-│  │    7. Build flash-attn 2.5.0 from source (pip)              │   │
-│  │    8. Validate entire stack                                 │   │
-│  │    9. Create success snapshot → snap-post-install           │   │
-│  │                                                             │   │
-│  │  Rollback triggers defined for each step                    │   │
-│  └─────────────────────────────────────────────────────────────┘   │
-└────────────────────────────────────────────────────────────────────┘
-\`\`\`
+**Phase 2: Constraint Collection** - Package requirements are gathered (e.g., pytorch needs CUDA >= 11.8 and Python >= 3.8; flash-attn needs compute capability >= 8.0). These are validated against detected hardware constraints and existing environment state.
+
+**Phase 3: Satisfiability Analysis** - A constraint solver determines compatible versions across all packages, ensuring CUDA version is within driver limits while meeting all package requirements. The solution specifies exact versions for each component.
+
+**Phase 4: Execution Plan Generation** - An ordered list of installation steps is created, respecting dependencies. This includes snapshotting current state, installing system components (CUDA toolkit, cuDNN), installing Python packages in order, validating the entire stack, and creating a success snapshot. Rollback triggers are defined for each step.
 
 ---
 
@@ -1394,70 +1207,17 @@ This means many "optimizations" that target compute efficiency (like kernel fusi
 
 GPU memory is not monolithic. Understanding the hierarchy is essential for effective optimization:
 
-\`\`\`
-┌─────────────────────────────────────────────────────────────────────────┐
-│                          GPU MEMORY HIERARCHY                           │
-│                            (NVIDIA Ampere/Ada)                          │
-└─────────────────────────────────────────────────────────────────────────┘
+The GPU memory hierarchy consists of four levels, from slowest to fastest:
 
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         GLOBAL MEMORY (HBM/GDDR)                        │
-│  RTX 4090: 24GB GDDR6X @ 1008 GB/s                                      │
-│  A100:     80GB HBM2e  @ 2039 GB/s                                      │
-│  H100:     80GB HBM3   @ 3350 GB/s                                      │
-│                                                                         │
-│  Latency: ~400-600 cycles                                               │
-│  This is where model weights, activations, and gradients live           │
-└─────────────────────────────────────────────────────────────────────────┘
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│                            L2 CACHE                                     │
-│  RTX 4090: 72MB                                                         │
-│  A100:     40MB                                                         │
-│  H100:     50MB                                                         │
-│                                                                         │
-│  Bandwidth: ~3-5 TB/s                                                   │
-│  Latency: ~100-200 cycles                                               │
-│  Shared across all SMs; automatic caching of frequently accessed data   │
-└─────────────────────────────────────────────────────────────────────────┘
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    SHARED MEMORY / L1 CACHE (per SM)                    │
-│  RTX 4090: 128KB per SM (configurable split with L1)                    │
-│  A100:     164KB per SM                                                 │
-│  H100:     228KB per SM                                                 │
-│                                                                         │
-│  Bandwidth: ~12-19 TB/s                                                 │
-│  Latency: ~20-30 cycles                                                 │
-│  Programmer-controlled scratchpad + automatic L1 cache                  │
-└─────────────────────────────────────────────────────────────────────────┘
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         REGISTERS (per SM)                              │
-│  RTX 4090: 256KB per SM (65536 32-bit registers)                        │
-│  A100:     256KB per SM                                                 │
-│  H100:     256KB per SM                                                 │
-│                                                                         │
-│  Bandwidth: Essentially unlimited (~80 TB/s equivalent)                 │
-│  Latency: 1 cycle                                                       │
-│  Fastest storage; held per-thread during kernel execution               │
-└─────────────────────────────────────────────────────────────────────────┘
+**Global Memory (HBM/GDDR):** The main GPU memory where model weights, activations, and gradients live. RTX 4090 has 24GB at 1008 GB/s, A100 has 80GB at 2039 GB/s, H100 has 80GB at 3350 GB/s. Latency is 400-600 cycles.
 
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      MEMORY BANDWIDTH IMPLICATIONS                      │
-│                                                                         │
-│  If your kernel needs 100GB/s of data movement:                         │
-│    - From Global Memory: Uses ~10% of RTX 4090 bandwidth                │
-│    - From L2 Cache:      Uses ~3% of available bandwidth                │
-│    - From Shared Memory: Uses <1% of available bandwidth                │
-│                                                                         │
-│  ➜ Optimizations that keep data in L2/Shared Memory win                 │
-│  ➜ Flash Attention works because it maximizes shared memory usage       │
-└─────────────────────────────────────────────────────────────────────────┘
-\`\`\`
+**L2 Cache:** Shared across all SMs with automatic caching. RTX 4090 has 72MB, A100 has 40MB, H100 has 50MB. Bandwidth is 3-5 TB/s with 100-200 cycle latency.
+
+**Shared Memory / L1 Cache (per SM):** Programmer-controlled scratchpad plus automatic L1 cache. RTX 4090 has 128KB per SM, A100 has 164KB, H100 has 228KB. Bandwidth is 12-19 TB/s with 20-30 cycle latency.
+
+**Registers (per SM):** The fastest storage, held per-thread during kernel execution. All modern GPUs have 256KB per SM. Bandwidth is effectively unlimited with 1-cycle latency.
+
+**The key insight:** If your kernel needs 100GB/s of data movement, accessing from Global Memory uses ~10% of RTX 4090 bandwidth, from L2 Cache uses ~3%, and from Shared Memory uses less than 1%. Optimizations that keep data in L2/Shared Memory win. Flash Attention works because it maximizes shared memory usage.
 
 ### Why This Matters for ML
 
@@ -1776,32 +1536,9 @@ Understanding the relationship between batch size and memory is crucial for maxi
 
 ### Memory Breakdown for a 7B Parameter Model
 
-\`\`\`
-┌────────────────────────────────────────────────────────────────┐
-│               GPU MEMORY BREAKDOWN: 7B MODEL                    │
-│                    (FP16 Training)                              │
-├────────────────────────────────────────────────────────────────┤
-│                                                                │
-│  Model Weights (FP16):                                         │
-│    7B × 2 bytes = 14 GB                                        │
-│                                                                │
-│  Gradients (FP16):                                             │
-│    7B × 2 bytes = 14 GB                                        │
-│                                                                │
-│  Optimizer States (FP32 for AdamW):                            │
-│    Momentum: 7B × 4 bytes = 28 GB                              │
-│    Variance: 7B × 4 bytes = 28 GB                              │
-│    Master weights: 7B × 4 bytes = 28 GB                        │
-│    Subtotal: 84 GB  (can offload to CPU)                       │
-│                                                                │
-│  Activations (batch 1, seq 2048, 32 layers):                   │
-│    Without checkpointing: ~40 GB                               │
-│    With checkpointing (8 segments): ~5 GB                      │
-│                                                                │
-│  TOTAL without offload/checkpointing: 14+14+84+40 = 152 GB     │
-│  TOTAL with offload+checkpointing: 14+14+5 = 33 GB             │
-└────────────────────────────────────────────────────────────────┘
-\`\`\`
+For a 7B parameter model with FP16 training, memory breaks down as follows: **Model Weights** require 14 GB (7B × 2 bytes). **Gradients** require another 14 GB. **Optimizer States** for AdamW in FP32 require 84 GB total (28 GB each for momentum, variance, and master weights), though these can be offloaded to CPU. **Activations** for batch size 1, sequence length 2048, and 32 layers require ~40 GB without checkpointing or ~5 GB with gradient checkpointing using 8 segments.
+
+**Total memory:** Without optimizations: 152 GB. With CPU offload and gradient checkpointing: 33 GB.
 
 ### Batch Size Scaling Table (RTX 4090, 24GB)
 
@@ -1840,63 +1577,13 @@ for step, batch in enumerate(dataloader):
 
 Understanding your GPU interconnect determines your scaling strategy:
 
-\`\`\`
-┌────────────────────────────────────────────────────────────────────────┐
-│                    MULTI-GPU TOPOLOGIES                                │
-└────────────────────────────────────────────────────────────────────────┘
+There are three common multi-GPU topologies:
 
-Option 1: PCIe Connected (Consumer/Workstation)
-┌─────────┐        ┌─────────┐        ┌─────────┐        ┌─────────┐
-│  GPU 0  │◄──────►│  GPU 1  │◄──────►│  GPU 2  │◄──────►│  GPU 3  │
-│ RTX4090 │  PCIe  │ RTX4090 │  PCIe  │ RTX4090 │  PCIe  │ RTX4090 │
-└────┬────┘  4.0   └────┬────┘  4.0   └────┬────┘  4.0   └────┬────┘
-     │       x16        │       x16        │       x16        │
-     └──────────────────┴──────────────────┴──────────────────┘
-                              │
-                              ▼
-                         CPU / RAM
-                              
-Bandwidth: ~32 GB/s per direction
-Latency: ~1-5 μs
-Best for: Data parallel with gradient compression
+**Option 1: PCIe Connected (Consumer/Workstation)** - GPUs communicate through PCIe 4.0 x16 via the CPU. Bandwidth is ~32 GB/s per direction with 1-5 μs latency. Best for data parallel training with gradient compression.
 
+**Option 2: NVLink Connected (Data Center)** - GPUs have direct high-speed links. A100s achieve 600 GB/s bidirectional bandwidth with 0.3-0.5 μs latency. Best for model parallel and tensor parallel strategies.
 
-Option 2: NVLink Connected (Data Center)
-┌─────────┐   NVLink   ┌─────────┐
-│  GPU 0  │◄─────────►│  GPU 1  │
-│  A100   │  600 GB/s  │  A100   │
-└────┬────┘            └────┬────┘
-     │     NVLink           │
-     ▼      ▲               ▼
-┌────┴────┐ │ 600 GB/s ┌────┴────┐
-│  GPU 2  │◄┴─────────►│  GPU 3  │
-│  A100   │            │  A100   │
-└─────────┘            └─────────┘
-
-Bandwidth: 600 GB/s bidirectional (NVLink 4.0)
-Latency: ~0.3-0.5 μs
-Best for: Model parallel, tensor parallel
-
-
-Option 3: NVSwitch Full Mesh (DGX)
-     ┌─────────────────────────────────────┐
-     │            NVSwitch Fabric          │
-     │         (All-to-all connectivity)   │
-     └──┬────────┬────────┬────────┬───────┘
-        │        │        │        │
-     ┌──▼──┐  ┌──▼──┐  ┌──▼──┐  ┌──▼──┐
-     │GPU 0│  │GPU 1│  │GPU 2│  │GPU 3│
-     │ H100│  │ H100│  │ H100│  │ H100│
-     └─────┘  └─────┘  └─────┘  └─────┘
-        │        │        │        │
-     ┌──▼──┐  ┌──▼──┐  ┌──▼──┐  ┌──▼──┐
-     │GPU 4│  │GPU 5│  │GPU 6│  │GPU 7│
-     │ H100│  │ H100│  │ H100│  │ H100│
-     └─────┘  └─────┘  └─────┘  └─────┘
-
-Bandwidth: 900 GB/s per GPU (NVSwitch 4.0)
-Best for: Large model training with tensor parallelism
-\`\`\`
+**Option 3: NVSwitch Full Mesh (DGX)** - All 8 GPUs connect through NVSwitch fabric with all-to-all connectivity. H100s achieve 900 GB/s per GPU. Best for large model training with tensor parallelism.
 
 ### Check Your Topology
 
@@ -2164,70 +1851,17 @@ This guide presents a systematic approach to eliminating hidden state and achiev
 
 A reproducible ML pipeline must track every component that affects the final model. Here's the complete architecture:
 
-\`\`\`
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                        REPRODUCIBLE ML PIPELINE ARCHITECTURE                     │
-└─────────────────────────────────────────────────────────────────────────────────┘
+A reproducible ML pipeline flows through five main stages:
 
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   RAW DATA      │    │   VERSIONED     │    │  PREPROCESSED   │
-│   SOURCES       │───▶│   DATA (DVC)    │───▶│   FEATURES      │
-│                 │    │                 │    │                 │
-│ • S3 buckets    │    │ • data.csv.dvc  │    │ • train.parquet │
-│ • Databases     │    │ • images.dvc    │    │ • val.parquet   │
-│ • API feeds     │    │ • .dvc/config   │    │ • test.parquet  │
-└─────────────────┘    └────────┬────────┘    └────────┬────────┘
-                                │                       │
-                    ┌───────────┴───────────────────────┴──────────────┐
-                    │           PREPROCESSING PIPELINE                  │
-                    │  ┌─────────────────────────────────────────────┐ │
-                    │  │ preprocessing/                               │ │
-                    │  │   ├── __init__.py                            │ │
-                    │  │   ├── transforms.py  (deterministic!)        │ │
-                    │  │   ├── config.yaml    (versioned params)      │ │
-                    │  │   └── Dockerfile     (locked environment)    │ │
-                    │  └─────────────────────────────────────────────┘ │
-                    └───────────────────────────┬──────────────────────┘
-                                                │
-                                                ▼
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                              TRAINING PIPELINE                                   │
-│  ┌────────────────────┐  ┌────────────────────┐  ┌────────────────────────────┐ │
-│  │    ENVIRONMENT     │  │   HYPERPARAMETERS  │  │        TRAINING            │ │
-│  │                    │  │                    │  │                            │ │
-│  │ • requirements.txt │  │ • config.yaml      │  │ • train.py                 │ │
-│  │ • conda.lock       │  │ • sweeps.yaml      │  │ • SEED=42 (explicit)       │ │
-│  │ • Dockerfile       │  │ • (git versioned)  │  │ • Checkpoints every N steps│ │
-│  │ • CUDA version     │  │                    │  │ • Metrics logged           │ │
-│  └────────────────────┘  └────────────────────┘  └────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────────────────────────┘
-                                                │
-                                                ▼
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                              VALIDATION & TESTING                                │
-│  ┌────────────────────────────────────────────────────────────────────────────┐ │
-│  │ Validation Suite:                                                          │ │
-│  │   • Holdout set evaluation (deterministic split)                           │ │
-│  │   • Cross-validation with fixed folds                                      │ │
-│  │   • Statistical significance tests                                         │ │
-│  │   • Bias/fairness checks                                                   │ │
-│  │   • Performance regression tests                                           │ │
-│  └────────────────────────────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────────────────────────┘
-                                                │
-                                                ▼
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                         ARTIFACT REGISTRY & DEPLOYMENT                           │
-│  ┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────────────┐  │
-│  │   MODEL REGISTRY    │  │   EXPERIMENT LOG    │  │     DEPLOYMENT          │  │
-│  │                     │  │                     │  │                         │  │
-│  │ • model.pt (DVC)    │  │ • MLflow/W&B run    │  │ • Versioned container   │  │
-│  │ • model_card.md     │  │ • All hyperparams   │  │ • A/B test config       │  │
-│  │ • metrics.json      │  │ • All metrics       │  │ • Rollback available    │  │
-│  │ • SHA256 hash       │  │ • Git commit SHA    │  │ • Monitoring enabled    │  │
-│  └─────────────────────┘  └─────────────────────┘  └─────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────────────────────┘
-\`\`\`
+**1. Data Layer:** Raw data sources (S3 buckets, databases, API feeds) flow into versioned data tracked by DVC (.dvc files and config), which produces preprocessed features (train/val/test parquet files).
+
+**2. Preprocessing Pipeline:** Contains deterministic transforms, versioned config parameters, and a locked Dockerfile environment.
+
+**3. Training Pipeline:** Combines the locked environment (requirements.txt, conda.lock, Dockerfile, CUDA version), versioned hyperparameters (config.yaml, sweeps.yaml), and training code with explicit seeds and checkpoint logging.
+
+**4. Validation & Testing:** Includes holdout evaluation with deterministic splits, cross-validation with fixed folds, statistical significance tests, bias/fairness checks, and performance regression tests.
+
+**5. Artifact Registry & Deployment:** The model registry stores model weights (DVC-tracked), model cards, metrics, and SHA256 hashes. Experiment logs capture all hyperparams, metrics, and git commit SHAs. Deployment uses versioned containers with A/B testing, rollback capability, and monitoring.
 
 ### Key Principle: Everything Is Versioned
 
@@ -3056,98 +2690,9 @@ This guide provides the data you need to make an informed infrastructure decisio
 
 Understanding the fundamental differences is essential before comparing performance:
 
-\`\`\`
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                        BARE METAL ARCHITECTURE                                   │
-└─────────────────────────────────────────────────────────────────────────────────┘
+**Bare Metal Architecture:** Your ML application runs directly on ML frameworks (PyTorch, TensorFlow), which use CUDA, cuDNN, and NCCL. These interface with the NVIDIA driver, which communicates with the Linux kernel for native hardware access to GPUs, CPUs, RAM, and storage.
 
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                           YOUR ML APPLICATION                                    │
-│                    (Training Script, Inference Server)                           │
-└─────────────────────────────────────────────────────────────────────────────────┘
-                                      │
-                                      ▼
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                         ML FRAMEWORKS (PyTorch, TensorFlow)                      │
-│                                      │                                           │
-│              ┌───────────────────────┼───────────────────────┐                   │
-│              ▼                       ▼                       ▼                   │
-│      ┌──────────────┐       ┌──────────────┐       ┌──────────────┐             │
-│      │  CUDA 12.1   │       │  cuDNN 8.9   │       │   NCCL 2.18  │             │
-│      └──────────────┘       └──────────────┘       └──────────────┘             │
-└─────────────────────────────────────────────────────────────────────────────────┘
-                                      │
-                                      ▼
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                        NVIDIA DRIVER (535.154.05)                                │
-│                        Direct kernel module access                               │
-└─────────────────────────────────────────────────────────────────────────────────┘
-                                      │
-                                      ▼
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                           LINUX KERNEL (6.5.0)                                   │
-│                        Native hardware access                                    │
-└─────────────────────────────────────────────────────────────────────────────────┘
-                                      │
-                                      ▼
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                              HARDWARE                                            │
-│   ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐    │
-│   │  GPU × 8    │  │  CPU × 64   │  │  RAM 512GB  │  │  NVMe Storage       │    │
-│   │  (H100 SXM) │  │  (EPYC)     │  │  (DDR5)     │  │  (Direct attached)  │    │
-│   └─────────────┘  └─────────────┘  └─────────────┘  └─────────────────────┘    │
-└─────────────────────────────────────────────────────────────────────────────────┘
-
-
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                      CONTAINERIZED ARCHITECTURE                                  │
-└─────────────────────────────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│  CONTAINER 1                 │  CONTAINER 2                │  CONTAINER 3       │
-│  ┌────────────────────────┐  │  ┌────────────────────────┐ │  ┌──────────────┐  │
-│  │ ML Application         │  │  │ ML Application         │ │  │ Monitoring   │  │
-│  │ PyTorch 2.1.2          │  │  │ TensorFlow 2.15        │ │  │ Prometheus   │  │
-│  │ CUDA Toolkit 12.1      │  │  │ CUDA Toolkit 11.8      │ │  │ Grafana      │  │
-│  │ cuDNN 8.9              │  │  │ cuDNN 8.6              │ │  │              │  │
-│  │ Python 3.11            │  │  │ Python 3.10            │ │  │              │  │
-│  └────────────────────────┘  │  └────────────────────────┘ │  └──────────────┘  │
-└─────────────────────────────────────────────────────────────────────────────────┘
-                                      │
-                                      ▼
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                     NVIDIA CONTAINER TOOLKIT                                     │
-│   ┌─────────────────────────────────────────────────────────────────────────┐   │
-│   │  nvidia-container-runtime                                                │   │
-│   │    • Injects GPU device files into containers                            │   │
-│   │    • Maps CUDA libraries from host                                       │   │
-│   │    • Handles driver compatibility layer                                  │   │
-│   └─────────────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────────┘
-                                      │
-                                      ▼
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                      CONTAINER RUNTIME (containerd)                              │
-│                              + Docker/Podman                                     │
-└─────────────────────────────────────────────────────────────────────────────────┘
-                                      │
-                                      ▼
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                        NVIDIA DRIVER (535.154.05)                                │
-│                        Shared across all containers                              │
-└─────────────────────────────────────────────────────────────────────────────────┘
-                                      │
-                                      ▼
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                           LINUX KERNEL (6.5.0)                                   │
-└─────────────────────────────────────────────────────────────────────────────────┘
-                                      │
-                                      ▼
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                              HARDWARE                                            │
-│   (Same hardware as bare metal, accessed through additional abstraction)         │
-└─────────────────────────────────────────────────────────────────────────────────┘
-\`\`\`
+**Containerized Architecture:** Multiple containers (each with their own ML framework, CUDA toolkit version, and Python environment) run on top of the NVIDIA Container Toolkit, which injects GPU device files, maps CUDA libraries from the host, and handles driver compatibility. This sits on the container runtime (containerd/Docker), which uses the shared NVIDIA driver and Linux kernel to access the same underlying hardware through an additional abstraction layer.
 
 ### Key Differences
 
@@ -3296,59 +2841,13 @@ services:
 
 ## Decision Framework: When to Use Each
 
-\`\`\`
-                    CONTAINER VS BARE METAL DECISION FLOWCHART
-                    ==========================================
-
-                              START HERE
-                                  │
-                                  ▼
-                    ┌─────────────────────────────┐
-                    │ Do you need to run multiple │
-                    │ CUDA versions simultaneously?│
-                    └─────────────────────────────┘
-                          │              │
-                        YES              NO
-                          │              │
-                          ▼              ▼
-                    ┌──────────┐   ┌─────────────────────────────┐
-                    │ CONTAINER│   │ Is reproducibility across   │
-                    │ (Strong) │   │ machines critical?          │
-                    └──────────┘   └─────────────────────────────┘
-                                         │              │
-                                       YES              NO
-                                         │              │
-                                         ▼              ▼
-                                   ┌──────────┐   ┌─────────────────────────────┐
-                                   │ CONTAINER│   │ Do you have dedicated       │
-                                   │ (Strong) │   │ infra/MLOps team?           │
-                                   └──────────┘   └─────────────────────────────┘
-                                                        │              │
-                                                       NO            YES
-                                                        │              │
-                                                        ▼              ▼
-                                   ┌─────────────────────────────┐  ┌─────────────────────────────┐
-                                   │ CONTAINER                    │  │ Is this production          │
-                                   │ (Reduces ops burden)         │  │ inference with SLA?         │
-                                   └─────────────────────────────┘  └─────────────────────────────┘
-                                                                          │              │
-                                                                        YES              NO
-                                                                          │              │
-                                                                          ▼              ▼
-                                                       ┌─────────────────────────────┐  ┌──────────────┐
-                                                       │ Is latency ultra-critical   │  │ BARE METAL   │
-                                                       │ (P99 < 5ms)?                 │  │ (Maximum     │
-                                                       └─────────────────────────────┘  │  flexibility) │
-                                                              │              │          └──────────────┘
-                                                            YES              NO
-                                                              │              │
-                                                              ▼              ▼
-                                                        ┌──────────┐   ┌──────────┐
-                                                        │BARE METAL│   │ CONTAINER│
-                                                        │ (Lowest  │   │ (Good    │
-                                                        │  latency)│   │  balance)│
-                                                        └──────────┘   └──────────┘
-\`\`\`
+**Decision Framework:**
+- If you need multiple CUDA versions simultaneously → **Container** (strong recommendation)
+- If reproducibility across machines is critical → **Container** (strong recommendation)
+- If you don't have a dedicated infra/MLOps team → **Container** (reduces ops burden)
+- If this is production inference with SLA and ultra-critical latency (P99 < 5ms) → **Bare Metal** (lowest latency)
+- If this is production inference but latency isn't ultra-critical → **Container** (good balance)
+- For non-production work with a dedicated team → **Bare Metal** (maximum flexibility)
 
 ### Summary Recommendations
 
@@ -3460,35 +2959,12 @@ torchrun --nnodes=4 --nproc_per_node=8 \\
 
 ### Local NVMe vs Networked Storage
 
-\`\`\`
-                      STORAGE PERFORMANCE COMPARISON
-                      ==============================
-
-                    ┌────────────────────────────────────────────────┐
-     LOCAL NVMe     │████████████████████████████████████████████████│  7.0 GB/s
-     (Direct)       │                                                │  Sequential Read
-                    └────────────────────────────────────────────────┘
-
-                    ┌──────────────────────────────────────────────┐
-     LOCAL NVMe     │██████████████████████████████████████████████│    6.5 GB/s
-     (Container)    │                                              │    Sequential Read
-                    └──────────────────────────────────────────────┘
-
-                    ┌──────────────────────────────────┐
-     NFS over       │██████████████████████████████████│              3.2 GB/s
-     100GbE         │                                  │              Sequential Read
-                    └──────────────────────────────────┘
-
-                    ┌──────────────────────┐
-     CEPH/Rook      │██████████████████████│                          2.1 GB/s
-     (K8s native)   │                      │                          Sequential Read
-                    └──────────────────────┘
-
-                    ┌─────────────────┐
-     EBS gp3        │█████████████████│                               1.0 GB/s
-     (AWS)          │                 │                               Sequential Read
-                    └─────────────────┘
-\`\`\`
+**Storage Performance Comparison (Sequential Read):**
+- Local NVMe (Direct): 7.0 GB/s
+- Local NVMe (Container): 6.5 GB/s
+- NFS over 100GbE: 3.2 GB/s
+- CEPH/Rook (K8s native): 2.1 GB/s
+- EBS gp3 (AWS): 1.0 GB/s
 
 ### Recommendations by Workload
 
@@ -3771,102 +3247,13 @@ This guide covers everything from basic concepts to production-ready configurati
 
 There are three fundamental approaches to distributing training across GPUs:
 
-\`\`\`
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                           DATA PARALLELISM (DP/DDP)                              │
-│                     "Same model, different data batches"                         │
-└─────────────────────────────────────────────────────────────────────────────────┘
+**Data Parallelism (DP/DDP)** - "Same model, different data batches": Each GPU holds a full copy of the model but processes different data batches. After computing gradients, an AllReduce operation synchronizes them across all GPUs. Simple and efficient for models that fit in GPU memory. Best for ResNet, BERT-base, and models under 2B parameters.
 
-     GPU 0                    GPU 1                    GPU 2                    GPU 3
-  ┌──────────────┐        ┌──────────────┐        ┌──────────────┐        ┌──────────────┐
-  │ Full Model   │        │ Full Model   │        │ Full Model   │        │ Full Model   │
-  │ (Copy)       │        │ (Copy)       │        │ (Copy)       │        │ (Copy)       │
-  │              │        │              │        │              │        │              │
-  │ Batch 0-31   │        │ Batch 32-63  │        │ Batch 64-95  │        │ Batch 96-127 │
-  └──────────────┘        └──────────────┘        └──────────────┘        └──────────────┘
-         │                       │                       │                       │
-         └───────────────────────┴───────────────────────┴───────────────────────┘
-                                          │
-                                          ▼
-                              ┌───────────────────────┐
-                              │   AllReduce Gradients │
-                              │   (Synchronized)      │
-                              └───────────────────────┘
+**Model Parallelism (Tensor)** - "Split layers across GPUs": Different layers run on different GPUs, with activations flowing sequentially through the pipeline. Enables training models larger than single GPU memory, but GPUs sit idle during other layers' forward/backward passes. Best for very deep models in memory-constrained scenarios.
 
-  Pros: Simple, efficient for models that fit in GPU memory
-  Cons: Each GPU needs full model copy; limited by single-GPU memory
-  Best for: ResNet, BERT-base, most models < 2B parameters
+**Pipeline Parallelism** - "Micro-batches flowing through GPU pipeline": Multiple micro-batches are processed simultaneously at different pipeline stages, improving GPU utilization over naive model parallelism. Has pipeline bubbles (idle time) and complex gradient accumulation. Best for very large models (100B+) with high GPU counts.
 
-
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                           MODEL PARALLELISM (Tensor)                             │
-│                     "Split layers across GPUs"                                   │
-└─────────────────────────────────────────────────────────────────────────────────┘
-
-     GPU 0                    GPU 1                    GPU 2                    GPU 3
-  ┌──────────────┐        ┌──────────────┐        ┌──────────────┐        ┌──────────────┐
-  │ Layers 0-7   │───────▶│ Layers 8-15  │───────▶│ Layers 16-23 │───────▶│ Layers 24-31 │
-  │              │        │              │        │              │        │              │
-  │ Embedding    │        │ Attention    │        │ Attention    │        │ LM Head      │
-  │ First Blocks │        │ Middle Blocks│        │ Later Blocks │        │ Output       │
-  └──────────────┘        └──────────────┘        └──────────────┘        └──────────────┘
-         ▲                                                                       │
-         └───────────────────────────────────────────────────────────────────────┘
-                                    Activation flow
-
-  Pros: Can train models larger than single GPU memory
-  Cons: Sequential execution; GPUs idle during forward/backward of other layers
-  Best for: Very deep models, memory-constrained scenarios
-
-
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                           PIPELINE PARALLELISM                                   │
-│                     "Micro-batches flowing through GPU pipeline"                 │
-└─────────────────────────────────────────────────────────────────────────────────┘
-
-  Time ──────────────────────────────────────────────────────────────────────────▶
-
-         GPU 0          GPU 1          GPU 2          GPU 3
-  t=0    [MB0 Fwd]
-  t=1    [MB1 Fwd]      [MB0 Fwd]
-  t=2    [MB2 Fwd]      [MB1 Fwd]      [MB0 Fwd]
-  t=3    [MB3 Fwd]      [MB2 Fwd]      [MB1 Fwd]      [MB0 Fwd]
-  t=4                   [MB3 Fwd]      [MB2 Fwd]      [MB1 Fwd]
-                                       [MB0 Bwd]      [MB0 Bwd]
-  t=5                                  [MB3 Fwd]      [MB2 Fwd]
-                        [MB0 Bwd]      [MB1 Bwd]      [MB1 Bwd]
-  ...
-
-  MB = Micro-batch, Fwd = Forward pass, Bwd = Backward pass
-
-  Pros: Better GPU utilization than naive model parallelism
-  Cons: Pipeline bubbles (idle time), complex gradient accumulation
-  Best for: Very large models (100B+), high GPU counts
-
-
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                    FULLY SHARDED DATA PARALLEL (FSDP/ZeRO)                       │
-│                     "Shard everything: params, gradients, optimizer"             │
-└─────────────────────────────────────────────────────────────────────────────────┘
-
-     GPU 0                    GPU 1                    GPU 2                    GPU 3
-  ┌──────────────┐        ┌──────────────┐        ┌──────────────┐        ┌──────────────┐
-  │ Params 0-24% │        │ Params 25-49%│        │ Params 50-74%│        │ Params 75-99%│
-  │ Grads 0-24%  │        │ Grads 25-49% │        │ Grads 50-74% │        │ Grads 75-99% │
-  │ Optim 0-24%  │        │ Optim 25-49% │        │ Optim 50-74% │        │ Optim 75-99% │
-  │              │        │              │        │              │        │              │
-  │ Full Batch   │        │ Full Batch   │        │ Full Batch   │        │ Full Batch   │
-  └──────────────┘        └──────────────┘        └──────────────┘        └──────────────┘
-         │                       │                       │                       │
-         └───────────────────────┼───────────────────────┼───────────────────────┘
-                                 │
-                    AllGather params before forward
-                    ReduceScatter gradients after backward
-
-  Pros: Train huge models with limited per-GPU memory
-  Cons: More communication overhead than pure DDP
-  Best for: LLMs (7B-70B), when model doesn't fit with DDP
-\`\`\`
+**Fully Sharded Data Parallel (FSDP/ZeRO)** - "Shard everything: params, gradients, optimizer": Each GPU holds only a fraction (e.g., 25%) of parameters, gradients, and optimizer states, but processes full batches. Uses AllGather before forward and ReduceScatter after backward. Trains huge models with limited per-GPU memory but has more communication overhead than pure DDP. Best for LLMs (7B-70B) when models don't fit with DDP.
 
 ### Strategy Selection Guide
 
@@ -3913,55 +3300,9 @@ nvidia-smi topo -m
 
 ### Topology Visualization
 
-\`\`\`
-                    8x H100 SXM FULLY-CONNECTED NVLINK TOPOLOGY
-                    ==========================================
-                    
-                              ┌─────────────────────┐
-                              │     NVSwitch × 4    │
-                              │   (900 GB/s total)  │
-                              └──────────┬──────────┘
-                                         │
-           ┌─────────┬─────────┬────────┼────────┬─────────┬─────────┐
-           │         │         │        │        │         │         │
-        ┌──┴──┐   ┌──┴──┐   ┌──┴──┐  ┌──┴──┐  ┌──┴──┐   ┌──┴──┐   ┌──┴──┐   ┌─────┐
-        │GPU0 │◄─▶│GPU1 │◄─▶│GPU2 │◄─▶│GPU3 │◄─▶│GPU4 │◄─▶│GPU5 │◄─▶│GPU6 │◄─▶│GPU7 │
-        │H100 │   │H100 │   │H100 │   │H100 │   │H100 │   │H100 │   │H100 │   │H100 │
-        │80GB │   │80GB │   │80GB │   │80GB │   │80GB │   │80GB │   │80GB │   │80GB │
-        └─────┘   └─────┘   └─────┘   └─────┘   └─────┘   └─────┘   └─────┘   └─────┘
-        
-        NVLink bandwidth: 900 GB/s bidirectional per GPU
-        All-to-all: All 8 GPUs can communicate simultaneously
-        
-        
-                    4x A100 PCIe TYPICAL TOPOLOGY (Suboptimal)
-                    ==========================================
-                    
-                              ┌─────────────────────┐
-                              │     CPU + PCIe      │
-                              │    Root Complex     │
-                              └──────────┬──────────┘
-                                         │
-                    ┌────────────────────┼────────────────────┐
-                    │                    │                    │
-               ┌────┴────┐          ┌────┴────┐          ┌────┴────┐
-               │PCIe Sw 0│          │PCIe Sw 1│          │PCIe Sw 2│
-               └────┬────┘          └────┬────┘          └────┬────┘
-                    │                    │                    │
-              ┌─────┴─────┐        ┌─────┴─────┐              │
-              │           │        │           │              │
-           ┌──┴──┐     ┌──┴──┐  ┌──┴──┐     ┌──┴──┐       ┌──┴──┐
-           │GPU0 │◄───▶│GPU1 │  │GPU2 │◄───▶│GPU3 │       │GPU4 │
-           │A100 │ NV  │A100 │  │A100 │ NV  │A100 │       │A100 │
-           │40GB │     │40GB │  │40GB │     │40GB │       │40GB │
-           └─────┘     └─────┘  └─────┘     └─────┘       └─────┘
-           
-           GPU0 ◄─▶ GPU1: NVLink (600 GB/s)
-           GPU2 ◄─▶ GPU3: NVLink (600 GB/s)
-           GPU0 ◄─▶ GPU2: PCIe (~30 GB/s) - 20× slower!
-           
-           NCCL will route traffic optimally, but bandwidth is limited
-\`\`\`
+**8x H100 SXM Fully-Connected NVLink Topology:** All 8 H100 GPUs (80GB each) connect through 4 NVSwitches providing 900 GB/s bidirectional bandwidth per GPU. All GPUs can communicate simultaneously with all-to-all connectivity.
+
+**4x A100 PCIe Typical Topology (Suboptimal):** GPUs connect through PCIe switches under the CPU root complex. GPU0-GPU1 and GPU2-GPU3 pairs have direct NVLink connections (600 GB/s), but cross-pair communication (e.g., GPU0 to GPU2) goes through PCIe at only ~30 GB/s—20× slower. NCCL routes traffic optimally, but bandwidth is fundamentally limited by the topology.
 
 ### Measuring Actual Bandwidth
 
@@ -4273,40 +3614,11 @@ dist.broadcast(random_tensor, src=0)
 
 ### How Batch Size Should Scale
 
-\`\`\`
-                    MEMORY AND BATCH SIZE SCALING
-                    =============================
+**Single GPU (24GB VRAM):** A 7B model requires 14GB for weights, 4GB for optimizer states, 4GB for gradients, and 2GB for activations at batch=4. Total: 24GB fits exactly.
 
-Single GPU (24GB VRAM):
-┌────────────────────────────────────────────────────────────┐
-│  Model (7B): 14GB                                          │
-│  Optimizer States: 4GB                                     │
-│  Gradients: 4GB                                            │
-│  Activations (batch=4): 2GB                                │
-│  ─────────────────────────────                             │
-│  Total: 24GB (fits exactly with batch_size=4)              │
-└────────────────────────────────────────────────────────────┘
+**With DDP (4 GPUs, each 24GB):** Each GPU holds the full model with batch=4. Effective batch size = 4 × 4 = 16. Memory per GPU remains the same as single GPU.
 
-With DDP (4 GPUs, each with 24GB):
-┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-│  GPU 0       │  │  GPU 1       │  │  GPU 2       │  │  GPU 3       │
-│  Full Model  │  │  Full Model  │  │  Full Model  │  │  Full Model  │
-│  batch=4     │  │  batch=4     │  │  batch=4     │  │  batch=4     │
-└──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘
-                                 │
-                    Effective batch size = 4 × 4 = 16
-
-With FSDP (4 GPUs, each with 24GB):
-┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-│  GPU 0       │  │  GPU 1       │  │  GPU 2       │  │  GPU 3       │
-│  1/4 Params  │  │  1/4 Params  │  │  1/4 Params  │  │  1/4 Params  │
-│  1/4 Optim   │  │  1/4 Optim   │  │  1/4 Optim   │  │  1/4 Optim   │
-│  batch=16    │  │  batch=16    │  │  batch=16    │  │  batch=16    │
-└──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘
-                                 │
-                    Effective batch size = 16 × 4 = 64
-                    4× larger batch possible with FSDP!
-\`\`\`
+**With FSDP (4 GPUs, each 24GB):** Each GPU holds only 1/4 of parameters and optimizer states, freeing memory to increase per-GPU batch to 16. Effective batch size = 16 × 4 = 64—a 4× larger batch is possible with FSDP compared to DDP.
 
 ### Batch Size Guidelines
 
@@ -4362,24 +3674,7 @@ Real-world measurements on LLaMA-7B training:
 
 ### Why Efficiency Decreases
 
-\`\`\`
-                    EFFICIENCY LOSS BREAKDOWN (8 GPU)
-                    ==================================
-
-100% ┌────────────────────────────────────────────────────┐
-     │█████████████████████████████████████████████      │ Compute
- 95% │█████████████████████████████████████████████      │ 
-     │                                             ████  │ AllReduce
- 90% │                                             ████  │ Communication
-     │                                             ████  │
- 85% │                                                 ██│ Synchronization
-     │                                                 ██│ Overhead
-     └────────────────────────────────────────────────────┘
-     
-     Compute:          ~85-90%
-     AllReduce:        ~5-10%  (scales with model size)
-     Sync overhead:    ~2-5%   (barrier, broadcast)
-\`\`\`
+**Efficiency Loss Breakdown (8 GPU):** Of the total time, ~85-90% is spent on actual compute. AllReduce communication takes ~5-10% (scales with model size). Synchronization overhead (barriers, broadcasts) accounts for ~2-5%.
 
 ---
 
