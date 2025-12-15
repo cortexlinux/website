@@ -469,7 +469,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       <section className="py-16 border-t border-white/5 overflow-hidden">
         <div className="text-center mb-8">
           <p className="text-sm text-gray-500 uppercase tracking-widest">Optimized for today’s developer ecosystem</p>
-          <p className="text-xs text-gray-600 mt-2">Over 50,000+ developers use Cortex daily</p>
+          <p className="text-xs text-gray-600 mt-2">Adopted by developers worldwide</p>
         </div>
         <div className="relative">
           <div className="logo-scroll flex gap-16 items-center">
