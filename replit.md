@@ -11,15 +11,28 @@ Professional marketing landing page and FAQ for Cortex Linux - an AI-native oper
 
 **Current Status (December 2025):**
 - Complete landing page with 15+ sections including hero, problem/solution, security, comparison, use cases, pricing, testimonials, contributors, blog preview
+- "New to Cortex?" preview card on homepage after Built For section linking to Getting Started guide
 - Blog Preview Section on homepage showing 3 latest posts with hover effects and blue glow accents
-- Full Blog system at /blog with 10 deep technical articles (2000-2500 words each), search functionality, and category filters across 8 categories
+- Full Blog system at /blog with 14 deep technical articles (1500-2500 words each), search functionality, and category filters across 9 categories
+- **NEW: Getting Started page at /getting-started** with:
+  - Hero section with gradient styling
+  - Quick navigation cards linking to beginner blog posts
+  - Prerequisites and system requirements
+  - 5-step getting started guide
+  - Learning paths (Beginner, Developer, Data Scientist)
+  - Community & Support section
+- **NEW: 4 Beginner Blog Posts** in "Getting Started" category:
+  - "Getting Started with Cortex Linux: Your First Workflow"
+  - "How to Install Cortex Linux: Complete Beginner Guide"
+  - "Cortex Linux for Students: Learn AI-Powered Development"
+  - "Run Your First AI Task with Cortex Linux"
 - Individual blog post pages at /blog/:slug with:
   - Sticky Table of Contents sidebar on desktop
   - SEO meta tags (Open Graph) with proper cleanup on navigation
   - JSON-LD structured data for BlogPosting schema
   - Word count display and reading time
   - Related articles section
-- Blog categories: Fundamentals, Tutorials, Performance, Best Practices, Infrastructure, Troubleshooting, Security, Industry Trends
+- Blog categories: Fundamentals, Tutorials, Performance, Best Practices, Infrastructure, Troubleshooting, Security, Industry Trends, Getting Started
 - Contributors section with GitHub avatar grid collage showing all developers (8 fallback contributors displayed)
 - Comprehensive FAQ page with 30 questions across 7 categories with real-time search
 - Live GitHub API integration for project statistics and contributors (currently showing 401 auth errors, non-blocking)
@@ -47,11 +60,12 @@ Preferred communication style: Simple, everyday language.
 
 **Routing Strategy**: Multi-page application using wouter for client-side routing. Routes include:
 - `/` - Landing page with smooth scrolling to section anchors (home, about, security, pricing, join)
+- `/getting-started` - Beginner onboarding page with step-by-step guide and learning paths
 - `/faq` - Comprehensive FAQ page with search
 - `/beta` - Interactive beta preview/demo page
 - `/blog` - Blog index with all posts, search, and category filtering
 - `/blog/:slug` - Individual blog post pages with full content and related posts
-Navigation tracks active sections via scroll position on the homepage.
+Navigation includes "Get Started" link in header, tracks active sections via scroll position on the homepage.
 
 **State Management**: React hooks (useState, useEffect) for local component state. No global state management needed for this marketing site. Active section tracking handled via scroll event listeners.
 
