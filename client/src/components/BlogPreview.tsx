@@ -21,7 +21,7 @@ export default function BlogPreview() {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Latest from the <span className="bg-gradient-to-r from-gray-300 via-gray-200 to-blue-400 bg-clip-text text-transparent">Blog</span>
+            Latest from the <span className="gradient-text">Blog</span>
           </h2>
           <p className="text-gray-400 max-w-2xl mx-auto">
             Technical insights, tutorials, and best practices for ML engineers

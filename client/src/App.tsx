@@ -102,7 +102,7 @@ export default function App() {
                 data-testid="logo-cortex"
               >
                 <span className="text-white">CORTEX</span>{" "}
-                <span className="bg-gradient-to-r from-gray-300 via-gray-200 to-blue-400 bg-clip-text text-transparent">LINUX</span>
+                <span className="gradient-text">LINUX</span>
               </button>
 
               {/* Desktop Navigation Links */}

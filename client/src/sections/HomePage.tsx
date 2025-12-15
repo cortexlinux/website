@@ -1409,7 +1409,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               <span>AI-Powered Pipeline</span>
             </div>
             <h2 className="text-3xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white via-white to-gray-400 bg-clip-text text-transparent">
-              The AI That Understands You
+              The AI That <span className="gradient-text"> Understands You </span>
             </h2>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
               Describe what you need in plain English. Cortex translates your intent into perfectly optimized system commands — instantly and safely.
@@ -1824,9 +1824,9 @@ export default function HomePage({ onNavigate }: HomePageProps) {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              { icon: FaDiscord, name: "Discord", count: "5.2k members", color: "hover:border-indigo-500", link: "https://discord.gg/cortexlinux" },
-              { icon: FaTwitter, name: "Twitter", count: "12.4k followers", color: "hover:border-sky-500", link: "https://twitter.com/cortexlinux" },
-              { icon: Github, name: "GitHub", count: "Discussions", color: "hover:border-gray-500", link: "https://github.com/cortexlinux/cortex/discussions" },
+              { icon: FaDiscord, name: "Discord", color: "hover:border-indigo-500", link: "https://discord.gg/cortexlinux" },
+              { icon: FaTwitter, name: "Twitter", color: "hover:border-sky-500", link: "https://twitter.com/cortexlinux" },
+              { icon: Github, name: "GitHub", color: "hover:border-gray-500", link: "https://github.com/cortexlinux/cortex/discussions" },
             ].map((platform, i) => (
               <a
                 key={i}
@@ -1837,7 +1837,6 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               >
                 <platform.icon size={32} className="mx-auto mb-4 text-gray-400" />
                 <h3 className="font-semibold mb-1">{platform.name}</h3>
-                <p className="text-sm text-gray-400">{platform.count}</p>
                 <button className="mt-4 px-4 py-2 bg-white/5 rounded-lg text-sm hover:bg-white/10 transition-colors">
                   Join
                   <ChevronRight size={14} className="inline ml-1" />
@@ -1861,7 +1860,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-5xl font-bold mb-4">
-              <span className="bg-gradient-to-r from-gray-300 via-gray-200 to-blue-400 bg-clip-text text-transparent">Roadmap</span>
+              <span className="gradient-text">Roadmap</span>
             </h2>
             <p className="text-gray-400 text-lg">Building the future of AI-native development</p>
           </motion.div>
