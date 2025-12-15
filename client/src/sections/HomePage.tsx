@@ -495,6 +495,70 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           </div>
         </div>
       </section>
+      {/* Built For Section - Who This Is For */}
+      <section className="py-20 px-4 border-t border-white/5">
+        <div className="max-w-5xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Built for <span className="gradient-text">You</span>
+            </h2>
+            <p className="text-gray-400 max-w-xl mx-auto">
+              Whether you're training models, shipping code, or scaling infrastructure
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                icon: Brain,
+                title: "ML Engineers",
+                description: "GPU drivers, CUDA, PyTorch",
+                detail: "Stop fighting drivers. Start training models."
+              },
+              {
+                icon: Workflow,
+                title: "DevOps Teams",
+                description: "Reproducible infra, CI-friendly",
+                detail: "Deterministic builds. Every time."
+              },
+              {
+                icon: Zap,
+                title: "Startups",
+                description: "Faster iteration, less infra debt",
+                detail: "Move fast without breaking things."
+              },
+              {
+                icon: ShieldCheck,
+                title: "Enterprises",
+                description: "Control, auditability, SLA",
+                detail: "Compliance-ready from day one."
+              }
+            ].map((item, index) => (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="group p-6 rounded-xl bg-white/5 border border-white/10 hover:border-blue-500/30 hover:bg-white/[0.07] transition-all duration-300"
+                data-testid={`built-for-${item.title.toLowerCase().replace(/\s+/g, "-")}`}
+              >
+                <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center mb-4 group-hover:bg-blue-500/20 transition-colors">
+                  <item.icon className="w-6 h-6 text-blue-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-white mb-1">{item.title}</h3>
+                <p className="text-blue-400 text-sm font-medium mb-2">{item.description}</p>
+                <p className="text-gray-500 text-sm">{item.detail}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
       {/* Interactive Product Preview */}
       <section id="preview" className="py-24 px-4 relative">
         <div className="max-w-6xl mx-auto">
