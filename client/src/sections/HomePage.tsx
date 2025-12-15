@@ -722,7 +722,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               <span>System Architecture</span>
             </div>
             <h2 className="text-3xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white via-white to-gray-400 bg-clip-text text-transparent">
-              How Cortex Works
+              How <span className="gradient-text"> Cortex </span> Works
             </h2>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
               A powerful layered architecture that transforms your natural language into optimized system operations.
@@ -880,7 +880,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               <span>Feature Comparison</span>
             </div>
             <h2 className="text-3xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white via-white to-gray-400 bg-clip-text text-transparent">
-              How Is Cortex Different?
+              How Is <span className="gradient-text">Cortex Different?</span>
             </h2>
             <p className="text-gray-400 text-lg max-w-xl mx-auto">
               See why developers choose Cortex over traditional alternatives.
@@ -1166,7 +1166,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               
               <div>
                 <h3 className="text-2xl font-bold mb-2">Enterprise Edition</h3>
-                <div className="text-4xl font-bold text-blue-400 mb-2">Custom</div>
+                <div className="text-4xl font-bold text-blue-400 mb-2"><span className="gradient-text">Custom</span></div>
                 <p className="text-gray-400 mb-8">Contact for Pricing</p>
                 
                 <ul className="space-y-4 mb-8">
