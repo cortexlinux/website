@@ -124,10 +124,8 @@ export default function App() {
               {/* Desktop Navigation Links */}
               <div className="hidden md:flex items-center space-x-6">
                 {[
-                  { name: "Features", id: "about" },
                   { name: "Docs", id: "preview" },
                   { name: "Security", id: "security" },
-                  { name: "Community", id: "join" },
                 ].map((link) => (
                   <button
                     key={link.id}
@@ -229,10 +227,8 @@ export default function App() {
                   className="px-4 py-6 space-y-4"
                 >
                   {[
-                    { name: "Features", id: "about" },
                     { name: "Docs", id: "preview" },
                     { name: "Security", id: "security" },
-                    { name: "Community", id: "join" },
                   ].map((link) => (
                     <button
                       key={link.id}
