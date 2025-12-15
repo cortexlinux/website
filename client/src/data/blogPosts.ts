@@ -8657,8 +8657,8 @@ Welcome to the world of AI development. The possibilities are endless.
     wordCount: 2850,
     author: "Cortex Team",
     category: "Getting Started",
-    image: "https://images.unsplash.com/photo-1677442135136-760c813029fb?w=1200&h=600&fit=crop",
-    imageAlt: "AI and machine learning concept with neural network visualization",
+    image: "/images/ai_neural_network_visualization.png",
+    imageAlt: "AI neural network visualization with glowing nodes",
     tags: ["Getting Started", "AI", "Machine Learning", "Tutorial"],
     relatedPosts: ["getting-started-cortex-first-workflow", "what-ai-native-linux-means"]
   }
