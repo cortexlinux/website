@@ -51,6 +51,7 @@ import {
   Info,
 } from "lucide-react";
 import { FaDiscord, FaTwitter } from "react-icons/fa";
+import { SiVercel, SiStripe, SiLinear, SiSupabase, SiRailway, SiPlanetscale, SiClerk, SiResend } from "react-icons/si";
 import type { Contributor } from "@shared/schema";
 import BlogPreview from "@/components/BlogPreview";
 
@@ -338,7 +339,16 @@ export default function HomePage({ onNavigate }: HomePageProps) {
     { quarter: "Q4 2024", items: ["Mobile SDK", "v3.0 Launch"], status: "planned" },
   ];
 
-  const logos = ["Vercel", "Stripe", "Linear", "Supabase", "Railway", "Planetscale", "Clerk", "Resend"];
+  const logos = [
+    { icon: SiVercel, name: "Vercel" },
+    { icon: SiStripe, name: "Stripe" },
+    { icon: SiLinear, name: "Linear" },
+    { icon: SiSupabase, name: "Supabase" },
+    { icon: SiRailway, name: "Railway" },
+    { icon: SiPlanetscale, name: "Planetscale" },
+    { icon: SiClerk, name: "Clerk" },
+    { icon: SiResend, name: "Resend" },
+  ];
 
   const installCommands = {
     npm: "npm install -g cortex-cli",
@@ -476,9 +486,10 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             {[...logos, ...logos].map((logo, i) => (
               <div
                 key={i}
-                className="text-2xl font-bold text-gray-600 hover:text-white transition-colors duration-300 whitespace-nowrap opacity-50 hover:opacity-100"
+                className="flex items-center gap-3 text-gray-500 hover:text-white transition-colors duration-300 opacity-60 hover:opacity-100"
               >
-                {logo}
+                <logo.icon size={24} />
+                <span className="text-lg font-semibold">{logo.name}</span>
               </div>
             ))}
           </div>
