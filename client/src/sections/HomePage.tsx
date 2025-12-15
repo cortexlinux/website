@@ -1972,7 +1972,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: i * 0.15, duration: 0.5 }}
+                  transition={{ delay: i * 0.25, duration: 0.8 }}
                   className="relative pt-16"
                 >
                   {/* Timeline Dot */}
