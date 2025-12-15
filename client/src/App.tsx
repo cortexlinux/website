@@ -169,6 +169,15 @@ export default function App() {
                 >
                   Blog
                 </Link>
+                <Link
+                  href="/status"
+                  className={`text-base font-medium transition-colors duration-300 ${
+                    location === "/status" ? "text-blue-400" : "text-gray-400 hover:text-blue-400"
+                  }`}
+                  data-testid="link-status"
+                >
+                  Status
+                </Link>
               </div>
 
               {/* GitHub Stars & Get Started Button (Desktop) */}
@@ -257,6 +266,14 @@ export default function App() {
                     data-testid="mobile-link-blog"
                   >
                     Blog
+                  </Link>
+                  <Link
+                    href="/status"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block w-full text-left py-2 text-gray-400 hover:text-blue-400 transition-colors duration-300"
+                    data-testid="mobile-link-status"
+                  >
+                    Status
                   </Link>
                   <Link
                     href="/beta"
