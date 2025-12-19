@@ -2,6 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import helmet from "helmet";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import demoApi from "./demo-api";
 
 const app = express();
 
@@ -14,7 +15,7 @@ app.use(helmet({
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:", "blob:"],
-      connectSrc: ["'self'", "https://api.github.com", "wss:", "ws:"],
+      connectSrc: ["'self'", "https://api.github.com", "https://api.anthropic.com", "wss:", "ws:"],
       frameSrc: ["'self'"],
       objectSrc: ["'none'"],
       upgradeInsecureRequests: [],
@@ -65,6 +66,9 @@ app.use((req, res, next) => {
 
   next();
 });
+
+// Demo API routes (rate-limited Anthropic proxy)
+app.use(demoApi);
 
 (async () => {
   const server = await registerRoutes(app);
