@@ -1,16 +1,13 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import {
   Send,
   Copy,
   Check,
-  Settings,
   Terminal,
   Sparkles,
   Github,
-  Eye,
-  EyeOff,
   ChevronLeft,
   Loader2,
   AlertCircle,
@@ -19,37 +16,9 @@ import {
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import { useToast } from "@/hooks/use-toast";
-
-type Provider = "anthropic" | "openai";
-
-interface HistoryEntry {
-  id: string;
-  request: string;
-  commands: string;
-  timestamp: Date;
-  provider: Provider;
-  dryRun: boolean;
-}
-
-const STORAGE_KEYS = {
-  ANTHROPIC_KEY: "cortex_anthropic_api_key",
-  OPENAI_KEY: "cortex_openai_api_key",
-  PROVIDER: "cortex_provider",
-  DRY_RUN: "cortex_dry_run",
-};
+import { useCortexDemo } from "@/hooks/useCortexDemo";
 
 const EXAMPLE_PROMPTS = [
   "install docker with compose",
@@ -59,595 +28,287 @@ const EXAMPLE_PROMPTS = [
   "set up postgresql database",
 ];
 
-const SYSTEM_PROMPT = `You are Cortex Linux, an AI assistant that converts natural language requests into Linux package installation and configuration commands.
-
-Your task is to generate the exact bash commands needed to fulfill the user's request on Ubuntu/Debian Linux.
-
-Rules:
-1. Return ONLY the bash commands, no explanations or markdown
-2. Use apt-get for package management (with -y flag for non-interactive)
-3. Include any necessary configuration commands
-4. Handle dependencies automatically
-5. Use sudo where required
-6. Each command should be on a new line
-7. If multiple steps are needed, include all of them in order
-8. Be security-conscious - don't include dangerous commands
-
-Example output format:
-sudo apt-get update
-sudo apt-get install -y docker.io docker-compose
-sudo systemctl enable docker
-sudo systemctl start docker
-sudo usermod -aG docker $USER`;
-
 export default function BetaPage() {
   const { toast } = useToast();
   const [input, setInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [provider, setProvider] = useState<Provider>("anthropic");
-  const [anthropicKey, setAnthropicKey] = useState("");
-  const [openaiKey, setOpenaiKey] = useState("");
-  const [dryRun, setDryRun] = useState(true);
-  const [showAnthropicKey, setShowAnthropicKey] = useState(false);
-  const [showOpenaiKey, setShowOpenaiKey] = useState(false);
-  const [history, setHistory] = useState<HistoryEntry[]>([]);
-  const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
 
-  // Load settings from localStorage on mount
-  useEffect(() => {
-    const savedAnthropicKey = localStorage.getItem(STORAGE_KEYS.ANTHROPIC_KEY) || "";
-    const savedOpenaiKey = localStorage.getItem(STORAGE_KEYS.OPENAI_KEY) || "";
-    const savedProvider = (localStorage.getItem(STORAGE_KEYS.PROVIDER) as Provider) || "anthropic";
-    const savedDryRun = localStorage.getItem(STORAGE_KEYS.DRY_RUN) !== "false";
+  const { messages, sendMessage, isLoading, error, remaining, limitReached, clearMessages } = useCortexDemo();
 
-    setAnthropicKey(savedAnthropicKey);
-    setOpenaiKey(savedOpenaiKey);
-    setProvider(savedProvider);
-    setDryRun(savedDryRun);
-  }, []);
-
-  // Save settings to localStorage
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.ANTHROPIC_KEY, anthropicKey);
-  }, [anthropicKey]);
-
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.OPENAI_KEY, openaiKey);
-  }, [openaiKey]);
-
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.PROVIDER, provider);
-  }, [provider]);
-
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.DRY_RUN, String(dryRun));
-  }, [dryRun]);
-
-  // Scroll terminal to bottom on new entries
+  // Scroll terminal to bottom on new messages
   useEffect(() => {
     if (terminalRef.current) {
       terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
     }
-  }, [history]);
-
-  const getCurrentApiKey = () => {
-    return provider === "anthropic" ? anthropicKey : openaiKey;
-  };
-
-  const callAnthropicAPI = async (userInput: string): Promise<string> => {
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": anthropicKey,
-        "anthropic-version": "2023-06-01",
-        "anthropic-dangerous-direct-browser-access": "true",
-      },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1024,
-        system: SYSTEM_PROMPT,
-        messages: [
-          {
-            role: "user",
-            content: `Convert this request to Linux installation/configuration commands: "${userInput}"`,
-          },
-        ],
-      }),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error?.message || "Anthropic API request failed");
-    }
-
-    const data = await response.json();
-    return data.content[0].text;
-  };
-
-  const callOpenAIAPI = async (userInput: string): Promise<string> => {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${openaiKey}`,
-      },
-      body: JSON.stringify({
-        model: "gpt-4o",
-        max_tokens: 1024,
-        messages: [
-          {
-            role: "system",
-            content: SYSTEM_PROMPT,
-          },
-          {
-            role: "user",
-            content: `Convert this request to Linux installation/configuration commands: "${userInput}"`,
-          },
-        ],
-      }),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error?.message || "OpenAI API request failed");
-    }
-
-    const data = await response.json();
-    return data.choices[0].message.content;
-  };
+  }, [messages]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!input.trim() || isLoading || limitReached) return;
 
-    if (!input.trim()) {
-      toast({
-        title: "Empty request",
-        description: "Please enter what you want to install or configure.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    const apiKey = getCurrentApiKey();
-    if (!apiKey) {
-      setSettingsOpen(true);
-      toast({
-        title: "API key required",
-        description: `Please enter your ${provider === "anthropic" ? "Anthropic" : "OpenAI"} API key in settings.`,
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      let commands: string;
-
-      if (provider === "anthropic") {
-        commands = await callAnthropicAPI(input);
-      } else {
-        commands = await callOpenAIAPI(input);
-      }
-
-      const entry: HistoryEntry = {
-        id: Date.now().toString(),
-        request: input,
-        commands,
-        timestamp: new Date(),
-        provider,
-        dryRun,
-      };
-
-      setHistory((prev) => [...prev, entry]);
-      setInput("");
-
-      toast({
-        title: "Commands generated",
-        description: dryRun
-          ? "Dry run mode - commands shown but not executed."
-          : "Commands ready to copy and run.",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to generate commands",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    const userInput = input;
+    setInput("");
+    await sendMessage(userInput);
   };
 
-  const copyToClipboard = async (text: string, id: string) => {
+  const handleExampleClick = async (prompt: string) => {
+    if (isLoading || limitReached) return;
+    setInput("");
+    await sendMessage(prompt);
+  };
+
+  const copyToClipboard = async (text: string, idx: number) => {
     try {
       await navigator.clipboard.writeText(text);
-      setCopiedId(id);
-      setTimeout(() => setCopiedId(null), 2000);
-      toast({
-        title: "Copied!",
-        description: "Commands copied to clipboard.",
-      });
+      setCopiedIdx(idx);
+      toast({ title: "Copied to clipboard" });
+      setTimeout(() => setCopiedIdx(null), 2000);
     } catch {
-      toast({
-        title: "Failed to copy",
-        description: "Please select and copy manually.",
-        variant: "destructive",
-      });
+      toast({ title: "Failed to copy", variant: "destructive" });
     }
   };
 
-  const handleExampleClick = (example: string) => {
-    setInput(example);
+  const extractCommands = (text: string): string => {
+    // Extract code blocks or return raw text
+    const codeBlockMatch = text.match(/```(?:bash|sh)?\n?([\s\S]*?)```/);
+    if (codeBlockMatch) return codeBlockMatch[1].trim();
+    return text;
   };
 
   return (
-    <div className="min-h-screen bg-black text-white pt-20">
+    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950">
       {/* Header */}
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <Link href="/">
-          <Button variant="ghost" className="mb-6 text-gray-400 hover:text-white">
-            <ChevronLeft className="mr-2 h-4 w-4" />
-            Back to Home
-          </Button>
-        </Link>
+      <header className="border-b border-gray-800 bg-gray-950/80 backdrop-blur-sm sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Link href="/">
+              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
+                <ChevronLeft className="w-4 h-4 mr-1" />
+                Back
+              </Button>
+            </Link>
+            <div className="flex items-center gap-2">
+              <Terminal className="w-6 h-6 text-orange-500" />
+              <span className="text-xl font-bold text-white">Cortex</span>
+              <span className="px-2 py-0.5 text-xs bg-orange-500/20 text-orange-400 rounded-full border border-orange-500/30">
+                BETA
+              </span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            {remaining !== null && (
+              <span className="text-sm text-gray-400">
+                {remaining} requests remaining
+              </span>
+            )}
+            <a href="https://github.com/cortexlinux/cortex" target="_blank" rel="noopener noreferrer">
+              <Button variant="outline" size="sm" className="border-gray-700 text-gray-300 hover:bg-gray-800">
+                <Github className="w-4 h-4 mr-2" />
+                GitHub
+              </Button>
+            </a>
+          </div>
+        </div>
+      </header>
 
+      <main className="container mx-auto px-4 py-8 max-w-4xl">
+        {/* Hero */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-12"
+          className="text-center mb-8"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/20 border border-blue-500/50 rounded-full text-blue-400 text-sm font-medium mb-6">
-            <Sparkles size={16} />
-            Beta Preview
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-gray-300 via-gray-200 to-blue-400 bg-clip-text text-transparent">
-            Try Cortex Linux
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            Try Cortex <span className="text-orange-500">Live</span>
           </h1>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Experience AI-powered Linux administration. Enter natural language commands and get
-            instant package installation scripts.
+          <p className="text-gray-400 max-w-2xl mx-auto">
+            Tell Cortex what you want to install or configure in plain English.
+            Get the exact commands you need.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Input and Terminal */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Command Input Card */}
-            <Card className="bg-white/5 border-white/10">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-white">
-                  <Terminal size={20} className="text-blue-400" />
-                  Command Generator
-                </CardTitle>
-                <CardDescription>
-                  Describe what you want to install or configure in plain English
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="flex gap-2">
-                    <Input
-                      value={input}
-                      onChange={(e) => setInput(e.target.value)}
-                      placeholder="What do you want to install?"
-                      className="flex-1 bg-black/50 border-white/20 text-white placeholder:text-gray-500 focus:border-blue-400"
-                      disabled={isLoading}
-                    />
-                    <Button
-                      type="submit"
-                      disabled={isLoading}
-                      className="bg-blue-500 hover:bg-blue-600 text-white"
-                    >
-                      {isLoading ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <Send className="h-4 w-4" />
-                      )}
-                    </Button>
-                  </div>
-
-                  {/* Example Prompts */}
-                  <div className="flex flex-wrap gap-2">
-                    <span className="text-xs text-gray-500">Try:</span>
-                    {EXAMPLE_PROMPTS.map((example) => (
-                      <button
-                        key={example}
-                        type="button"
-                        onClick={() => handleExampleClick(example)}
-                        className="text-xs px-2 py-1 bg-white/5 border border-white/10 rounded-full text-gray-400 hover:text-blue-400 hover:border-blue-400/50 transition-colors"
-                      >
-                        {example}
-                      </button>
-                    ))}
-                  </div>
-                </form>
+        {/* Limit Reached Banner */}
+        {limitReached && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="mb-6"
+          >
+            <Card className="bg-orange-500/10 border-orange-500/30">
+              <CardContent className="py-6 text-center">
+                <Zap className="w-12 h-12 text-orange-500 mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-white mb-2">Demo Limit Reached</h3>
+                <p className="text-gray-300 mb-4">
+                  You've used all 5 demo requests. Install Cortex to get unlimited access!
+                </p>
+                <Link href="/install">
+                  <Button className="bg-orange-500 hover:bg-orange-600 text-white">
+                    Install Cortex
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
+          </motion.div>
+        )}
 
-            {/* Terminal Output */}
-            <Card className="bg-white/5 border-white/10">
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center justify-between text-white">
-                  <span className="flex items-center gap-2">
-                    <div className="flex gap-1.5">
-                      <div className="w-3 h-3 rounded-full bg-red-500" />
-                      <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                      <div className="w-3 h-3 rounded-full bg-green-500" />
-                    </div>
-                    Terminal Output
-                  </span>
-                  {dryRun && (
-                    <span className="text-xs px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded-full">
-                      Dry Run Mode
-                    </span>
-                  )}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div
-                  ref={terminalRef}
-                  className="bg-black rounded-lg p-4 font-mono text-sm min-h-[300px] max-h-[500px] overflow-y-auto border border-white/10"
-                >
-                  {history.length === 0 ? (
-                    <div className="text-gray-500 flex items-center justify-center h-full">
-                      <div className="text-center">
-                        <Terminal className="mx-auto mb-4 h-12 w-12 text-gray-600" />
-                        <p>Generated commands will appear here</p>
-                        <p className="text-xs mt-2 text-gray-600">
-                          Enter a request above to get started
-                        </p>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="space-y-6">
-                      {history.map((entry) => (
-                        <div key={entry.id} className="group">
-                          {/* User Request */}
-                          <div className="flex items-start gap-2 mb-2">
-                            <span className="text-green-400">$</span>
-                            <span className="text-gray-300">cortex install "{entry.request}"</span>
-                          </div>
-
-                          {/* Provider Badge */}
-                          <div className="ml-4 mb-2 flex items-center gap-2">
-                            <span className="text-xs px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded">
-                              {entry.provider === "anthropic" ? "Claude" : "GPT-4"}
-                            </span>
-                            <span className="text-xs text-gray-600">
-                              {entry.timestamp.toLocaleTimeString()}
-                            </span>
-                          </div>
-
-                          {/* Generated Commands */}
-                          <div className="ml-4 relative">
-                            <pre className="text-green-400 whitespace-pre-wrap bg-white/5 rounded-lg p-3 border border-white/10">
-                              {entry.commands}
-                            </pre>
-                            <button
-                              onClick={() => copyToClipboard(entry.commands, entry.id)}
-                              className="absolute top-2 right-2 p-2 bg-white/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white/20"
-                              title="Copy to clipboard"
-                            >
-                              {copiedId === entry.id ? (
-                                <Check className="h-4 w-4 text-green-400" />
-                              ) : (
-                                <Copy className="h-4 w-4 text-gray-400" />
-                              )}
-                            </button>
-                          </div>
-
-                          {entry.dryRun && (
-                            <div className="ml-4 mt-2 flex items-center gap-2 text-xs text-yellow-400">
-                              <AlertCircle className="h-3 w-3" />
-                              Dry run - commands not executed
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Settings Panel */}
-          <div className="space-y-6">
-            {/* Settings Card */}
-            <Card className="bg-white/5 border-white/10">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-white">
-                  <Settings size={20} className="text-blue-400" />
-                  Settings
-                </CardTitle>
-                <CardDescription>Configure your API provider and preferences</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {/* Provider Selection */}
-                <div className="space-y-2">
-                  <Label className="text-gray-300">AI Provider</Label>
-                  <Tabs value={provider} onValueChange={(v) => setProvider(v as Provider)}>
-                    <TabsList className="grid w-full grid-cols-2 bg-black/50">
-                      <TabsTrigger
-                        value="anthropic"
-                        className="data-[state=active]:bg-blue-500 data-[state=active]:text-white"
-                      >
-                        Claude
-                      </TabsTrigger>
-                      <TabsTrigger
-                        value="openai"
-                        className="data-[state=active]:bg-blue-500 data-[state=active]:text-white"
-                      >
-                        OpenAI
-                      </TabsTrigger>
-                    </TabsList>
-                  </Tabs>
-                </div>
-
-                {/* API Key Input */}
-                <div className="space-y-2">
-                  <Label className="text-gray-300">
-                    {provider === "anthropic" ? "Anthropic" : "OpenAI"} API Key
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      type={
-                        provider === "anthropic"
-                          ? showAnthropicKey
-                            ? "text"
-                            : "password"
-                          : showOpenaiKey
-                            ? "text"
-                            : "password"
-                      }
-                      value={provider === "anthropic" ? anthropicKey : openaiKey}
-                      onChange={(e) =>
-                        provider === "anthropic"
-                          ? setAnthropicKey(e.target.value)
-                          : setOpenaiKey(e.target.value)
-                      }
-                      placeholder={`Enter your ${provider === "anthropic" ? "Anthropic" : "OpenAI"} API key`}
-                      className="bg-black/50 border-white/20 text-white pr-10"
-                    />
-                    <button
-                      type="button"
-                      onClick={() =>
-                        provider === "anthropic"
-                          ? setShowAnthropicKey(!showAnthropicKey)
-                          : setShowOpenaiKey(!showOpenaiKey)
-                      }
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
-                    >
-                      {(provider === "anthropic" ? showAnthropicKey : showOpenaiKey) ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
-                    </button>
-                  </div>
-                  <p className="text-xs text-gray-500 flex items-center gap-1">
-                    <AlertCircle className="h-3 w-3" />
-                    Keys are stored locally, never sent to our servers
-                  </p>
-                </div>
-
-                {/* Dry Run Toggle */}
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label className="text-gray-300">Dry Run Mode</Label>
-                    <p className="text-xs text-gray-500">Show commands without executing</p>
-                  </div>
-                  <Checkbox
-                    checked={dryRun}
-                    onCheckedChange={(checked) => setDryRun(checked as boolean)}
-                    className="border-white/20 data-[state=checked]:bg-blue-500"
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* CTA Card */}
-            <Card className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 border-blue-400/30">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-white">
-                  <Zap size={20} className="text-blue-400" />
-                  Want More Features?
-                </CardTitle>
-                <CardDescription>
-                  Install the full Cortex Linux CLI for hardware detection, rollback support, and
-                  more.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="bg-black/50 rounded-lg p-3 font-mono text-sm border border-white/10">
-                  <span className="text-gray-500"># Install Cortex CLI</span>
-                  <br />
-                  <span className="text-green-400">pip install cortex-linux</span>
-                </div>
-                <a
-                  href="https://github.com/cortexlinux/cortex"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg font-semibold transition-colors"
-                >
-                  <Github size={20} />
-                  View on GitHub
-                </a>
-              </CardContent>
-            </Card>
-
-            {/* Security Notice */}
-            <div className="text-xs text-gray-500 space-y-2 p-4 bg-white/5 rounded-lg border border-white/10">
-              <p className="font-medium text-gray-400">Security Notice</p>
-              <ul className="space-y-1 list-disc list-inside">
-                <li>API calls are made directly from your browser</li>
-                <li>Your API keys never leave your device</li>
-                <li>Generated commands should be reviewed before running</li>
-                <li>This is a demo - use the full CLI for production</li>
-              </ul>
+        {/* Terminal */}
+        <Card className="bg-gray-900/50 border-gray-800 mb-6">
+          <CardHeader className="border-b border-gray-800 py-3">
+            <div className="flex items-center gap-2">
+              <div className="flex gap-1.5">
+                <div className="w-3 h-3 rounded-full bg-red-500" />
+                <div className="w-3 h-3 rounded-full bg-yellow-500" />
+                <div className="w-3 h-3 rounded-full bg-green-500" />
+              </div>
+              <span className="text-sm text-gray-400 ml-2">cortex-demo</span>
             </div>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div
+              ref={terminalRef}
+              className="h-80 overflow-y-auto p-4 font-mono text-sm space-y-4"
+            >
+              {messages.length === 0 ? (
+                <div className="text-gray-500 text-center py-8">
+                  <Sparkles className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                  <p>Try an example below or type your own request</p>
+                </div>
+              ) : (
+                messages.map((msg, idx) => (
+                  <div key={idx} className="space-y-2">
+                    {msg.role === "user" ? (
+                      <div className="flex items-start gap-2">
+                        <span className="text-green-400">$</span>
+                        <span className="text-gray-300">{msg.content}</span>
+                      </div>
+                    ) : (
+                      <div className="bg-gray-800/50 rounded-lg p-3 relative group">
+                        <pre className="text-orange-400 whitespace-pre-wrap text-xs md:text-sm overflow-x-auto">
+                          {extractCommands(msg.content)}
+                        </pre>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={() => copyToClipboard(extractCommands(msg.content), idx)}
+                        >
+                          {copiedIdx === idx ? (
+                            <Check className="w-4 h-4 text-green-400" />
+                          ) : (
+                            <Copy className="w-4 h-4 text-gray-400" />
+                          )}
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                ))
+              )}
+              {isLoading && (
+                <div className="flex items-center gap-2 text-gray-400">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Generating commands...</span>
+                </div>
+              )}
+              {error && (
+                <div className="flex items-center gap-2 text-red-400">
+                  <AlertCircle className="w-4 h-4" />
+                  <span>{error}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Input */}
+            <form onSubmit={handleSubmit} className="border-t border-gray-800 p-4">
+              <div className="flex gap-2">
+                <Input
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="What do you want to install or configure?"
+                  className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500"
+                  disabled={isLoading || limitReached}
+                />
+                <Button
+                  type="submit"
+                  disabled={!input.trim() || isLoading || limitReached}
+                  className="bg-orange-500 hover:bg-orange-600 text-white"
+                >
+                  {isLoading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Send className="w-4 h-4" />
+                  )}
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+
+        {/* Example Prompts */}
+        <div className="mb-8">
+          <h3 className="text-sm font-medium text-gray-400 mb-3">Try these examples:</h3>
+          <div className="flex flex-wrap gap-2">
+            {EXAMPLE_PROMPTS.map((prompt) => (
+              <Button
+                key={prompt}
+                variant="outline"
+                size="sm"
+                className="border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white"
+                onClick={() => handleExampleClick(prompt)}
+                disabled={isLoading || limitReached}
+              >
+                {prompt}
+              </Button>
+            ))}
           </div>
         </div>
-      </div>
 
-      {/* Mobile Settings Sheet */}
-      <Sheet open={settingsOpen} onOpenChange={setSettingsOpen}>
-        <SheetContent className="bg-black border-white/10">
-          <SheetHeader>
-            <SheetTitle className="text-white">Settings</SheetTitle>
-            <SheetDescription>Configure your API provider and preferences</SheetDescription>
-          </SheetHeader>
-          <div className="mt-6 space-y-6">
-            {/* Provider Selection */}
-            <div className="space-y-2">
-              <Label className="text-gray-300">AI Provider</Label>
-              <Tabs value={provider} onValueChange={(v) => setProvider(v as Provider)}>
-                <TabsList className="grid w-full grid-cols-2 bg-white/5">
-                  <TabsTrigger
-                    value="anthropic"
-                    className="data-[state=active]:bg-blue-500 data-[state=active]:text-white"
-                  >
-                    Claude
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="openai"
-                    className="data-[state=active]:bg-blue-500 data-[state=active]:text-white"
-                  >
-                    OpenAI
-                  </TabsTrigger>
-                </TabsList>
-              </Tabs>
-            </div>
+        {/* Info Cards */}
+        <div className="grid md:grid-cols-2 gap-4 mb-8">
+          <Card className="bg-gray-900/50 border-gray-800">
+            <CardHeader>
+              <CardTitle className="text-white text-lg flex items-center gap-2">
+                <Terminal className="w-5 h-5 text-orange-500" />
+                What is Cortex?
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-gray-400 text-sm">
+              Cortex is an AI-powered package manager for Debian/Ubuntu Linux.
+              Instead of memorizing apt commands, just describe what you need in plain English.
+            </CardContent>
+          </Card>
+          <Card className="bg-gray-900/50 border-gray-800">
+            <CardHeader>
+              <CardTitle className="text-white text-lg flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-orange-500" />
+                Full Installation
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-gray-400 text-sm">
+              This demo shows command generation. The full Cortex CLI automatically
+              executes commands with safety checks, rollback support, and more.
+              <Link href="/install">
+                <Button variant="link" className="text-orange-500 p-0 h-auto mt-2">
+                  Install Cortex →
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </div>
 
-            {/* API Key Input */}
-            <div className="space-y-2">
-              <Label className="text-gray-300">
-                {provider === "anthropic" ? "Anthropic" : "OpenAI"} API Key
-              </Label>
-              <Input
-                type="password"
-                value={provider === "anthropic" ? anthropicKey : openaiKey}
-                onChange={(e) =>
-                  provider === "anthropic"
-                    ? setAnthropicKey(e.target.value)
-                    : setOpenaiKey(e.target.value)
-                }
-                placeholder={`Enter your ${provider === "anthropic" ? "Anthropic" : "OpenAI"} API key`}
-                className="bg-white/5 border-white/20 text-white"
-              />
-            </div>
-
-            <Button onClick={() => setSettingsOpen(false)} className="w-full bg-blue-500">
-              Save Settings
+        {messages.length > 0 && (
+          <div className="text-center">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clearMessages}
+              className="text-gray-500 hover:text-gray-300"
+            >
+              Clear conversation
             </Button>
           </div>
-        </SheetContent>
-      </Sheet>
+        )}
+      </main>
 
       <Footer />
     </div>
