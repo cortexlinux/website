@@ -10,8 +10,29 @@ interface DemoState {
   limitReached: boolean;
 }
 
-const SYSTEM_CONTEXT = `You are Cortex, an AI-powered package manager for Debian/Ubuntu Linux. Help users with package installation, dependency resolution, and system configuration. Show exact commands in code blocks. Be concise.`;
+const SYSTEM_CONTEXT = `You are Cortex, an AI-powered Linux package manager assistant. When a user asks for installation or configuration help, respond with ONLY the required shell commands in a single code block. Do NOT include:
+- Explanatory text or headers (like "Here's how to..." or "## Install X")
+- Comments or annotations within or outside the code block
+- Additional notes or instructions
+- Any text before or after the code block
 
+Only output the essential commands needed to accomplish the task, formatted in a single bash code block.
+`;
+
+/**
+ * Hook that manages a demo chat session with a Cortex Linux package-management assistant.
+ *
+ * Provides state and actions for sending user messages, clearing the conversation, and tracking loading/error/usage status.
+ *
+ * @returns An object containing:
+ * - `messages`: the conversation messages (each has `role` and `content`),
+ * - `isLoading`: `true` while a request is in flight,
+ * - `error`: an error message or `null`,
+ * - `remaining`: optional remaining usage count,
+ * - `limitReached`: `true` if the demo rate limit was hit,
+ * - `sendMessage`: function to send a user message (`(content: string) => Promise<void>`-like),
+ * - `clearMessages`: function to reset the conversation and clear errors.
+ */
 export function useCortexDemo() {
   const [state, setState] = useState<DemoState>({
     messages: [], isLoading: false, error: null, remaining: null, limitReached: false
