@@ -19,6 +19,9 @@ const SYSTEM_CONTEXT = `You are Cortex, an AI-powered Linux package manager assi
 Only output the essential commands needed to accomplish the task, formatted in a single bash code block.
 `;
 
+Only output the essential commands needed to accomplish the task, formatted in a single bash code block.
+`;
+
 /**
  * Hook that manages a demo chat session with a Cortex Linux package-management assistant.
  *

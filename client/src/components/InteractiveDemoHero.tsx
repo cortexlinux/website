@@ -14,14 +14,6 @@ const EXAMPLE_PROMPTS = [
   "Set up Node.js development environment",
 ];
 
-/**
- * Render an interactive demo UI that lets users send natural-language prompts to Cortex and view terminal-style outputs.
- *
- * The component manages input state, demo messages, loading/error states, copy-to-clipboard for assistant responses,
- * example prompt quick actions, and a limit-reached install CTA.
- *
- * @returns A React element containing the interactive Cortex demo hero with input, example chips, terminal output, error display, and install CTA.
- */
 export default function InteractiveDemoHero() {
   const [input, setInput] = useState("");
   const [copied, setCopied] = useState(false);
@@ -261,14 +253,6 @@ export default function InteractiveDemoHero() {
   );
 }
 
-/**
- * Extracts fenced code blocks from a markdown-like string and renders them as green text previews.
- *
- * Language identifiers and triple-backtick fences are removed from each block before rendering.
- *
- * @param content - Input text that may contain one or more triple-backtick fenced code blocks.
- * @returns A React node containing each extracted code block rendered as green text lines; if no code blocks are present, returns a muted "Processing..." placeholder.
- */
 function formatCommandsPreview(content: string): React.ReactNode {
   const codeMatch = content.match(/```[\s\S]*?```/g);
   if (codeMatch) {
@@ -288,12 +272,6 @@ function formatCommandsPreview(content: string): React.ReactNode {
   return <div className="text-gray-400">Processing...</div>;
 }
 
-/**
- * Render a text blob into React nodes, converting fenced code blocks into styled code elements and leaving other segments as inline text.
- *
- * @param content - The input string which may contain fenced code blocks (triple-backtick fences).
- * @returns A React node where each fenced code block is rendered as a monospace, styled <code> block (language hint and fences removed, content trimmed) and all other text is rendered as <span> elements.
- */
 function formatOutput(content: string): React.ReactNode {
   const parts = content.split(/(```[\s\S]*?```)/g);
   return parts.map((part, i) => {
