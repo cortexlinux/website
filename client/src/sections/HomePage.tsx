@@ -290,6 +290,13 @@ function InteractiveCodeEditor({
   );
 }
 
+/**
+ * Render the homepage for the Cortex marketing site, composing hero, demo, features, comparison, roadmap,
+ * community, and footer sections with interactive demos and animated visuals.
+ *
+ * @param onNavigate - Callback invoked with a section id to request navigation within the page (used by CTAs and footer links)
+ * @returns The homepage React element
+ */
 export default function HomePage({ onNavigate }: HomePageProps) {
   const { data: githubStats } = useQuery<GitHubStats>({
     queryKey: ["/api/github/stats"],

@@ -19,6 +19,23 @@ const SYSTEM_CONTEXT = `You are Cortex, an AI-powered Linux package manager assi
 Only output the essential commands needed to accomplish the task, formatted in a single bash code block.
 `;
 
+Only output the essential commands needed to accomplish the task, formatted in a single bash code block.
+`;
+
+/**
+ * Hook that manages a demo chat session with a Cortex Linux package-management assistant.
+ *
+ * Provides state and actions for sending user messages, clearing the conversation, and tracking loading/error/usage status.
+ *
+ * @returns An object containing:
+ * - `messages`: the conversation messages (each has `role` and `content`),
+ * - `isLoading`: `true` while a request is in flight,
+ * - `error`: an error message or `null`,
+ * - `remaining`: optional remaining usage count,
+ * - `limitReached`: `true` if the demo rate limit was hit,
+ * - `sendMessage`: function to send a user message (`(content: string) => Promise<void>`-like),
+ * - `clearMessages`: function to reset the conversation and clear errors.
+ */
 export function useCortexDemo() {
   const [state, setState] = useState<DemoState>({
     messages: [], isLoading: false, error: null, remaining: null, limitReached: false
